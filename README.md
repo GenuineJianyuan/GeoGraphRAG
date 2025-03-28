@@ -1,2 +1,3 @@
 # GeoGraphRAG
-Project for GeoGraphRAG
+
+**GeoGraphRAG** — Releasing Soon!
