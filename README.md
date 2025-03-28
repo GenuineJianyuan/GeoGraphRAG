@@ -1,3 +1,3 @@
 # GeoGraphRAG
 
-**GeoGraphRAG** — Releasing Soon!
+**GeoGraphRAG** project is releasing Soon!
