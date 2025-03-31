@@ -1,0 +1,32 @@
+﻿{
+    "query": "Building density analysis",
+    "datasource": [
+        "vector data (city boundary, buildings)"
+    ],
+    "raw_code": "// 加载城市边界和建筑物数据（假设已经上传到GEE）\nvar cityBoundary = ee.FeatureCollection('users/your_username/Wuhan_boundary'); // 替换为你的资产路径\nvar buildings = ee.FeatureCollection('users/your_username/Wuhan_buildings'); // 替换为你的资产路径\n\n// 计算总建筑面积和城市面积\nvar cityArea = cityBoundary.geometry().area(); // 计算城市总面积\nvar buildingArea = buildings.geometry().area().reduce(ee.Reducer.sum()); // 计算建筑总面积\nvar areaRatio = buildingArea.divide(cityArea); // 建筑面积与城市面积的比例\n\nprint('Total Building Area (m²):', buildingArea);\nprint('City Area (m²):', cityArea);\nprint('Building Area as Percentage of City Area:', areaRatio.multiply(100).format('%.2f'));\n\n// 创建网格\nvar gridSize = 2000; // 网格大小为2000米\nvar bounds = cityBoundary.geometry().bounds();\nvar xmin = bounds.coordinates().get(0).get(0);\nvar ymin = bounds.coordinates().get(0).get(1);\nvar xmax = bounds.coordinates().get(2).get(0);\nvar ymax = bounds.coordinates().get(2).get(1);\n\n// 计算网格的行和列数\nvar rows = ee.Number(ymax.subtract(ymin)).divide(gridSize).floor();\nvar cols = ee.Number(xmax.subtract(xmin)).divide(gridSize).floor();\n\n// 创建网格\nvar gridCells = [];\nfor (var i = 0; i < cols.getInfo(); i++) {\n  for (var j = 0; j < rows.getInfo(); j++) {\n    var gridCell = ee.Geometry.Rectangle([xmin.add(i * gridSize), ymin.add(j * gridSize), xmin.add((i + 1) * gridSize), ymin.add((j + 1) * gridSize)]);\n    gridCells.push(gridCell);\n  }\n}\n\nvar grid = ee.FeatureCollection(gridCells.map(function(cell) {\n  return ee.Feature(cell);\n}));\n\n// 计算每个网格的建筑物面积\nvar calcBuildingArea = function(gridCell) {\n  var buildingsInCell = buildings.filterBounds(gridCell.geometry());\n  var area = buildingsInCell.geometry().area().reduce(ee.Reducer.sum());\n  return gridCell.set({'building_area': area});\n};\n\nvar gridWithBuildingArea = grid.map(calcBuildingArea);\n\n// 可视化网格和建筑物密度热图\nvar buildingAreaVis = {\n  min: 0,\n  max: 1000000,\n  palette: ['blue', 'green', 'yellow', 'red']\n};\n\n// 可视化网格\nMap.centerObject(cityBoundary, 12);\nMap.addLayer(gridWithBuildingArea, buildingAreaVis, 'Building Density Heatmap');\nMap.addLayer(cityBoundary, {color: 'black'}, 'City Boundary');\n\n// 显示建筑面积比例的柱状图\nvar chart = ui.Chart.feature.byFeature(gridWithBuildingArea, 'building_area')\n    .setChartType('ColumnChart')\n    .setOptions({\n      title: 'Building Area by Grid Cell',\n      vAxis: {title: 'Building Area (m²)'},\n      hAxis: {title: 'Grid Cell'},\n      legend: {position: 'none'}\n    });\n\nprint(chart);",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.Geometry.area",
+        "ee.Reducer.sum",
+        "ee.Number.divide",
+        "ee.Geometry.bounds",
+        "ee.Geometry.coordinates",
+        "ee.Number.subtract",
+        "ee.Number.floor",
+        "ee.Geometry.Rectangle",
+        "ee.Feature",
+        "ee.FeatureCollection.map",
+        "ee.Feature.set",
+        "ui.Chart.feature.byFeature"
+    ],
+    "processing step": [
+        "Load city boundary and building data.",
+        "Calculate total building and city area.",
+        "Compute building area to city area ratio.",
+        "Create grid within city boundary.",
+        "Calculate building area for each grid cell.",
+        "Visualize building density heatmap and city boundary.",
+        "Display building area by grid cell chart."
+    ],
+    "output": "**Chart**: Building area by grid cell."
+}

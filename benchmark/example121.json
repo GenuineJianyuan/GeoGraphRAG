@@ -1,0 +1,35 @@
+﻿{
+    "query": "Terrain visualization",
+    "datasource": [
+        "USGS/GMTED2010 DEM"
+    ],
+    "raw_code": "// Use an elevation dataset and terrain functions to create\n// a custom visualization of topography\n\n// Load a global elevation image.\nvar elev = ee.Image('USGS/GMTED2010');\n\n// Zoom to an area of interest.\nMap.setCenter(-121.069, 50.709, 6);\n\n// Add the elevation to the map.\nMap.addLayer(elev, {}, 'elev');\n\n// Use the terrain algorithms to compute a hillshade with 8-bit values.\nvar shade = ee.Terrain.hillshade(elev);\nMap.addLayer(shade, {}, 'hillshade', false);\n\n// Create a \"sea\" variable to be used for cartographic purposes\nvar sea = elev.lte(0);\nMap.addLayer(sea.mask(sea), {palette:'000022'}, 'sea', false);\n\n// Create a custom elevation palette from hex strings.\nvar elevationPalette = ['006600', '002200', 'fff700', 'ab7634', 'c4d0ff', 'ffffff'];\n// Use these visualization parameters, customized by location.\nvar visParams = {min: 1, max: 3000, palette: elevationPalette};\n\n// Create a mosaic of the sea and the elevation data\nvar visualized = ee.ImageCollection([\n  // Mask the elevation to get only land\n  elev.mask(sea.not()).visualize(visParams),\n  // Use the sea mask directly to display sea.\n  sea.mask(sea).visualize({palette:'000022'})\n]).mosaic();\n\n// Note that the visualization image doesn't require visualization parameters.\nMap.addLayer(visualized, {}, 'elev palette', false);\n\n// Convert the visualized elevation to HSV, first converting to [0, 1] data.\nvar hsv = visualized.divide(255).rgbToHsv();\n// Select only the hue and saturation bands.\nvar hs = hsv.select(0, 1);\n// Convert the hillshade to [0, 1] data, as expected by the HSV algorithm.\nvar v = shade.divide(255);\n// Create a visualization image by converting back to RGB from HSV.\n// Note the cast to byte in order to export the image correctly.\nvar rgb = hs.addBands(v).hsvToRgb().multiply(255).byte();\nMap.addLayer(rgb, {}, 'styled');",
+    "api": [
+        "ee.Image",
+        "ee.Terrain.hillshade",
+        "ee.Image.lte",
+        "ee.Image.mask",
+        "ee.Image.visualize",
+        "ee.ImageCollection",
+        "ee.Image.divide",
+        "ee.Image.rgbToHsv",
+        "ee.Image.select",
+        "ee.Image.addBands",
+        "ee.Image.hsvToRgb",
+        "ee.Image.multiply",
+        "ee.Image.byte"
+    ],
+    "processing step": [
+        "Load global elevation dataset.",
+        "Set map center and zoom level.",
+        "Compute hillshade from elevation data.",
+        "Create sea mask from elevation values.",
+        "Define custom elevation color palette.",
+        "Visualize land and sea separately.",
+        "Combine land and sea visualizations.",
+        "Convert visualization to HSV color space.",
+        "Merge hillshade with hue and saturation.",
+        "Convert final image back to RGB."
+    ],
+    "output": "A styled topographic map."
+}

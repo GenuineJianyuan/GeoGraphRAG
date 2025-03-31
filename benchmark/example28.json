@@ -1,0 +1,38 @@
+﻿{
+    "query": "Urban expansion & air quality change",
+    "datasource": [
+        "MODIS land cover data",
+        "MODIS aerosol data",
+        "Administrative boundary vector data"
+    ],
+    "raw_code": "var region = ee.FeatureCollection('users/your_username/Beijing_boundary');\n\nvar urbanCover = ee.ImageCollection(\"MODIS/061/MCD12Q1\")\n  .select('LC_Type1')\n  .map(function(image) {\n    return image.eq(13).selfMask()\n      .multiply(ee.Image.pixelArea().divide(1e6))\n      .copyProperties(image, ['system:time_start']);\n  });\n\nvar extractUrbanAreaSeries = function(imageCollection, region) {\n  var years = ee.List.sequence(2001, 2023);\n  var urbanAreas = years.map(function(year) {\n    var yearlyImage = imageCollection.filterDate(ee.Date.fromYMD(year, 1, 1), ee.Date.fromYMD(year, 12, 31)).sum();\n    var stats = yearlyImage.reduceRegion({\n      reducer: ee.Reducer.sum(),\n      geometry: region,\n      scale: 500\n    });\n    return stats.get('LC_Type1');\n  });\n  return ee.FeatureCollection(urbanAreas.zip(years).map(function(pair) {\n    return ee.Feature(null, {\n      'Year': ee.Number(pair.get(1)),\n      'Urban Area (km²)': ee.Number(pair.get(0))\n    });\n  }));\n};\n\nvar aodCollection = ee.ImageCollection(\"MODIS/061/MCD19A2_GRANULES\")\n  .select('Optical_Depth_047')\n  .filterDate('2001-01-01', '2024-01-01')\n  .filterBounds(region);\n\nvar extractHighAodSeries = function(imageCollection, region) {\n  var years = ee.List.sequence(2001, 2023);\n  var highAodFrequencies = years.map(function(year) {\n    var yearlyImage = imageCollection.filterDate(ee.Date.fromYMD(year, 1, 1), ee.Date.fromYMD(year, 12, 31))\n      .map(function(image) { return image.multiply(0.001).gt(0.5); }).sum();\n    var stats = yearlyImage.reduceRegion({\n      reducer: ee.Reducer.mean(),\n      geometry: region,\n      scale: 1000\n    });\n    return stats.get('Optical_Depth_047');\n  });\n  return ee.FeatureCollection(highAodFrequencies.zip(years).map(function(pair) {\n    return ee.Feature(null, {\n      'Year': ee.Number(pair.get(1)),\n      'High AOD Frequency': ee.Number(pair.get(0))\n    });\n  }));\n};",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.ImageCollection.select",
+        "ee.Image.eq",
+        "ee.Image.selfMask",
+        "ee.Image.multiply",
+        "ee.Image.copyProperties",
+        "ee.List.sequence",
+        "ee.ImageCollection.filterDate",
+        "ee.Image.sum",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.sum",
+        "ee.FeatureCollection.zip",
+        "ee.Feature",
+        "ee.Number",
+        "ee.Image.gt",
+        "ee.Reducer.mean"
+    ],
+    "processing step": [
+        "Load boundary feature collection for analysis.",
+        "Filter urban cover from MODIS land cover data.",
+        "Calculate urban area in square kilometers.",
+        "Extract yearly urban area statistics for the region.",
+        "Load AOD data from MODIS dataset.",
+        "Filter and scale AOD values for analysis.",
+        "Calculate yearly high AOD frequency statistics.",
+        "Combine results into feature collections for visualization."
+    ],
+    "output": "**Table** showing urban area and AOD trends."
+}

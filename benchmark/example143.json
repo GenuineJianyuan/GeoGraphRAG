@@ -1,0 +1,32 @@
+﻿{
+    "query": "Land surface temperature day-night difference analysis",
+    "datasource": [
+        "MODIS MOD11A2 (LST_Day_1km, LST_Night_1km)",
+        "Vector data (user-provided FeatureCollection)"
+    ],
+    "raw_code": "var redriver = ee.FeatureCollection('users/Tarefa01_MAPBIOMAS/bahia').geometry();\n\nvar imagem = ee.ImageCollection('MODIS/MOD11A2').select('LST_Day_1km');\nvar imagem = imagem.map(function(img) {\n  return img.multiply(0.02).subtract(273.15).copyProperties(img,['system:time_start',\n  'system:time_end']); \n});\n\n\nvar collection10year = ee.ImageCollection(imagem.filterDate('2010-01-01', '2010-12-31'));\nvar clipOC = collection10year.mean().clip(redriver); \n\n\nMap.addLayer (clipOC, {'min': 0, 'max': 45, 'palette':\"0000ff,32cd32,ffff00,ff8c00,ff0000\"},'Caatinga');\n\n////////////////////////////////////////////////////////\n\nvar imagem2 = ee.ImageCollection('MODIS/MOD11A2').select('LST_Night_1km');\nvar imagem2 = imagem2.map(function(img2) {\n  return img2.multiply(0.02).subtract(273.15).copyProperties(img2,['system:time_start',\n  'system:time_end']); \n});\n\n\nvar collection10year2 = ee.ImageCollection(imagem2.filterDate('2010-01-01', '2010-12-31'));\nvar clipOC2 = collection10year2.mean().clip(redriver); \n\n\nMap.addLayer (clipOC2, {'min': 0, 'max': 45, 'palette':\"0000ff,32cd32,ffff00,ff8c00,ff0000\"},'Caatinga');\n/////////////////////////////////////\n\nvar image3 = clipOC.subtract(clipOC2);\n\nMap.addLayer (image3, {'min': 0, 'max': 45, 'palette':\"0000ff,32cd32,ffff00,ff8c00,ff0000\"},'Bahia');\n\nprint(image3);",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.Geometry",
+        "ee.ImageCollection.select",
+        "ee.Image.multiply",
+        "ee.Image.subtract",
+        "ee.Image.copyProperties",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.mean",
+        "ee.Image.clip",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load geometry for region of interest",
+        "Select and process daytime LST images",
+        "Filter and average daytime LST data",
+        "Clip daytime LST data to region",
+        "Select and process nighttime LST images",
+        "Filter and average nighttime LST data",
+        "Clip nighttime LST data to region",
+        "Calculate LST difference between day and night",
+        "Visualize and print the LST difference"
+    ],
+    "output": "**Map of temperature difference (day-night)**"
+}

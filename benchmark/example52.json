@@ -1,0 +1,30 @@
+﻿{
+    "query": "Calculate Forest Cover Change",
+    "datasource": [
+        "Vector data (country boundary)",
+        "Hansen Global Forest Change dataset"
+    ],
+    "raw_code": "// 1. Create country polygon\n\nvar countries = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017');\nvar country = countries.filter(ee.Filter.eq('country_na', 'Finland'));\n\n// 2. Get Hansen data\n\nvar gfc2020 = ee.Image(\"UMD/hansen/global_forest_change_2020_v1_8\");\nvar treeCover = gfc2020.select(['treecover2000']);\nvar lossImage = gfc2020.select(['loss']);\nvar gainImage = gfc2020.select(['gain']);\n\n// 3. Get area\n//.divide(1000000)\nvar areaTreeCover = treeCover.multiply(ee.Image.pixelArea()).divide(1000000);\nvar areaLossImage = lossImage.multiply(ee.Image.pixelArea()).divide(1000000);\nvar areaGainImage = gainImage.multiply(ee.Image.pixelArea()).divide(1000000);\n\n// 4. Compute forest loss and gain in square km.\nvar stats = areaTreeCover.reduceRegion({\n  reducer: ee.Reducer.sum(),\n  geometry: country,\n  scale: 30,\n  maxPixels: 2e9\n});\nprint('Tree cover 2000: ', stats.get('treecover2000'), 'square km');\n\nvar stats = areaLossImage.reduceRegion({\n  reducer: ee.Reducer.sum(),\n  geometry: country,\n  scale: 30,\n  maxPixels: 2e9\n});\nprint('Loss 2000-2020: ', stats.get('loss'), 'square km');\n\nvar stats = areaGainImage.reduceRegion({\n  reducer: ee.Reducer.sum(),\n  geometry: country,\n  scale: 30,\n  maxPixels: 2e9\n});\nprint('Gain 2000-2020: ', stats.get('gain'), 'square km');",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.Filter.eq",
+        "ee.Image",
+        "ee.Image.select",
+        "ee.Image.multiply",
+        "ee.Image.pixelArea",
+        "ee.Image.divide",
+        "ee.Reducer.sum",
+        "ee.Image.reduceRegion"
+    ],
+    "processing step": [
+        "Load country boundary from feature collection.",
+        "Filter specific country from the collection.",
+        "Load Hansen forest change dataset.",
+        "Select tree cover, loss, and gain layers.",
+        "Calculate area of tree cover, loss, and gain.",
+        "Sum tree cover area within country boundary.",
+        "Sum forest loss area within country boundary.",
+        "Sum forest gain area within country boundary."
+    ],
+    "output": "Numerical: Forest cover, loss, and gain statistics."
+}

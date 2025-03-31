@@ -1,0 +1,34 @@
+﻿{
+    "query": "Calculate road distribution",
+    "datasource": [
+        "Administrative regions vector data",
+        "Roads vector data"
+    ],
+    "raw_code": "// 1. 数据加载：读取武汉的行政区和道路数据\nvar city_shp = ee.FeatureCollection(\"users/your_username/Wuhanqu\");  // 需要上传Wuhanqu.shp文件到GEE\nvar roads_shp = ee.FeatureCollection(\"users/your_username/Wuhanroad\");  // 需要上传Wuhanroad.shp文件到GEE\n\n// 2. 投影转换：GEE会自动处理CRS，但我们可以明确指定EPSG:4527\ncity_shp = city_shp.transform('EPSG:4527');\nroads_shp = roads_shp.transform('EPSG:4527');\n\n// 3. 数据清理：去除无效的道路几何\nroads_shp = roads_shp.filter(ee.Filter.notNull(['geometry']));\n\n// 4. 道路长度计算：计算道路的长度（单位：km）\nvar roads_length = roads_shp.map(function(feature) {\n  var length = feature.geometry().length().divide(1000);  // 转换为公里\n  return feature.set('length_km', length);\n});\n\n// 5. 行政区面积计算：计算每个行政区的面积（单位：km²）\ncity_shp = city_shp.map(function(feature) {\n  var area = feature.geometry().area().divide(1e6);  // 转换为km²\n  return feature.set('area_km2', area);\n});\n\n// 6. 空间连接：将道路数据与行政区空间连接\nvar roads_in_city = roads_shp.filterBounds(city_shp.geometry());\n\n// 7. 聚合计算：计算每个行政区内的总道路长度\nvar road_length_by_area = city_shp.map(function(feature) {\n  var roads_in_district = roads_in_city.filterBounds(feature.geometry());\n  var total_road_length = roads_in_district.aggregate_sum('length_km');\n  return feature.set('total_road_length_km', total_road_length);\n});\n\n// 8. 道路密度计算：计算道路密度（单位：km/km²）\nroad_length_by_area = road_length_by_area.map(function(feature) {\n  var road_density = feature.get('total_road_length_km').divide(feature.get('area_km2'));\n  return feature.set('road_density_km_per_km2', road_density);\n});\n\n// 9. 可视化道路密度的主题地图\nMap.centerObject(city_shp, 10);  // 设置地图中心\nMap.addLayer(road_length_by_area, \n             {color: 'FF0000', \n              min: 0, max: 10, \n              palette: ['white', 'red']}, \n             'Road Density');\n\n// 10. 创建条形图：按道路密度排序显示武汉各区的道路密度\nvar sorted = road_length_by_area.sort('road_density_km_per_km2', false);\nvar chart = ui.Chart.feature.byFeature(sorted, 'road_density_km_per_km2')\n               .setChartType('Bar')\n               .setOptions({\n                 title: 'Road Density by Administrative District in Wuhan',\n                 vAxis: {title: 'Road Density (km/km²)'},\n                 hAxis: {title: 'District'},\n                 legend: {position: 'none'}\n               });\nprint(chart);",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.Filter.notNull",
+        "ee.Geometry.length",
+        "ee.Number.divide",
+        "ee.Feature.set",
+        "ee.Geometry.area",
+        "ee.FeatureCollection.filterBounds",
+        "ee.FeatureCollection.aggregate_sum",
+        "ui.Chart.feature.byFeature",
+        "Map.centerObject",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load administrative and road data",
+        "Transform CRS to EPSG:4527",
+        "Remove invalid road geometries",
+        "Calculate road lengths in km",
+        "Calculate administrative area in km²",
+        "Spatially join roads with administrative areas",
+        "Aggregate total road length per area",
+        "Calculate road density in km/km²",
+        "Visualize road density on a thematic map",
+        "Create bar chart of road density by area"
+    ],
+    "output": "**Chart of road density by district**"
+}

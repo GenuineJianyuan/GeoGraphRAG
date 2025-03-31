@@ -1,0 +1,32 @@
+﻿{
+    "query": "Public transportation accessibility analysis",
+    "datasource": [
+        "vector data (transportation points)",
+        "vector data (road network)"
+    ],
+    "raw_code": "// Load datasets\nvar busPoints = ee.FeatureCollection(\"users/your_username/bus_points_pro\");\nvar roads = ee.FeatureCollection(\"users/your_username/Wuhanroad_pro\");\n\n// Create buffers\nvar buffer500 = busPoints.map(function(feature) {\n  return feature.buffer(500);\n});\nvar buffer1000 = busPoints.map(function(feature) {\n  return feature.buffer(1000);\n});\n\n// Road intersection\nvar accessibleRoads = roads.filterBounds(buffer1000);\n\n// Density analysis\nvar density = ee.Image().paint({\n  featureCollection: busPoints,\n  color: 1,\n  width: 5\n}).reduceToImage({\n  reducer: ee.Reducer.count(),\n  maxPixels: 1e8\n});\nvar densityRaster = density.resample('bicubic').reproject({\n  crs: 'EPSG:4326',\n  scale: 100\n});\n\n// Overlay analysis\nvar extractedDensity = densityRaster.clip(accessibleRoads);\n\n// Visualization\nMap.centerObject(busPoints, 12);\nMap.addLayer(buffer500, {color: 'red'}, '500m Buffer');\nMap.addLayer(buffer1000, {color: 'blue'}, '1000m Buffer');\nMap.addLayer(accessibleRoads, {color: 'green'}, 'Accessible Roads');\nMap.addLayer(extractedDensity, {min: 0, max: 10, palette: ['white', 'blue']}, 'Extracted Density');",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.FeatureCollection.map",
+        "ee.Geometry.buffer",
+        "ee.FeatureCollection.filterBounds",
+        "ee.Image.paint",
+        "ee.Reducer.count",
+        "ee.Image.reduceToImage",
+        "ee.Image.resample",
+        "ee.Image.reproject",
+        "ee.Image.clip",
+        "Map.centerObject",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load bus points and roads datasets",
+        "Create 500m and 1000m buffers around bus points",
+        "Filter roads within 1000m buffer",
+        "Generate density raster from bus points",
+        "Resample and reproject density raster",
+        "Clip density raster to accessible roads",
+        "Visualize buffers, roads, and density raster"
+    ],
+    "output": "Raster of bus point density on accessible roads."
+}

@@ -1,0 +1,40 @@
+﻿{
+    "query": "Carbon emission and nightlight correlation analysis",
+    "datasource": [
+        "Remote sensing imagery (nightlight)",
+        "Carbon emission raster data"
+    ],
+    "raw_code": "// ================== Module1: Environment Setup ==================\n// 输入路径：在GEE中我们直接加载数据集或上传影像\nvar carbonEmission = ee.Image(\"users/your_username/LongNTL_2023_BTH\");  // 替换为实际路径\nvar nightlight = ee.Image(\"users/your_username/BTHemission\");  // 替换为实际路径\n\n// ================== Module2: Resampling ==================\n// 重新采样碳排放数据，使其匹配夜间灯光数据的分辨率和范围\nvar resampledCarbonEmission = carbonEmission.resample('bilinear').reproject({\n  crs: nightlight.projection(), \n  scale: nightlight.select(0).projection().nominalScale()\n});\n\n// ================== Module3: Correlation Analysis ==================\n// 计算夜间灯光强度和碳排放的相关性\nvar nightlightArray = nightlight.reduceRegion({\n  reducer: ee.Reducer.toList(),\n  geometry: nightlight.geometry(),\n  scale: nightlight.projection().nominalScale(),\n  maxPixels: 1e8\n}).get('BTHemission');\n\nvar carbonEmissionArray = resampledCarbonEmission.reduceRegion({\n  reducer: ee.Reducer.toList(),\n  geometry: resampledCarbonEmission.geometry(),\n  scale: resampledCarbonEmission.projection().nominalScale(),\n  maxPixels: 1e8\n}).get('LongNTL_2023_BTH');\n\n// 将列表转换为数组\nvar nightlightList = ee.List(nightlightArray);\nvar carbonEmissionList = ee.List(carbonEmissionArray);\n\n// 将列表转换为ee.Array，计算Pearson相关系数\nvar nightlightArray = ee.Array(nightlightList);\nvar carbonEmissionArray = ee.Array(carbonEmissionList);\n\n// 计算Pearson相关系数\nvar meanNightlight = nightlightArray.mean();\nvar meanCarbonEmission = carbonEmissionArray.mean();\nvar covariance = nightlightArray.subtract(meanNightlight).multiply(carbonEmissionArray.subtract(meanCarbonEmission)).mean();\nvar nightlightStdDev = nightlightArray.subtract(meanNightlight).pow(2).mean().sqrt();\nvar carbonEmissionStdDev = carbonEmissionArray.subtract(meanCarbonEmission).pow(2).mean().sqrt();\n\nvar correlation = covariance.divide(nightlightStdDev.multiply(carbonEmissionStdDev));\nprint('Correlation between nightlight and carbon emission:', correlation);\n\n// ================== Module4: Visualization ==================\n// 可视化夜间灯光数据和重采样的碳排放数据\nMap.centerObject(nightlight, 8);\n\n// 显示夜间灯光数据\nMap.addLayer(nightlight, {min: 0, max: 300, palette: ['black', 'yellow']}, 'Nightlight Image');\n\n// 显示重采样后的碳排放数据\nMap.addLayer(resampledCarbonEmission, {min: 0, max: 50, palette: ['black', 'red']}, 'Resampled Carbon Emission Image');",
+    "api": [
+        "ee.Image",
+        "ee.Image.resample",
+        "ee.Image.reproject",
+        "ee.Reducer.toList",
+        "ee.Image.reduceRegion",
+        "ee.Image.geometry",
+        "ee.Image.projection",
+        "ee.Image.select",
+        "ee.Projection.nominalScale",
+        "ee.List",
+        "ee.Array",
+        "ee.Array.mean",
+        "ee.Array.subtract",
+        "ee.Array.multiply",
+        "ee.Array.pow",
+        "ee.Array.sqrt",
+        "ee.Array.divide",
+        "Map.centerObject",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load carbon emission and nightlight datasets.",
+        "Resample carbon emission to match nightlight resolution.",
+        "Extract nightlight and carbon emission data as arrays.",
+        "Convert extracted data lists to arrays.",
+        "Calculate mean values for both datasets.",
+        "Compute covariance and standard deviations.",
+        "Calculate and print Pearson correlation coefficient.",
+        "Visualize nightlight and resampled carbon emission data."
+    ],
+    "output": "Numerical: Pearson correlation coefficient"
+}

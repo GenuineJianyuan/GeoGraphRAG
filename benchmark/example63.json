@@ -1,0 +1,31 @@
+﻿{
+    "query": "Visualize Landsat8 True Color Imagery with Radiometric Calibration",
+    "datasource": [
+        "Landsat8",
+        "Vector data (user-defined ROI)"
+    ],
+    "raw_code": "/**** Start of imports. If edited, may not auto-convert in the playground. ****/\nvar aoi = \n    /* color: #d63000 */\n    /* shown: false */\n    /* displayProperties: [\n      {\n        \"type\": \"rectangle\"\n      }\n    ] */\n    ee.Geometry.Polygon(\n        [[[38.72494110837396, 0.1083418363509475],\n          [38.72494110837396, -2.977475263513048],\n          [40.91122040524896, -2.977475263513048],\n          [40.91122040524896, 0.1083418363509475]]], null, false);\n/***** End of imports. If edited, may not auto-convert in the playground. *****/\nvar image = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2');\n\n    .filterDate('2020-03-22', '2020-06-22');\n\n    .filter.lt('CLOUDY_PIXEL_PERCENTAGE',50);\n\n\n// Applies scaling factors.\nfunction applyScaleFactors(image) {\n  \n  var opticalBands = image.select('SR_B.').multiply(0.0000275).add(-0.2);\n  \n  var thermalBands = image.select('ST_B.*').multiply(0.00341802).add(149.0);\n  \n  return image.addBands(opticalBands, null, true)\n              .addBands(thermalBands, null, true);\n}\n\n\nimage = image.map(applyScaleFactors);\n\n\nvar visualization = {\n  bands: ['SR_B4', 'SR_B3', 'SR_B2'],\n  min: 0.0,\n  max: 0.3,\n};\n\n\nMap.addLayer(image, visualization, 'True Color (423)');\n\n\nMap.setCenter(41.00460419431146,-0.2651923084686196, 8);",
+    "api": [
+        "ee.Geometry.Polygon",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filter.lt",
+        "ee.Image.select",
+        "ee.Image.multiply",
+        "ee.Image.add",
+        "ee.Image.addBands",
+        "Map.addLayer",
+        "Map.setCenter"
+    ],
+    "processing step": [
+        "Define area of interest using polygon geometry.",
+        "Load Landsat 8 image collection.",
+        "Filter images by date range.",
+        "Filter images by cloud cover percentage.",
+        "Apply scaling factors to optical and thermal bands.",
+        "Map scaling function across image collection.",
+        "Set visualization parameters for true color display.",
+        "Add image layer to map with visualization settings.",
+        "Set map center and zoom level."
+    ],
+    "output": "**Map with true color Landsat imagery**"
+}

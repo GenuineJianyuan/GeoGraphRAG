@@ -1,0 +1,32 @@
+﻿{
+    "query": "Flood inundation detection",
+    "datasource": [
+        "COPERNICUS/S1_GRD (Sentinel-1 SAR data)",
+        "Region of interest (point geometry)"
+    ],
+    "raw_code": "var geometry = ee.Geometry.Point([85.89045341936998, 25.52378866966648]);\nvar collection = ee.ImageCollection('COPERNICUS/S1_GRD').filterBounds(geometry)\n  .filter(ee.Filter.listContains('transmitterReceiverPolarisation', 'VV'))\n  .select('VV');\nvar before = collection.filterDate('2021-06-01', '2021-06-30').mosaic();\nvar after = collection.filterDate('2021-07-01', '2021-07-30').mosaic();\nvar SMOOTHING_RADIUS = 100;\nvar DIFF_UPPER_THRESHOLD = -3;\nvar diff_smoothed = after.focal_median(SMOOTHING_RADIUS, 'circle', 'meters')\n  .subtract(before.focal_median(SMOOTHING_RADIUS, 'circle', 'meters'));\nvar diff_thresholded = diff_smoothed.lt(DIFF_UPPER_THRESHOLD);\nMap.addLayer(before, {min:-30,max:0}, 'Before flood');\nMap.addLayer(after.subtract(before), {min:-10,max:10}, 'After - before', 0);\nMap.addLayer(diff_smoothed, {min:-10,max:10}, 'diff smoothed', 0);\nMap.addLayer(diff_thresholded.updateMask(diff_thresholded), {palette:\"0000FF\"},'flooded areas - blue',1);",
+    "api": [
+        "ee.Geometry.Point",
+        "ee.ImageCollection",
+        "ee.ImageCollection.filterBounds",
+        "ee.Filter.listContains",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterDate",
+        "ee.Image.mosaic",
+        "ee.Image.focal_median",
+        "ee.Image.subtract",
+        "ee.Image.lt",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define a point geometry for analysis.",
+        "Filter Sentinel-1 GRD collection by location and polarization.",
+        "Select VV polarization band.",
+        "Create mosaics for two distinct time periods.",
+        "Apply focal median smoothing to both mosaics.",
+        "Calculate difference between smoothed mosaics.",
+        "Threshold the difference to identify significant changes.",
+        "Visualize original, difference, and thresholded results."
+    ],
+    "output": "Map showing flooded areas in blue."
+}

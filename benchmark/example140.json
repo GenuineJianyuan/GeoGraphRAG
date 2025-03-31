@@ -1,0 +1,28 @@
+﻿{
+    "query": "Calculate NDCI using Sentinel-2",
+    "datasource": [
+        "User-defined geometry",
+        "Sentinel-2 SR imagery"
+    ],
+    "raw_code": "/**** Start of imports. If edited, may not auto-convert in the playground. ****/\nvar geometry = \n    /* color: #d63000 */\n    /* shown: false */\n    /* displayProperties: [\n      {\n        \"type\": \"rectangle\"\n      }\n    ] */\n    ee.Geometry.Polygon(\n        [[[-46.35698198856693, -20.575944746277344],\n          [-46.35698198856693, -21.57160958285701],\n          [-44.31627153934818, -21.57160958285701],\n          [-44.31627153934818, -20.575944746277344]]], null, false);\n/***** End of imports. If edited, may not auto-convert in the playground. *****/\n// Composite an image collection and clip it to a boundary.\n\n// Load Landsat 7 raw imagery and filter it to April-July 2000.\n/**\n * Function to mask clouds using the Sentinel-2 QA band\n * @param {ee.Image} image Sentinel-2 image\n * @return {ee.Image} cloud masked Sentinel-2 image\n */\n\n\nvar c_cover = require('users/daniellookorox/default:Kd Calculation/cloud_cover');\nvar palettes = require('users/gena/packages:palettes');\n\n///Palesta de cores\nvar palette = palettes.misc.coolwarm[7];\n\n/// Data inicial e data final (pegar intervalo de 5 dias)\nvar date_ini = '2020-05-07'\nvar date_fim = '2020-05-12'\n\n// Map the function over one year of data and take the median.\n// Load Sentinel-2 TOA reflectance data.\nvar water_gc = ee.ImageCollection('COPERNICUS/S2_SR')\n                  .filterDate(date_ini, date_fim)\n                  .filterBounds(geometry)\n                  // Pre-filter to get less cloudy granules.\n                  //.filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 90))\n                  .map(c_cover.maskcloudsMSI)\n\nvar RGB = ee.ImageCollection('COPERNICUS/S2_SR')\n                  .filterDate(date_ini, date_fim)\n                  .filterBounds(geometry)\n\n\nprint(water_gc)         \n\n\nvar rgbVis = {\n  min: 0.0,\n  max: 0.2,\n  bands: ['B5', 'B3', 'B2'],\n};\n\n\nfunction NDCI(img) {\n  \n  var red = img.select(\"B4\")\n  var nir = img.select(\"B5\")\n  var ndvi = (nir.subtract(red)).divide(nir.add(red)).rename(\"NDCI\")\n  \n  return ndvi.set(\"system:time_start\", img.get(\"system:time_start\"))\n  \n}\n\nvar NDCI = water_gc.map(NDCI)\n\n// Display the result.\n\n\nvar visParams = {bands: ['B5', 'B4', 'B3'], gain: [1.4, 1.4, 1.1]};\n\n\nMap.addLayer(RGB, {min:0, max:3000, bands:['B4', 'B3', 'B2']}, 'clipped composite');\nMap.addLayer(water_gc, {min:0, max:0.05, bands:['B4', 'B3', 'B2']}, 'clipped composite');\nMap.addLayer(NDCI, {min:-0.5, max:0.8, palette:palette}, \"NDCI\")\nMap.addLayer(water_gc.select(\"B3\"), {min:0, max:0.03, palette:palette}, \"B3 Rrs\")",
+    "api": [
+        "ee.Geometry.Polygon",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.map",
+        "ee.Image.select",
+        "ee.Image.rename",
+        "ee.Image.set",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define study area geometry for analysis.",
+        "Load and filter Sentinel-2 surface reflectance data.",
+        "Apply cloud masking to Sentinel-2 imagery.",
+        "Calculate NDCI index for water quality analysis.",
+        "Visualize RGB composite of Sentinel-2 imagery.",
+        "Visualize cloud-masked Sentinel-2 imagery.",
+        "Visualize NDCI results with a color palette."
+    ],
+    "output": "Map with NDCI and RGB imagery layers."
+}

@@ -1,0 +1,34 @@
+﻿{
+    "query": "Climate data analysis (Kenya)",
+    "datasource": [
+        "TerraClimate dataset",
+        "Region of interest (KenyaAEZ)"
+    ],
+    "raw_code": "/**** Start of imports. If edited, may not auto-convert in the playground. ****/\nvar KenyaAEZ = ee.FeatureCollection(\"users/jvilbig/KenyaAEZ\");\n/***** End of imports. If edited, may not auto-convert in the playground. *****/\n// Climate Data for Kenya for all of 1980 from the TerraClimate Dataset\n\n\n\n// Import Kenya shapefile “KenyaAEZ”\n\n// Select image\n\nvar collection = ee.ImageCollection('IDAHO_EPSCOR/TERRACLIMATE')\n\n  .filterDate('1981-01-01', '1981-12-31')\n\n  .select('pdsi', 'soil', 'tmmn', 'tmmx')\n\n  .median()\n\n  .clip(KenyaAEZ)\n\n;\n\n\n// Create temperature average\n\nvar tempav = collection.expression(\n  '(max+min)/2', {\n    'max': collection.select('tmmx'),\n    'min': collection.select('tmmn'),\n  }).rename('tempave')\n\n;\n\n\n// Join Temperature Average to the image as a new band\n\nvar image = ee.Image.cat([collection, tempav]);\n\n\n//Mask out the zero values in the data\n\nvar masked = image.selfMask();\n\n\n// Check overall properties\n\nprint(image);\n\n\n// Display image\n\nvar imgVis = {\n  min: -300,\n  max: 300,\n};\nMap.setCenter(37.77, 0.2, 6);\nMap.addLayer(image, imgVis, \"1981 Climate Image\");\n\n\n// Export image\n\nExport.image.toDrive({\n  image: image,\n  description: 'Kenya_Climate_1981',\n  // scale: 1000,\n});",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.median",
+        "ee.Image.clip",
+        "ee.Image.expression",
+        "ee.Image.rename",
+        "ee.Image.cat",
+        "ee.Image.selfMask",
+        "Map.setCenter",
+        "Map.addLayer",
+        "Export.image.toDrive"
+    ],
+    "processing step": [
+        "Import feature collection for the region of interest",
+        "Filter image collection by date and select specific bands",
+        "Compute median of the filtered image collection",
+        "Clip the image to the region of interest",
+        "Calculate average temperature using expression",
+        "Join average temperature as a new band",
+        "Mask out zero values in the image",
+        "Print and display the processed image",
+        "Export the final image to Google Drive"
+    ],
+    "output": "**Raster of climate variables.**"
+}

@@ -1,0 +1,28 @@
+﻿{
+    "query": "Terrain analysis",
+    "datasource": [
+        "DEM (SRTM)",
+        "Vector data (TIGER)"
+    ],
+    "raw_code": "// ================== Module 1: Data Retrieval ==================\n// Step 1: 获取美国的地形数据（高程数据）\nvar elevation = ee.Image('USGS/SRTMGL1_003');  // 使用 SRTM 数据集，1秒分辨率\n\n// Step 2: 只保留美国的区域（通过裁剪）\nvar usa = ee.FeatureCollection('TIGER/2018/States')\n           .filter(ee.Filter.eq('STUSPS', 'US'));  // 选取美国（可以根据具体需求调整）\nvar elevation_usa = elevation.clip(usa);\n\n// ================== Module 2: Data Processing ==================\n// Step 3: 数据处理 - 坡度和方位图计算\n// 计算坡度\nvar slope = ee.Terrain.slope(elevation_usa);\n// 计算方位\nvar aspect = ee.Terrain.aspect(elevation_usa);\n\n// ================== Module 3: Visualization of Elevation ==================\n// Step 4: 高程数据的可视化\nMap.centerObject(usa, 5);\nMap.addLayer(elevation_usa, {min: 0, max: 3000, palette: ['blue', 'green', 'brown', 'white']}, 'Elevation');\n\n// ================== Module 4: Terrain Analysis ==================\n// Step 5: 坡度和方位数据的可视化\nMap.addLayer(slope, {min: 0, max: 60, palette: ['white', 'yellow', 'red']}, 'Slope');\nMap.addLayer(aspect, {min: 0, max: 360, palette: ['blue', 'green', 'yellow', 'red']}, 'Aspect');\n\n// ================== Module 5: Visualization of Slope and Aspect ==================\n// 通过GEE地图直接查看坡度和方位图\n// 可选择导出数据或其他自定义操作，GEE默认提供了直接查看功能",
+    "api": [
+        "ee.Image",
+        "ee.FeatureCollection",
+        "ee.Filter.eq",
+        "ee.Image.clip",
+        "ee.Terrain.slope",
+        "ee.Terrain.aspect",
+        "Map.centerObject",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Retrieve elevation data from SRTM dataset",
+        "Clip elevation data to specific region",
+        "Calculate slope from elevation data",
+        "Calculate aspect from elevation data",
+        "Visualize elevation data on map",
+        "Visualize slope data on map",
+        "Visualize aspect data on map"
+    ],
+    "output": "Raster of elevation, slope, and aspect."
+}

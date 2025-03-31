@@ -1,0 +1,31 @@
+﻿{
+    "query": "Calculate mean NPP over Riau",
+    "datasource": [
+        "Vector data (user-provided region)",
+        "MODIS/006/MOD17A3HGF (NPP dataset)"
+    ],
+    "raw_code": "var geometry2 = \n    ee.Geometry.Polygon(\n        [[[100.5210531264222, 1.128780531014714],\n          [100.5210531264222, -2.671447519581694],\n          [104.2783773451722, -2.671447519581694],\n          [104.2783773451722, 1.128780531014714]]], null, false),\n    table = ee.FeatureCollection(\"users/lismasafitri86/prov_riau_ar_140020180328185155\");\n\nvar NPP_dataset = ee.ImageCollection('MODIS/006/MOD17A3HGF')\n.filterDate('2001-01-01', '2021-12-31')\n.filter(ee.Filter.bounds(table));\n\nMap.centerObject(table);\nMap.addLayer(table, {}, 'table');\nMap.addLayer(NPP_dataset.median().clip(table));\n\nExport.image.toDrive({\nimage: NPP_dataset.median().clip(table).select([\"Npp\"]),\ndescription: \"NPPmedianRiau\",\nfileNamePrefix: \"NPPmedianRiau\",\nscale: 500,\nregion: table.geometry().bounds(),\nmaxPixels: 1e13\n});\nMap.addLayer(table.geometry().bounds(),{},'riau');",
+    "api": [
+        "ee.Geometry.Polygon",
+        "ee.FeatureCollection",
+        "ee.ImageCollection",
+        "ee.Filter.bounds",
+        "Map.centerObject",
+        "Map.addLayer",
+        "ee.Image.clip",
+        "Export.image.toDrive",
+        "ee.Image.select",
+        "ee.Geometry.bounds"
+    ],
+    "processing step": [
+        "Define a polygon geometry for the region of interest",
+        "Load a feature collection from a specified asset",
+        "Filter MODIS NPP dataset by date and spatial bounds",
+        "Center the map on the feature collection",
+        "Add the feature collection as a layer to the map",
+        "Clip and display the median NPP image",
+        "Export the clipped NPP image to Google Drive",
+        "Add the bounds of the feature collection as a map layer"
+    ],
+    "output": "Raster of median NPP values."
+}

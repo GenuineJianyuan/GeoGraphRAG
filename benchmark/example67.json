@@ -1,0 +1,31 @@
+﻿{
+    "query": "Water occurrence analysis",
+    "datasource": [
+        "Global Surface Water (JRC/GSW1_3)",
+        "Vector data (user-uploaded FeatureCollection)"
+    ],
+    "raw_code": "var dataset = ee.Image(\"JRC/GSW1_3/GlobalSurfaceWater\"),\n    table = ee.FeatureCollection(\"users/latif316/Pakistan\"),\n    CS = ee.FeatureCollection(\"users/latif316/Catchment_Shamshal\");\n\nvar PakistanWater = dataset.select('occurrence').clip(CS);\n\nvar visualization = {\n  bands: ['occurrence'],\n  min: 0.0,\n  max: 100.0,\n  palette: ['ffffff', 'ffbbbb', '0000ff']\n};\n\nMap.centerObject(CS,12)\n\nMap.addLayer(PakistanWater, visualization, 'occurrence');\n\nvar flooded_vec = PakistanWater.reduceToVectors({\n  scale: 10,\n  geometryType:'polygon',\n  geometry: CS,\n  eightConnected: false,\n  bestEffort:true,\n  tileScale:2,\n});\n\nExport.table.toDrive({\n  collection:flooded_vec,\n  description:'Shimshal Water Occurrence',\n  fileFormat:'SHP',\n  fileNamePrefix:'Shimshal Water Occurrence'\n});\nExport.image.toDrive({\n  image:PakistanWater,\n  description:'Shimshal Water Occurrence',\n  scale: 250,\n  fileNamePrefix:'Shimshal Water Occurrence',\n  region: CS,\n  maxPixels:1e10\n});",
+    "api": [
+        "ee.Image",
+        "ee.FeatureCollection",
+        "ee.Image.select",
+        "ee.Image.clip",
+        "ee.Image.reduceToVectors",
+        "ee.Image.visualize",
+        "Map.centerObject",
+        "Map.addLayer",
+        "Export.table.toDrive",
+        "Export.image.toDrive"
+    ],
+    "processing step": [
+        "Load global surface water dataset",
+        "Clip dataset to specific catchment area",
+        "Set visualization parameters for water occurrence",
+        "Center map on the catchment area",
+        "Display water occurrence layer on map",
+        "Convert water occurrence to vector polygons",
+        "Export vector polygons to Drive",
+        "Export water occurrence image to Drive"
+    ],
+    "output": "vector (polygon water occurrence features)"
+}

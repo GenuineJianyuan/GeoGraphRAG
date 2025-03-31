@@ -1,0 +1,42 @@
+﻿{
+    "query": "Analyze global forest cover rate by country",
+    "datasource": [
+        "MODIS land cover data",
+        "Country boundary vector data"
+    ],
+    "raw_code": "// ================== Module 1: Data Loading ==================\nvar landCover = ee.Image(\"MODIS/006/MCD12Q1/2021_01_01\");\nvar countries = ee.FeatureCollection(\"USDOS/LSIB_SIMPLE/2017\");\n\n// ================== Module 2: Data Processing ==================\nvar landCoverProj = landCover.projection();\nvar forestArea = landCover.select('LC_Type1').eq(1);\n\nvar countriesWithArea = countries.map(function(country) {\n  var area = country.area().divide(1e6);\n  return country.set('total_area', area);\n});\n\nvar calcForestArea = function(country) {\n  var countryMask = forestArea.clip(country.geometry());\n  var forestSum = countryMask.reduceRegion({\n    reducer: ee.Reducer.sum(),\n    geometry: country.geometry(),\n    scale: 500,\n    maxPixels: 1e8\n  }).get('LC_Type1');\n  return country.set('forest_area', forestSum);\n};\n\nvar countriesWithForest = countriesWithArea.map(calcForestArea);\n\nvar withCoverRate = countriesWithForest.map(function(country) {\n  var forestArea = ee.Number(country.get('forest_area'));\n  var totalArea = ee.Number(country.get('total_area'));\n  var coverRate = forestArea.divide(totalArea).multiply(100);\n  return country.set('forest_cover_rate', coverRate);\n});\n\n// ================== Module 3: Top 10 Countries ==================\nvar top10Countries = withCoverRate.sort('forest_cover_rate', false).limit(10);\nprint('Top 10 Countries by Forest Cover Rate:', top10Countries);\n\n// ================== Module 4: Visualization ==================\nMap.centerObject(countries, 2);\nMap.addLayer(withCoverRate, {color: 'green'}, 'Forest Cover Rate');\n\nExport.table.toDrive({\n  collection: top10Countries,\n  description: 'Top10CountriesByForestCoverRate',\n  fileFormat: 'CSV'\n});",
+    "api": [
+        "ee.Image",
+        "ee.FeatureCollection",
+        "ee.Image.projection",
+        "ee.Image.select",
+        "ee.Image.eq",
+        "ee.FeatureCollection.map",
+        "ee.Feature.area",
+        "ee.Feature.set",
+        "ee.Image.clip",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.sum",
+        "ee.Feature.get",
+        "ee.Number",
+        "ee.Number.divide",
+        "ee.Number.multiply",
+        "ee.FeatureCollection.sort",
+        "ee.FeatureCollection.limit",
+        "Map.centerObject",
+        "Map.addLayer",
+        "Export.table.toDrive"
+    ],
+    "processing step": [
+        "Load land cover and country data.",
+        "Project land cover data.",
+        "Identify forest areas from land cover.",
+        "Calculate total area for each country.",
+        "Compute forest area within each country.",
+        "Calculate forest cover rate for each country.",
+        "Sort and select top 10 countries by cover rate.",
+        "Visualize forest cover rate on map.",
+        "Export top 10 countries data to CSV."
+    ],
+    "output": "**Table of top 10 forested countries.**"
+}

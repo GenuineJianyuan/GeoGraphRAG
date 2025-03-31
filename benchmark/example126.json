@@ -1,0 +1,34 @@
+﻿{
+    "query": "Crop growth combined index calculation",
+    "datasource": [
+        "MODIS LAI dataset",
+        "ERA5 temperature dataset",
+        "CHIRPS precipitation dataset",
+        "France region vector data"
+    ],
+    "raw_code": "//crop_growth_detection\n\n// 定义法国区域\nvar france = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017')\n  .filter(ee.Filter.eq('country_na', 'France'));\n\n// 设置时间范围\nvar start = '2020-01-01';\nvar end = '2020-12-31';\n\n// 加载LAI数据集 (MODIS)\nvar laiDataset = ee.ImageCollection('MODIS/061/MCD15A3H')\n  .filterDate(start, end)\n  .filterBounds(france)\n  .select('Lai').mean();\n\n// 加载气温数据集 (ERA5)\nvar tempDataset = ee.ImageCollection(\"ECMWF/ERA5_LAND/HOURLY\")\n  .filterDate(start, end)\n  .filterBounds(france)\n  .select('temperature_2m').mean();\n\n// 加载降水数据集 (CHIRPS)\nvar precipDataset = ee.ImageCollection(\"UCSB-CHG/CHIRPS/PENTAD\")\n  .filterDate(start, end)\n  .filterBounds(france)\n  .select('precipitation').mean();\n\n// 重分类，赋予权重\nvar laiWeighted = laiDataset.multiply(0.5); // 举例权重为0.5\nvar tempWeighted = tempDataset.subtract(273).multiply(0.3); // 转换为摄氏度并赋予权重0.3\nvar precipWeighted = precipDataset.multiply(0.2); // 举例权重为0.2\n\n// 叠加分析\nvar combinedIndex = laiWeighted.add(tempWeighted).add(precipWeighted);\n\n// 可视化\nvar visParams = {min: 0, max: 10, palette: ['blue', 'green', 'yellow', 'orange', 'red']};\nMap.centerObject(france, 6);\nMap.addLayer(combinedIndex, visParams, 'Combined Index');",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.Filter.eq",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.mean",
+        "ee.Image.multiply",
+        "ee.Image.subtract",
+        "ee.Image.add",
+        "Map.centerObject",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define target region using feature collection.",
+        "Set time range for data analysis.",
+        "Load MODIS LAI dataset and compute mean.",
+        "Load ERA5 temperature dataset and compute mean.",
+        "Load CHIRPS precipitation dataset and compute mean.",
+        "Apply weights to LAI, temperature, and precipitation data.",
+        "Combine weighted datasets into a single index.",
+        "Visualize the combined index on the map."
+    ],
+    "output": "**Map of combined crop growth index**"
+}

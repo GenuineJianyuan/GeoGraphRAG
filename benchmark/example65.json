@@ -1,0 +1,38 @@
+﻿{
+    "query": "Water body extraction and classification with terrain consideration",
+    "datasource": [
+        "Landsat8 imagery",
+        "Vector data (user-provided region of interest)",
+        "SRTM DEM"
+    ],
+    "raw_code": "var Land8 = ee.ImageCollection(\"LANDSAT/LC08/C01/T1\"),\n    Land5 = ee.ImageCollection(\"LANDSAT/LT05/C01/T1\"),\n    YiLi = ee.FeatureCollection(\"users/lanshuihai/YiLiQu\"),\n    DEM = ee.Image(\"USGS/SRTMGL1_003\");\nvar China = YiLi.geometry();\nvar Data1 = Land8.filterDate('2013-07-1', '2013-8-31').filterBounds(China);\nvar dem=DEM.clip(China);\nvar Data_Collection=ee.Algorithms.Landsat.simpleComposite(Data1).clip(China);\nvar NDWI=Data_Collection.normalizedDifference(['B3','B5']).rename('NDWI');\nvar Collection_mask=Data_Collection.updateMask(NDWI.gt(0))\nvar water=NDWI.updateMask(NDWI.gt(0))\nvar ice=water.where(dem.gt(3000),1).where(dem.lt(3000),2);\nMap.centerObject(China, 9);\nMap.addLayer(Collection_mask,{min:20,max:40,bands:['B4','B3','B2']},'Data');\nMap.addLayer(water,{min:0.1,max:0.3,palette:['red','green']},'water');\nMap.addLayer(ice,{min:1,max:2,palette:['red','green']},'ice');\nExport.image.toDrive({\n  'image':water,\n  'folder':'water',\n  'fileNamePrefix':'water2013',\n  'region':China,\n  'scale':30,\n  'maxPixels':1e13\n  })",
+    "api": [
+        "ee.ImageCollection",
+        "ee.FeatureCollection",
+        "ee.Image",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filterBounds",
+        "ee.Image.clip",
+        "ee.Algorithms.Landsat.simpleComposite",
+        "ee.Image.normalizedDifference",
+        "ee.Image.rename",
+        "ee.Image.updateMask",
+        "ee.Image.where",
+        "Map.centerObject",
+        "Map.addLayer",
+        "Export.image.toDrive"
+    ],
+    "processing step": [
+        "Load Landsat 8 and 5 image collections.",
+        "Load feature collection and DEM.",
+        "Filter Landsat 8 images by date and bounds.",
+        "Clip DEM to the study area.",
+        "Create a composite image of filtered Landsat 8 data.",
+        "Calculate NDWI from the composite image.",
+        "Mask the composite image using NDWI.",
+        "Classify water and ice based on elevation.",
+        "Visualize the masked composite, water, and ice layers.",
+        "Export water layer to Google Drive."
+    ],
+    "output": "Raster of water and ice distribution."
+}

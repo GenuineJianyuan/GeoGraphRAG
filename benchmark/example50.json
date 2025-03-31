@@ -1,0 +1,37 @@
+﻿{
+    "query": "Calculate Drought Ratio Index",
+    "datasource": [
+        "Vector data",
+        "Sentinel-2 SR"
+    ],
+    "raw_code": "/**** Start of imports. If edited, may not auto-convert in the playground. ****/\nvar Bhutan = ee.FeatureCollection(\"projects/ee07200446droughtratioindex/assets/AOI_Bhutan\");\n/***** End of imports. If edited, may not auto-convert in the playground. *****/\n// Load Sentinel-2 Surface Reflectance data\n\nvar s2 = ee.ImageCollection('COPERNICUS/S2_SR')\n\n  .filterBounds(Bhutan)\n\n  .filterDate('2022-01-01', '2023-01-01')\n\n  .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 5))\n\n  .median()\n\n  .clip(Bhutan).divide(10000);\n\n\n\n// Calculate the Drought Ratio Index (DRI)\nvar ndvi = s2.normalizedDifference(['B8', 'B4']);\n\n\n  var evi = s2.expression(\n    '(2.5 * (nir - red)) / ((nir + 6 * red - 7.5 * blue) + 1)',\n    { 'nir': s2.select('B8'),\n      'red': s2.select('B4'),\n      'blue': s2.select('B2')}  );\n  \n\nvar dri = evi.subtract(ndvi).divide(evi.add(ndvi));\n\n\n\n\n// Display the Drought Ratio Index (DRI)\nvar driVis = {\n  min: -1,\n  max: 1,\n  palette: ['red', 'white', 'blue']};\nMap.addLayer(dri, driVis, 'Drought Ratio Index (DRI)');\nMap.centerObject(Bhutan)\n// Export the Drought Ratio Index (DRI) as a GeoTIFF\nExport.image.toDrive({\n  image: dri,\n  description: 'drought_ratio_index_bhutan',\n  scale: 10,\n  region:Bhutan,\n  maxPixels: 1e13,});",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filter",
+        "ee.ImageCollection.median",
+        "ee.Image.clip",
+        "ee.Image.divide",
+        "ee.Image.normalizedDifference",
+        "ee.Image.expression",
+        "ee.Image.subtract",
+        "ee.Image.add",
+        "Map.addLayer",
+        "Map.centerObject",
+        "Export.image.toDrive"
+    ],
+    "processing step": [
+        "Load Sentinel-2 Surface Reflectance data.",
+        "Filter data by region and date.",
+        "Apply cloud coverage filter.",
+        "Compute median image.",
+        "Normalize image values.",
+        "Calculate NDVI.",
+        "Calculate EVI.",
+        "Compute Drought Ratio Index (DRI).",
+        "Visualize DRI.",
+        "Export DRI as GeoTIFF."
+    ],
+    "output": "**Raster depicting Drought Ratio Index (DRI).**"
+}

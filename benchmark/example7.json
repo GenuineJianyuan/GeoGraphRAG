@@ -1,0 +1,34 @@
+﻿{
+    "query": "Analyze built-up area trends",
+    "datasource": [
+        "Urban frequency data",
+        "Administrative boundaries"
+    ],
+    "raw_code": "var roi = ee.FeatureCollection('FAO/GAUL/2015/level1')\n             .filter(ee.Filter.eq('ADM1_CODE', '110000'));\n\nvar urbanData = ee.Image('THU/UrbanFreq_1978_2017/UrbanFreq_1978_2017_Beijing').select('urban_frequency');\n\nvar yearImgs = ee.List.sequence(2000, 2017).map(function(year) {\n  return urbanData.gte(year - 1985 + 15)\n                  .set('year', year)\n                  .clip(roi);\n});\n\nvar areaStats = ee.ImageCollection(yearImgs).map(function(img) {\n  var area = img.multiply(ee.Image.pixelArea())\n               .reduceRegion({\n                 reducer: ee.Reducer.sum(),\n                 geometry: roi,\n                 scale: 1000\n               });\n  return img.set('area_km2', area.get('urban_frequency').divide(1e6));\n});\n\nvar chart = ui.Chart.feature.byProperty({\n  features: areaStats,\n  xProperties: ['year'],\n  yProperties: ['area_km2']\n}).setChartType('LineChart')\n .setOptions({\n   title: 'Urban Expansion in Beijing (2000-2017)',\n   hAxis: {title: 'Year'},\n   vAxis: {title: 'Built-up Area (km²)'}\n });\n\nprint(chart);",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.Filter.eq",
+        "ee.Image.select",
+        "ee.List.sequence",
+        "ee.Image.gte",
+        "ee.Image.set",
+        "ee.Image.clip",
+        "ee.Image.multiply",
+        "ee.Image.pixelArea",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.sum",
+        "ee.ImageCollection.map",
+        "ui.Chart.feature.byProperty",
+        "ui.Chart.setChartType",
+        "ui.Chart.setOptions"
+    ],
+    "processing step": [
+        "Load administrative boundary for region of interest",
+        "Extract urban frequency data",
+        "Generate yearly urban extent images",
+        "Calculate built-up area for each year",
+        "Aggregate area statistics by year",
+        "Plot urban expansion over time"
+    ],
+    "output": "Chart showing urban expansion over time."
+}

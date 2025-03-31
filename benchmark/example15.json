@@ -1,0 +1,29 @@
+﻿{
+    "query": "Building attributes and patterns",
+    "datasource": [
+        "Vector data (building footprints with attributes)"
+    ],
+    "raw_code": "// GEE Code: Nanjing Building Analysis\n\n// 1. 导入Nanjing建筑数据\nvar buildingData = ee.FeatureCollection(\"users/your_username/NanjingBuilding\");  // 修改为实际数据路径\n\n// 2. 分析建筑功能（按'landuseTyp'统计建筑数量）\nvar landuseCount = buildingData.aggregate_stats('landuseTyp');\nprint('Building function summary:', landuseCount);\n\n// 3. 计算建筑物的平均年龄和楼层数\nvar stats = buildingData.reduceColumns({\n  reducer: ee.Reducer.mean(),\n  selectors: ['Age', 'Fnum']\n});\nprint('Average Age:', stats.get('mean_Age'));\nprint('Average Floor Count:', stats.get('mean_Fnum'));\n\n// 4. 按功能类型计算平均年龄\nvar avgAgeByLanduse = buildingData.reduceColumns({\n  reducer: ee.Reducer.mean().group({\n    groupField: 0,\n    groupName: 'landuseTyp'\n  }),\n  selectors: ['landuseTyp', 'Age']\n});\nprint('Average Age by Function:', avgAgeByLanduse);\n\n// 5. 相关性分析（建筑年龄与楼层数之间的相关性）\nvar correlation = buildingData.reduceColumns({\n  reducer: ee.Reducer.pearsonsCorrelation(),\n  selectors: ['Age', 'Fnum']\n});\nprint('Correlation between Age and Floor Count:', correlation);\n\n// 6. 添加并更新平均年龄字段\nvar addAvgAge = buildingData.map(function(feature) {\n  var landuse = feature.get('landuseTyp');\n  var avgAge = avgAgeByLanduse[landuse];\n  return feature.set('AvgAge', avgAge);\n});\nprint('Updated Feature Collection with AvgAge:', addAvgAge);\n\n// 7. 空间模式分析（建筑功能的空间分布）\nvar spatialPatterns = buildingData.aggregate_stats('landuseTyp');\nprint('Spatial Distribution of Functions:', spatialPatterns);\n\n// 可视化\nMap.centerObject(buildingData, 12);\nMap.addLayer(buildingData, {}, 'Building Data');",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.FeatureCollection.aggregate_stats",
+        "ee.Reducer.mean",
+        "ee.FeatureCollection.reduceColumns",
+        "ee.Reducer.pearsonsCorrelation",
+        "ee.Reducer.mean.group",
+        "ee.FeatureCollection.map",
+        "Map.centerObject",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Import building data for analysis",
+        "Summarize building functions by type",
+        "Calculate average age and floor count",
+        "Compute average age by function type",
+        "Analyze correlation between age and floor count",
+        "Add average age field to features",
+        "Analyze spatial distribution of functions",
+        "Visualize building data on map"
+    ],
+    "output": "Table summarizing building function statistics."
+}

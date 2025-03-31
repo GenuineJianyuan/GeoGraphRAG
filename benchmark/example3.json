@@ -1,0 +1,41 @@
+﻿{
+    "query": "Analyze precipitation and soil moisture trends and relationship",
+    "datasource": [
+        "TerraClimate monthly climate data",
+        "Region of interest"
+    ],
+    "raw_code": "var table = ee.FeatureCollection(table);\nvar dataset = ee.ImageCollection('IDAHO_EPSCOR/TERRACLIMATE').filter(ee.Filter.date('2016-01-01', '2020-12-31')).filterBounds(table).select(['pr', 'soil']).map(function(image) {\n  var pr = image.select('pr');\n  var soil = image.select('soil').multiply(0.1);\n  var time = ee.Image.constant(image.date().millis()).rename('time').toFloat();\n  return pr.addBands(soil).addBands(time).clip(table);\n});\nprint(ui.Chart.image.series({\n  imageCollection: dataset.select(['pr', 'soil']),\n  region: table,\n  reducer: ee.Reducer.pearsonsCorrelation(),\n  scale: 4638.3\n}));\nfunction calculateTrend(variable) {\n  return dataset.select(['time', variable]).reduce(ee.Reducer.linearFit());\n}\nvar prSlope = calculateTrend('pr').select('scale').rename('pr_trend');\nvar soilSlope = calculateTrend('soil').select('scale').rename('soil_trend');\nMap.centerObject(table, 7);\nMap.addLayer(prSlope, {}, 'Precipitation Trend');\nMap.addLayer(soilSlope, {}, 'Soil Moisture Trend');",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.ImageCollection",
+        "ee.Filter.date",
+        "ee.FilterBounds",
+        "ee.Image.select",
+        "ee.Image.multiply",
+        "ee.Image.constant",
+        "ee.Image.rename",
+        "ee.Image.toFloat",
+        "ee.Image.addBands",
+        "ee.Image.clip",
+        "ui.Chart.image.series",
+        "ee.Reducer.pearsonsCorrelation",
+        "ee.Reducer.linearFit",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filter",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.map",
+        "Map.centerObject",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load feature collection for analysis",
+        "Filter image collection by date and bounds",
+        "Select and process precipitation and soil moisture bands",
+        "Add time band as constant image",
+        "Clip images to feature collection bounds",
+        "Calculate Pearson correlation for selected bands",
+        "Compute linear trend for precipitation and soil moisture",
+        "Visualize trends on map"
+    ],
+    "output": "Chart of Pearson's correlation between variables."
+}

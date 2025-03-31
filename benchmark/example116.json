@@ -1,0 +1,37 @@
+﻿{
+    "query": "Calculate Land use/cover change using OOA method",
+    "datasource": [
+        "Landsat8",
+        "Region of Interest (ROI)",
+        "Vector data (urban, vegetation, water)"
+    ],
+    "raw_code": "//LULC change using OOA method\n// Load the Landsat 8 scaled radiance image collection.\nvar urban = \n    /* color: #ff0000 */\n    /* shown: false */\n    ee.FeatureCollection(\n        []),\n    roi = \n    /* color: #d63000 */\n    /* shown: false */\n    /* displayProperties: [\n      {\n        \"type\": \"rectangle\"\n      }\n    ] */\n    ee.Geometry.Polygon(\n        [[[-122.68429793191306, 37.93474908792731],\n          [-122.68429793191306, 37.60691665494165],\n          [-122.00863875222556, 37.60691665494165],\n          [-122.00863875222556, 37.93474908792731]]], null, false);\n\nvar landsatCollection = ee.ImageCollection('LANDSAT/LC08/C02/T1')\n  .filterDate('2017-01-01', '2017-12-31');\n\n// 2. 数据预处理（例如，云去除、辐射校正等）\n// Make a cloud-free composite.\nvar composite = ee.Algorithms.Landsat.simpleComposite({\n  collection: landsatCollection,\n  asFloat: true\n});\n\n// 3. 分割图像\nvar seeds = ee.Algorithms.Image.Segmentation.seedGrid(16); // 超像素大小设置\nvar snic = ee.Algorithms.Image.Segmentation.SNIC({\n  image: composite,\n  compactness: 5,\n  connectivity: 8,\n  seeds: seeds\n});\n\nvar newfc = urban.merge(vegetation).merge(water);\n// 4. 特征提取\nvar bands = ['B2', 'B3', 'B4', 'B5', 'B6', 'B7'];\n// 5. 样本准备\n\n\nvar classProperty = 'landcover';\nvar trainingData = composite.select(bands).sampleRegions({\n  collection: newfc,\n  properties: [classProperty],\n  scale: 30\n});\n\n// 6. 分类器训练\nvar classifier = ee.Classifier.smileRandomForest(10).train({\n  features: trainingData,\n  classProperty: classProperty, // 类别属性\n  inputProperties: bands // 特征属性\n});\n\nsnic = snic.select(['B2_mean', 'B3_mean', 'B4_mean', 'B5_mean', 'B6_mean', 'B7_mean'])\n            .rename( ['B2', 'B3', 'B4', 'B5', 'B6', 'B7']);\n\n// 7. 分类\nvar classified = snic.classify(classifier);\n\n// 9. 结果可视化\nMap.centerObject(roi, 10);\nMap.addLayer(classified, {min: 0, max: 2, palette: ['blue', 'green', 'red']}, 'LULC Classification');",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.Geometry.Polygon",
+        "ee.ImageCollection",
+        "ee.ImageCollection.filterDate",
+        "ee.Algorithms.Landsat.simpleComposite",
+        "ee.Algorithms.Image.Segmentation.seedGrid",
+        "ee.Algorithms.Image.Segmentation.SNIC",
+        "ee.Image.select",
+        "ee.Image.rename",
+        "ee.Classifier.smileRandomForest",
+        "ee.Classifier.train",
+        "ee.Image.classify",
+        "Map.centerObject",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load Landsat 8 image collection.",
+        "Create cloud-free composite image.",
+        "Segment image using SNIC algorithm.",
+        "Merge feature collections for classes.",
+        "Select spectral bands for analysis.",
+        "Prepare training data for classification.",
+        "Train Random Forest classifier.",
+        "Classify segmented image.",
+        "Visualize land cover classification."
+    ],
+    "output": "Land Use Land Cover (LULC) classification map."
+}

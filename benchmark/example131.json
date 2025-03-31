@@ -1,0 +1,34 @@
+﻿{
+    "query": "Landsat5影像辐射校正与热异常检测",
+    "datasource": [
+        "Landsat5",
+        "region of interest"
+    ],
+    "raw_code": "var dataset = ee.ImageCollection('LANDSAT/LT05/C02/T1_L2')\n    .filterDate('2001-08-05', '2001-08-07')\n    .filter(ee.Filter.eq('WRS_PATH', 188))\n    .filter(ee.Filter.eq('WRS_ROW', 34));\n\nfunction applyScaleFactors(image) {\n  var opticalBands = image.select('SR_B.').multiply(0.0000275).add(-0.2);\n  var thermalBand = image.select('ST_B6').multiply(0.00341802).add(149.0);\n  return image.addBands(opticalBands, null, true)\n              .addBands(thermalBand, null, true);\n}\n\ndataset = dataset.map(applyScaleFactors);\n\nvar visualization = {\n  bands: ['SR_B5', 'SR_B4', 'SR_B3'],\n  min: 0.0,\n  max: 0.3,\n};\n\nMap.addLayer(dataset, visualization, 'False Color (543)');\n\nvar visualization2 = {\nbands: ['ST_B6'],\nmin: 280,\nmax: 340,\n};\n\nMap.addLayer(dataset, visualization2, 'Thermal (ST_B6)');\n\nvar roi = ee.Geometry.Point([15.0, 37.7]).buffer(20000);\nvar hotspots = dataset.map(function(img) {\nvar mask1 = img.select('ST_B6').gte(329);\nreturn img.updateMask(mask1);\n});\nvar visualization3 = {\nbands: ['ST_B6'],\nmin: 329,\nmax: 360,\npalette: ['yellow', 'orange', 'red'],\n};\n\nMap.addLayer(hotspots, visualization3, 'Hotspots');\n\nMap.setOptions('HYBRID');\nMap.setCenter(15.003, 37.70003, 12);",
+    "api": [
+        "ee.ImageCollection",
+        "ee.Filter.eq",
+        "ee.Image.select",
+        "ee.Image.multiply",
+        "ee.Image.add",
+        "ee.Image.addBands",
+        "Map.addLayer",
+        "ee.Geometry.Point",
+        "ee.Geometry.buffer",
+        "ee.Image.updateMask",
+        "ee.Image.gte",
+        "Map.setOptions",
+        "Map.setCenter"
+    ],
+    "processing step": [
+        "Load Landsat 5 imagery collection.",
+        "Filter by path, row, and date range.",
+        "Apply scale factors to optical and thermal bands.",
+        "Visualize false color composite (B5, B4, B3).",
+        "Visualize thermal band (ST_B6).",
+        "Define region of interest with buffer.",
+        "Identify hotspots using thermal threshold.",
+        "Visualize hotspots with custom palette."
+    ],
+    "output": "Map displaying thermal hotspots."
+}

@@ -1,0 +1,26 @@
+﻿{
+    "query": "Urban hotspot identification",
+    "datasource": [
+        "Population density raster data"
+    ],
+    "raw_code": "// ================== Module 1: Environment Setup ==================\n// GEE 脚本不需要设置工作环境或导入外部库，直接使用 GEE 自带的 API\n\n// ================== Module 2: Input Data ==================\n// 加载北京地区的人口数据（假设数据是可用的 GEE 影像）\nvar populationRaster = ee.Image(\"users/your_username/BeijingPOP\");  // 输入的栅格数据\n\n// ================== Module 3: High-Density Area Extraction ==================\n// 提取人口密度大于设定阈值的区域\nvar thresholdValue = 1000; // 人口密度阈值 (人/km²)\nvar highDensityRaster = populationRaster.gt(thresholdValue).multiply(populationRaster);\n\n// ================== Module 4: Focal Statistics for Local Density ==================\n// 使用邻域统计来计算局部人口密度（3x3 矩阵的最大值）\nvar focalStatisticsRaster = highDensityRaster.focal_max(3, 'square', 'meters');\n\n// ================== Module 5: Hotspot Identification ==================\n// 提取局部密度超过阈值的热点区域\nvar thresholdHotspotValue = 1000; // 局部密度阈值\nvar hotspotRaster = focalStatisticsRaster.gt(thresholdHotspotValue).multiply(focalStatisticsRaster);\n\n// ================== Module 6: Raster-to-Point Conversion ==================\n// 将热点栅格转换为点数据\nvar hotspotPoints = hotspotRaster.reduceToVectors({\n  reducer: ee.Reducer.countEvery(),\n  scale: 30,  // 依据栅格分辨率设定\n  maxPixels: 1e8\n});\n\n// ================== Module 7: Coordinate Extraction ==================\n// 提取热点点的坐标\nvar centerPoints = hotspotPoints.geometry().coordinates();\n\n// ================== 打印中心点坐标 ==================\n// 在控制台输出中心点坐标\nprint('Identified city center points:', centerPoints);",
+    "api": [
+        "ee.Image",
+        "ee.Image.gt",
+        "ee.Image.multiply",
+        "ee.Image.focal_max",
+        "ee.Reducer.countEvery",
+        "ee.Image.reduceToVectors",
+        "ee.Geometry.coordinates"
+    ],
+    "processing step": [
+        "Load population raster data",
+        "Extract high-density areas using threshold",
+        "Apply focal max for local density",
+        "Identify hotspots using density threshold",
+        "Convert hotspot raster to points",
+        "Extract coordinates of hotspot points",
+        "Print identified center points coordinates"
+    ],
+    "output": "**Vector (point data)**"
+}

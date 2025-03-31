@@ -1,0 +1,25 @@
+﻿{
+    "query": "Calculate total forest loss",
+    "datasource": [
+        "USDOS/LSIB_SIMPLE/2017",
+        "UMD/hansen/global_forest_change"
+    ],
+    "raw_code": "//Forest Change\n\n// Load country features from Large Scale International Boundary (LSIB) dataset.\nvar countries = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017');\n\n// Subset the Congo Republic feature from countries.\nvar congo = countries.filter(ee.Filter.eq('country_na', 'Rep of the Congo'));\n\n// Get the forest loss image.\nvar gfc2014 = ee.Image('UMD/hansen/global_forest_change_2015');\nvar lossImage = gfc2014.select(['loss']);\n\n// Sum the values of forest loss pixels in the Congo Republic.\nvar stats = lossImage.reduceRegion({\n  reducer: ee.Reducer.sum(),\n  geometry: congo,\n  scale: 30\n});\nprint(stats);",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.Filter.eq",
+        "ee.Image",
+        "ee.Reducer.sum",
+        "ee.Image.select",
+        "ee.Image.reduceRegion"
+    ],
+    "processing step": [
+        "Load international boundaries dataset",
+        "Filter Congo Republic feature",
+        "Load global forest change image",
+        "Select forest loss band",
+        "Sum forest loss pixels in region",
+        "Print forest loss statistics"
+    ],
+    "output": "**Numerical**: Sum of forest loss pixels."
+}

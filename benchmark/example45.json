@@ -1,0 +1,28 @@
+﻿{
+    "query": "Population density analysis",
+    "datasource": [
+        "vector data (state boundaries)",
+        "vector data (population data)"
+    ],
+    "raw_code": "// 加载美国的边界数据（美国各州边界）\nvar usStates = ee.FeatureCollection(\"TIGER/2018/States\");\n\n// 示例：加载一个包含各州人口的 FeatureCollection（你需要上传你的数据）\nvar populationData = ee.FeatureCollection(\"users/your_user/population_data\");\n\n// 将人口数据与州的边界进行合并\nvar usStatesWithPop = usStates.map(function(feature) {\n  var pop = populationData.filter(ee.Filter.equals('state_name', feature.get('name'))).first();\n  return feature.set('population', pop.get('total_population'));\n});\n\n// 计算每个州的人口密度（单位：人/km²）\nusStatesWithPop = usStatesWithPop.map(function(feature) {\n  var area = feature.geometry().area().divide(1e6);\n  var popDensity = feature.get('population').divide(area);\n  return feature.set('pop_density', popDensity);\n});\n\n// 对人口密度进行对数变换\nusStatesWithPop = usStatesWithPop.map(function(feature) {\n  var popDensity = feature.get('pop_density');\n  var logPopDensity = ee.Number(popDensity).log10().add(1);\n  return feature.set('log_pop_density', logPopDensity);\n});\n\n// 可视化对数人口密度\nMap.centerObject(usStatesWithPop, 5);\nMap.addLayer(usStatesWithPop, {color: 'log_pop_density'}, 'Log Population Density', true);\nMap.add(ui.Label('Log Transformed Population Density of US States'));",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.Filter.equals",
+        "ee.Geometry.area",
+        "ee.Number.log10",
+        "Map.centerObject",
+        "Map.addLayer",
+        "Map.add"
+    ],
+    "processing step": [
+        "Load state boundary data",
+        "Load population data",
+        "Merge population with state boundaries",
+        "Calculate state area in km²",
+        "Compute population density per km²",
+        "Apply logarithmic transformation to density",
+        "Visualize log-transformed population density",
+        "Add descriptive label to the map"
+    ],
+    "output": "Map displaying log-transformed population density."
+}

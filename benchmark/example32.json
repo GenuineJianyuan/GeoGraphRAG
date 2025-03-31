@@ -1,0 +1,35 @@
+﻿{
+    "query": "Analyze glacier area changes",
+    "datasource": [
+        "Landsat8 image",
+        "Region of interest vector data"
+    ],
+    "raw_code": "var roi = ee.Geometry.Rectangle([longitude1,latitude1,longitude2,latitude2]);\n\nvar image_2014 = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR')\n  .filterDate('2014-01-01','2014-12-31')\n  .filterBounds(roi).first();\n\nvar image_2020 = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR')\n  .filterDate('2020-01-01','2020-12-31')\n  .filterBounds(roi).first();\n\nvar ndwi_2014 = image_2014.normalizedDifference(['B3','B5']).rename('NDWI');\nvar ndwi_2020 = image_2020.normalizedDifference(['B3','B5']).rename('NDWI');\n\nvar glacier_2014 = ndwi_2014.gt(0.3).rename('Glacier_2014');\nvar glacier_2020 = ndwi_2020.gt(0.3).rename('Glacier_2020');\n\nvar area_2014 = glacier_2014.multiply(ee.Image.pixelArea()).divide(1e6)\n  .reduceRegion(ee.Reducer.sum(), roi, 30);\n\nvar change_map = glacier_2020.subtract(glacier_2014);\n\nExport.image.toDrive({\n  image: change_map,\n  description: 'glacier_change_map',\n  scale: 30,\n  region: roi\n});",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.first",
+        "ee.Image.normalizedDifference",
+        "ee.Image.rename",
+        "ee.Image.gt",
+        "ee.Image.multiply",
+        "ee.Image.divide",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.sum",
+        "ee.Image.subtract",
+        "Export.image.toDrive"
+    ],
+    "processing step": [
+        "Define the region of interest using coordinates.",
+        "Load Landsat image collection for the first year.",
+        "Load Landsat image collection for the second year.",
+        "Calculate NDWI for the first year image.",
+        "Calculate NDWI for the second year image.",
+        "Identify glacier areas using NDWI threshold.",
+        "Compute glacier area in square kilometers.",
+        "Generate glacier change map by subtraction.",
+        "Export the glacier change map to Drive."
+    ],
+    "output": "Glacier change map (raster)"
+}

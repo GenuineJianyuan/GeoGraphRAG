@@ -1,0 +1,30 @@
+﻿{
+    "query": "Calculate nighttime light intensity",
+    "datasource": [
+        "VIIRS monthly nighttime lights (VCMCFG)",
+        "Vector boundary data"
+    ],
+    "raw_code": "/**** Start of imports. If edited, may not auto-convert in the playground. ****/\nvar imageCollection = ee.ImageCollection(\"NOAA/DMSP-OLS/CALIBRATED_LIGHTS_V4\"),\n    nightlight = ee.ImageCollection(\"NOAA/DMSP-OLS/CALIBRATED_LIGHTS_V4\"),\n    table = ee.FeatureCollection(\"projects/wide-exchanger-220204/assets/tza_boundary\"),\n    imageCollection2 = ee.ImageCollection(\"NOAA/VIIRS/DNB/MONTHLY_V1/VCMCFG\");\n/***** End of imports. If edited, may not auto-convert in the playground. *****/\n// set the start and end dates\nvar start = ee.Date.fromYMD(2017,01,01);\nvar end = ee.Date.fromYMD(2017,12,31);\nvar boundary = ee.FeatureCollection(\"projects/wide-exchanger-220204/assets/tza_boundary\");\n// clip for the area of interest\n// filter for the period of interest\nvar nightlights2017 = imageCollection2.filterDate(start,end);\n// take the mean note that this operation transforms the image collection into an image\nnightlights2017 = ee.Image(nightlights2017.mean());\n\n// clip for the area of interest\nnightlights2017 = nightlights2017.clip(table);\n// select the avg_rad band\nnightlights2017 = nightlights2017.select(\"avg_rad\");\n\nMap.addLayer(nightlights2017)\n\n// Export.image.toDrive({\n//   image: nightlights2017,\n//   description: 'nightlights2017',\n//   region: table,\n//   maxPixels: 1e9\n// });",
+    "api": [
+        "ee.ImageCollection",
+        "ee.Image",
+        "ee.FeatureCollection",
+        "ee.Date.fromYMD",
+        "ee.ImageCollection.filterDate",
+        "ee.Image.mean",
+        "ee.Image.clip",
+        "ee.Image.select",
+        "Map.addLayer",
+        "Export.image.toDrive"
+    ],
+    "processing step": [
+        "Import required image collections and feature collections",
+        "Set start and end dates for filtering",
+        "Filter image collection by specified date range",
+        "Compute mean of filtered image collection",
+        "Clip the mean image to the area of interest",
+        "Select the 'avg_rad' band from the clipped image",
+        "Add the final image to the map for visualization"
+    ],
+    "output": "Raster of average nighttime lights."
+}

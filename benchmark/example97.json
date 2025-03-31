@@ -1,0 +1,24 @@
+﻿{
+    "query": "Canny edge detection on NDVI",
+    "datasource": [
+        "LANDSAT5"
+    ],
+    "raw_code": "// Canny Edge Detector .\n\n// Load an image and compute NDVI from it.\nvar image = ee.Image('LANDSAT/LT05/C02/T1_TOA/LT05_031034_20110619');\nvar ndvi = image.normalizedDifference(['B4','B3']);\n\n// Detect edges in the composite.\nvar canny = ee.Algorithms.CannyEdgeDetector(ndvi, 0.7);\n\n// Mask the image with itself to get rid of areas with no edges.\ncanny = canny.updateMask(canny);\n\nMap.setCenter(-101.05259, 37.93418, 13);\nMap.addLayer(ndvi, {min: 0, max: 1}, 'Landsat NDVI');\nMap.addLayer(canny, {min: 0, max: 1, palette: 'FF0000'}, 'Canny Edges');",
+    "api": [
+        "ee.Image.normalizedDifference",
+        "ee.Algorithms.CannyEdgeDetector",
+        "ee.Image.updateMask",
+        "Map.setCenter",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load Landsat TOA image",
+        "Compute NDVI using bands B4 and B3",
+        "Apply Canny edge detection on NDVI",
+        "Mask edges to remove non-edge areas",
+        "Set map center and zoom level",
+        "Display NDVI layer on map",
+        "Display Canny edges layer on map"
+    ],
+    "output": "Raster with detected NDVI edges."
+}

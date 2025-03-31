@@ -1,0 +1,35 @@
+﻿{
+    "query": "Analyze annual precipitation trends",
+    "datasource": [
+        "Administrative boundary vector data",
+        "Meteorological raster data"
+    ],
+    "raw_code": "var roi = ee.FeatureCollection('FAO/GAUL/2015/level1').filter(ee.Filter.eq('ADM1_CODE',12));\nvar region = roi.geometry();\n\nfunction processPrecipitationData(year) {\n    return ee.Image(`NASA/GLDAS/V021/NOAH/G025/T3H/${year}`)\n        .select('precipitation')\n        .clip(region)\n        .multiply(8760);\n}\n\nvar years = ee.List.sequence(2000,2018);\nvar precipitationImages = years.map(processPrecipitationData);\n\nvar annualMeans = precipitationImages.map(function(image){\n    return image.reduceRegion({\n        reducer: ee.Reducer.mean(),\n        geometry: region,\n        scale:1000\n    });\n});\n\nvar lineChart = ui.Chart.array.values({\n    array: ee.Array(annualMeans),\n    axis:0,\n    xLabels:years\n}).setChartType('LineChart').setOptions({\n    title:'Annual Precipitation in the Tianjin Region (2000-2018)',\n    hAxis:{title:'Year'},\n    vAxis:{title:'Annual Precipitation (mm)'}\n});",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.Filter.eq",
+        "ee.Geometry.geometry",
+        "ee.Image",
+        "ee.Image.select",
+        "ee.Image.clip",
+        "ee.Image.multiply",
+        "ee.List.sequence",
+        "ee.List.map",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.mean",
+        "ui.Chart.array.values",
+        "ee.Array"
+    ],
+    "processing step": [
+        "Define region of interest using feature collection",
+        "Filter feature collection by specific administrative code",
+        "Extract geometry from the filtered feature collection",
+        "Process precipitation data for a given year",
+        "Clip precipitation data to the defined region",
+        "Convert hourly precipitation to annual total",
+        "Map processing function over a sequence of years",
+        "Calculate mean annual precipitation for each year",
+        "Create line chart of annual precipitation values"
+    ],
+    "output": "Chart of annual precipitation trends."
+}

@@ -1,0 +1,39 @@
+﻿{
+    "query": "Crop type classification (Corn)",
+    "datasource": [
+        "User-uploaded vector data",
+        "Landsat8"
+    ],
+    "raw_code": "//crop area detection\n\n// 示例：如何导入用户上传的CSV文件\nvar uploadedSample = ee.FeatureCollection('users/your_username/your_sample_dataset');\n\n// 设置时间范围和区域\nvar start = '2023-04-01';\nvar end = '2023-10-31';\nvar iowa = ee.Geometry.Rectangle([-96.6397, 40.3754, -90.1401, 43.5012]);\n\n// 加载Landsat 8影像\nvar landsat = ee.ImageCollection('LANDSAT/LC08/C02/T1')\n                .filterBounds(iowa)\n                .filterDate(start, end)\n                .median();\n\n// 选择波段\nvar bands = ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7'];\n\n// 提取每个样本点的波段值\nvar trainingData = uploadedSample.map(function(feature) {\n  return feature.set(landsat.select(bands).reduceRegion({\n    reducer: ee.Reducer.first(),\n    geometry: feature.geometry(),\n    scale: 30\n  }));\n});\n\n// 训练分类器\nvar classifier = ee.Classifier.smileRandomForest(10).train({\n  features: trainingData,\n  classProperty: 'landType',\n  inputProperties: bands\n});\n\n// 应用分类器\nvar classified = landsat.select(bands).classify(classifier);\n\n// 可视化\nMap.centerObject(iowa, 7);\nMap.addLayer(classified, {min: 0, max: 1, palette: ['yellow', 'green']}, 'Classified Image');\n\n// 计算玉米种植面积\nvar cornArea = classified.eq(1)\n                .multiply(ee.Image.pixelArea())\n                .reduceRegion({\n                  reducer: ee.Reducer.sum(),\n                  geometry: iowa,\n                  scale: 30,\n                  maxPixels: 1e9\n                });\n\n// 输出面积结果\nprint('Corn Field Area in Iowa:', cornArea);",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.median",
+        "ee.Image.select",
+        "ee.Reducer.first",
+        "ee.FeatureCollection.map",
+        "ee.Classifier.smileRandomForest.train",
+        "ee.Image.classify",
+        "Map.centerObject",
+        "Map.addLayer",
+        "ee.Image.eq",
+        "ee.Image.multiply",
+        "ee.Image.pixelArea",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.sum"
+    ],
+    "processing step": [
+        "Import user-uploaded CSV dataset as feature collection.",
+        "Define time range and geographic area of interest.",
+        "Load and filter Landsat 8 imagery for the area.",
+        "Extract band values for each sample point.",
+        "Train Random Forest classifier using sample data.",
+        "Apply classifier to classify the Landsat image.",
+        "Visualize the classified image on the map.",
+        "Calculate area of classified corn fields.",
+        "Print the calculated corn field area."
+    ],
+    "output": "**Numerical: Corn field area measurement**"
+}

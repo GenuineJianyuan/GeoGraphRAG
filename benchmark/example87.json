@@ -1,0 +1,27 @@
+﻿{
+    "query": "Land cover classification using SVM",
+    "datasource": [
+        "user-provided raster data",
+        "user-provided vector data (training polygons)"
+    ],
+    "raw_code": "var image =ee.Image('users/alexmerkovic/douentza_2019_east');\n\nvar bands = ['NDVI', 'NDVI_1', 'NDVI_2'];\n\nvar polygons = ee.FeatureCollection('users/alexmerkovic/training_subset');\n\nvar training = image.sampleRegions({\n  collection: polygons,\n  properties: ['MC_ID'],\n  scale: 30\n});\n\nvar classifier = ee.Classifier.libsvm({\n  kernelType: 'RBF',\n  gamma: 0.5,\n  cost: 10\n});\n\nvar trained = classifier.train(training, 'MC_ID', bands);\n\nvar classified = image.classify(trained);\n\nMap.addLayer(image, {bands: ['NDVI', 'NDVI_1', 'NDVI_2'], max: 0.5, gamma: 2});\nMap.addLayer(polygons, {}, 'training polygons');\nMap.addLayer(classified,\n             {min: 1, max: 2, palette: ['red', 'green']},\n             'cropland');",
+    "api": [
+        "ee.Image",
+        "ee.Image.sampleRegions",
+        "ee.Classifier.libsvm",
+        "ee.Classifier.train",
+        "ee.Image.classify",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load input image with specified bands.",
+        "Define training polygons with target property.",
+        "Sample image pixels within training polygons.",
+        "Configure SVM classifier with RBF kernel.",
+        "Train classifier using sampled data and target property.",
+        "Classify entire image using trained classifier.",
+        "Visualize input image and training polygons.",
+        "Display classified image with color palette."
+    ],
+    "output": "A classified raster map of cropland types."
+}

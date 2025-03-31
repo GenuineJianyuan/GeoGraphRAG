@@ -1,0 +1,34 @@
+﻿{
+    "query": "统计区域内的水体像元数量",
+    "datasource": [
+        "MODIS/006/MCD12Q1（地表覆盖数据）",
+        "用户上传的矢量数据（甘肃省）"
+    ],
+    "raw_code": "var imageCollection = ee.ImageCollection(\"MODIS/006/MCD12Q1\");\nvar table = ee.FeatureCollection(\"users/2018212274/gansu\");\n\nvar gansu = ee.FeatureCollection(table);\n\nvar mask=function(image,my_type){\n  var mask=image.eq(my_type);\n  var masked_image=image.updateMask(mask);\n  return masked_image;\n}\n\nvar dataset = ee.ImageCollection('MODIS/006/MCD12Q1').filterDate('2017-01-01','2017-12-31');\n\nvar igbpLandCover = dataset.first().select('LC_Type1');\n\nvar image_17=mask(igbpLandCover,17)\n\nvar countDictionary = image_17.reduceRegion({\n  reducer: ee.Reducer.count(),\n  geometry: gansu.geometry(),\n  scale: 30,\n  maxPixels: 1e9\n});\n\nprint(countDictionary);\n\nvar visparam = {\n  min: 17.0,\n  max: 17.0,\n  palette: ['1c0dff']\n};\n\nMap.centerObject(gansu,10);\nMap.addLayer(gansu);\nMap.addLayer(image_17.clip(gansu), visparam);",
+    "api": [
+        "ee.ImageCollection",
+        "ee.FeatureCollection",
+        "ee.Image.updateMask",
+        "ee.ImageCollection.filterDate",
+        "ee.Image.select",
+        "ee.Reducer.count",
+        "ee.Image.reduceRegion",
+        "ee.Geometry.geometry",
+        "Map.centerObject",
+        "Map.addLayer",
+        "ee.Image.clip"
+    ],
+    "processing step": [
+        "Load MODIS land cover dataset",
+        "Load Gansu feature collection",
+        "Define masking function for land cover type",
+        "Filter dataset by date",
+        "Select land cover type from dataset",
+        "Apply mask to land cover type",
+        "Count masked pixels in region",
+        "Set visualization parameters",
+        "Center map on Gansu region",
+        "Add Gansu and masked layer to map"
+    ],
+    "output": "**Numerical count of specific land cover type**"
+}

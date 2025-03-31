@@ -1,0 +1,25 @@
+﻿{
+    "query": "Extract rainfall from point location",
+    "datasource": [
+        "GPM遥感影像"
+    ],
+    "raw_code": "var lat = 52.30696;\nvar lon = 4.48853;\nvar point = ee.Geometry.Point([lon, lat]);\nMap.addLayer(point);\n\nvar dataset = ee.ImageCollection('JAXA/GPM_L3/GSMaP/v6/operational')\n                  .filter(ee.Filter.date('2021-08-14', '2021-10-21'));\nprint(dataset);\nvar precipitation = dataset.select('hourlyPrecipRate');\nvar precipitationVis = {\n  min: 0.0,\n  max: 5,\n  palette:\n      ['1621a2', 'ffffff', '03ffff', '13ff03', 'efff00', 'ffb103', 'ff2300'],\n};\nMap.setCenter(lon, lat, 2);\nMap.addLayer(precipitation, precipitationVis, 'Precipitation');\nprint(precipitation);",
+    "api": [
+        "ee.Geometry.Point",
+        "Map.addLayer",
+        "ee.ImageCollection",
+        "ee.Filter.date",
+        "dataset.select",
+        "Map.setCenter"
+    ],
+    "processing step": [
+        "Define point location using latitude and longitude",
+        "Add point to the map as a layer",
+        "Filter image collection by date range",
+        "Select hourly precipitation rate band",
+        "Set visualization parameters for precipitation",
+        "Center map on specified coordinates",
+        "Add precipitation layer to map"
+    ],
+    "output": "raster of hourly precipitation rates"
+}

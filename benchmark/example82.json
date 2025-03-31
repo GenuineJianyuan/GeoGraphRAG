@@ -1,0 +1,33 @@
+﻿{
+    "query": "Fire situation analysis",
+    "datasource": [
+        "MODIS6/MCD64A1",
+        "Vector data (user-provided FeatureCollection)"
+    ],
+    "raw_code": "/**** Start of imports. If edited, may not auto-convert in the playground. ****/\nvar geometry = \n    /* color: #d63000 */\n    /* shown: false */\n    /* displayProperties: [\n      {\n        \"type\": \"rectangle\"\n      }\n    ] */\n    ee.Geometry.Polygon(\n        [[[-70.53528761901441, -8.854074170501864],\n          [-70.53528761901441, -23.73652133635783],\n          [-56.12122511901441, -23.73652133635783],\n          [-56.12122511901441, -8.854074170501864]]], null, false),\n    BOL = ee.FeatureCollection(\"users/nefchapi/MASK_BOL\");\n/***** End of imports. If edited, may not auto-convert in the playground. *****/\nvar MBurn_2001 = ee.ImageCollection(\"MODIS/006/MCD64A1\")\n\n                 .filterBounds(geometry)\n\n                 .filterDate('2001-01-01', '2001-12-31')\n\n                 .select(\"BurnDate\");\n\n\n\n// var MBurn_median = MBurn.median();\n\nvar MBurn_mean_2001 = MBurn_2001.mean();\n\nvar MBurn_mean_r_2001 = MBurn_mean_2001.multiply(0).add(1);\n\nvar Burn_2001 = MBurn_mean_r_2001.clip(BOL);\n\n\n\n// var reproject\n\nvar Burn_2001_prj = Burn_2001\n\n            .reproject('EPSG:4326', null, 500);\n\nMap.addLayer(Burn_2001_prj,{max: 366, min: 1, palette:[\"46c436\",\"66ff06\",\"f2f518\",\"e4b8bc\",\"eb2a21\",\"722210\"] },\"2001\");\n\n\n\n// //////Mes especifico\n\n// var MBurn_2001_09 = ee.ImageCollection(\"MODIS/006/MCD64A1\")\n\n//                 .filterBounds(geometry)\n\n//                 .filterDate('2001-09-01')\n\n//                 .select(\"BurnDate\");\n\n\n\n// // var MBurn_median = MBurn.median();\n\n// var MBurn_mean_2001_09 = MBurn_2001_09.mean();\n\n// var MBurn_mean_r_2001_09 = MBurn_mean_2001_09.multiply(0).add(1);\n\n// var Burn_2001_09 = MBurn_mean_r_2001_09.clip(BOL);\n\n\n\n// // Map.addLayer(MBurn_median,{},\"mediana\");\n\n// Map.addLayer(Burn_2001,{max: 366, min: 1, palette:[\"46c436\",\"66ff06\",\"f2f518\",\"e4b8bc\",\"eb2a21\",\"722210\"] },\"2001\");\n\n// Map.addLayer(Burn_2001_09,{max: 366, min: 1, palette:[\"46c436\",\"66ff06\",\"f2f518\",\"e4b8bc\",\"eb2a21\",\"722210\"] },\"2001_09\");\n\n\n\n//Exportar\n\nExport.image.toDrive({\n\n  image: Burn_2001_prj,\n\n  description: 'Burn_2001',\n\n  scale: 500,\n\n  region: BOL\n\n});",
+    "api": [
+        "ee.Geometry.Polygon",
+        "ee.FeatureCollection",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.select",
+        "ee.Image.mean",
+        "ee.Image.multiply",
+        "ee.Image.add",
+        "ee.Image.clip",
+        "ee.Image.reproject",
+        "Map.addLayer",
+        "Export.image.toDrive"
+    ],
+    "processing step": [
+        "Import geometry and feature collection.",
+        "Filter MODIS burn date data by bounds and date.",
+        "Calculate mean of burn date images.",
+        "Transform mean burn date values.",
+        "Clip transformed image to feature collection.",
+        "Reproject clipped image to EPSG:4326.",
+        "Add reprojected image to map with custom palette.",
+        "Export final image to Google Drive."
+    ],
+    "output": "Raster of burned area classification."
+}

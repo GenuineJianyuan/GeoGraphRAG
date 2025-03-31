@@ -1,0 +1,37 @@
+﻿{
+    "query": "Calculate NDVI using Landsat8 imagery",
+    "datasource": [
+        "Landsat8 TOA image collection",
+        "Point geometry (coordinates)",
+        "Point geometry (coordinates)"
+    ],
+    "raw_code": "var point = ee.Geometry.Point([-122.292, 37.9018]),\n    point_b = ee.Geometry.Point([-119.5615566359485, 38.21234929072798]);\nvar l8 = ee.ImageCollection('LANDSAT/LC08/C01/T1_TOA');\nvar image = ee.Image(\n  l8.filterBounds(point_b)\n    .filterDate('2015-01-01', '2015-12-31')\n    .sort('CLOUD_COVER')\n    .first()\n);\nvar nir = image.select('B5');\nvar red = image.select('B4');\nvar ndvi = nir.subtract(red).divide(nir.add(red)).rename('NDVI');\nMap.centerObject(image, 9);\nvar ndviParams = {min: -1, max: 1, palette: ['blue', 'white', 'green']};\nMap.addLayer(ndvi, ndviParams, 'NDVI image');\nvar ndvi = image.normalizedDifference(['B5', 'B4']).rename('NDVI');",
+    "api": [
+        "ee.Geometry.Point",
+        "ee.ImageCollection",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.sort",
+        "ee.ImageCollection.first",
+        "ee.Image.select",
+        "ee.Image.subtract",
+        "ee.Image.add",
+        "ee.Image.rename",
+        "Map.centerObject",
+        "Map.addLayer",
+        "ee.Image.normalizedDifference"
+    ],
+    "processing step": [
+        "Define two point geometries for analysis.",
+        "Load Landsat 8 TOA image collection.",
+        "Filter collection by location and date.",
+        "Sort images by cloud cover and select first.",
+        "Extract NIR and Red bands from image.",
+        "Calculate NDVI using NIR and Red bands.",
+        "Center map on selected image.",
+        "Set visualization parameters for NDVI.",
+        "Add NDVI layer to the map.",
+        "Recalculate NDVI using normalizedDifference method."
+    ],
+    "output": "Raster of NDVI values."
+}
