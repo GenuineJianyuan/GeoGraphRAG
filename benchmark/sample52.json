@@ -1,0 +1,30 @@
+﻿{
+    "query": "Analyze heat island effect",
+    "datasource": [
+        "Climate raster data",
+        "City point vector data"
+    ],
+    "raw_code": "var temperature = ee.ImageCollection('WORLDCLIM/V1/CLIMATE').filter(ee.Filter.eq('var','bio1')).first();\nvar cities = ee.FeatureCollection([\n  ee.Feature(ee.Geometry.Point([116.4,39.9]),{city:'Beijing'}),\n  ee.Feature(ee.Geometry.Point([121.5,31.2]),{city:'Shanghai'}),\n  ee.Feature(ee.Geometry.Point([114.1,23.1]),{city:'Guangzhou'})\n]);\nvar buffers = cities.map(function(city){ return city.buffer(100000); });\nvar temperature_clipped = temperature.clip(buffers);\nvar meanTempByBuffer = temperature_clipped.reduceRegions({\n  collection: buffers,\n  reducer: ee.Reducer.mean(),\n  scale:1000\n});",
+    "api": [
+        "ee.ImageCollection",
+        "ee.Filter.eq",
+        "ee.ImageCollection.filter",
+        "ee.ImageCollection.first",
+        "ee.FeatureCollection",
+        "ee.Geometry.Point",
+        "ee.Feature",
+        "ee.FeatureCollection.map",
+        "ee.Geometry.buffer",
+        "ee.Image.clip",
+        "ee.Image.reduceRegions",
+        "ee.Reducer.mean"
+    ],
+    "processing step": [
+        "Load annual mean temperature image",
+        "Create feature collection of cities",
+        "Generate 100km buffers around cities",
+        "Clip temperature image to buffers",
+        "Calculate mean temperature within each buffer"
+    ],
+    "output": "Table of mean temperatures by city buffer."
+}

@@ -1,0 +1,29 @@
+﻿{
+    "query": "Analyze terrain and population density relationships",
+    "datasource": [
+        "DEM raster data",
+        "Population raster data",
+        "Region of interest vector data"
+    ],
+    "raw_code": "var region = ee.Geometry.Polygon([[116.0,39.5],[117.0,39.5],[117.0,40.0],[116.0,40.0]]);\n\nvar srtm = ee.Image('USGS/SRTMGL1_003');\nvar elevation = srtm.select('elevation').clip(region);\nvar slope = ee.Terrain.slope(elevation).clip(region);\n\nvar population_density = ee.ImageCollection('WorldPop/GP/100m/pop')\n  .filterDate('2020-01-01','2020-12-31')\n  .mean()\n  .clip(region);\n\nvar sample = slope.addBands(population_density).sample({\n  region: region,\n  scale: 100,\n  numPixels: 5000\n});",
+    "api": [
+        "ee.Geometry.Polygon",
+        "ee.Image.select",
+        "ee.Image.clip",
+        "ee.Terrain.slope",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.mean",
+        "ee.Image.addBands",
+        "ee.Image.sample"
+    ],
+    "processing step": [
+        "Define region of interest as a polygon.",
+        "Load SRTM elevation data and clip to region.",
+        "Calculate slope from elevation data.",
+        "Load population density data and clip to region.",
+        "Combine slope and population density bands.",
+        "Sample data from combined image within region.",
+        "Set sampling scale and number of pixels."
+    ],
+    "output": "**Table of sampled slope and population density**"
+}

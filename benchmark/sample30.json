@@ -1,0 +1,30 @@
+﻿{
+    "query": "Fire burned area analysis",
+    "datasource": [
+        "Vector data (user-defined FeatureCollection)",
+        "ESA FireCCI5.1 imagery"
+    ],
+    "raw_code": "var table = ee.FeatureCollection(\"users/chittanap/StudyArea\");\nvar aoi = table;\nvar dataset = ee.ImageCollection('ESA/CCI/FireCCI/5_1').filterDate('2016-01-01', '2016-05-31');\nvar burnedArea = dataset.select('BurnDate');\nvar maxBA = burnedArea.max();\nvar area = ee.FeatureCollection(aoi);\nvar maxBAClip = maxBA.clip(area);\nMap.centerObject(aoi, 8);\nMap.addLayer(aoi, {}, 'Study Area');\nMap.addLayer(maxBAClip, baVis, 'Burned Area');\nExport.image.toDrive({ image: maxBAClip, description: 'Forest Fires', scale: 250, maxPixels: 2000000000, fileFormat: 'GeoTIFF' });",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.select",
+        "ee.Image.max",
+        "ee.Image.clip",
+        "Map.centerObject",
+        "Map.addLayer",
+        "Export.image.toDrive"
+    ],
+    "processing step": [
+        "Load study area feature collection",
+        "Filter image collection by date",
+        "Select BurnDate band",
+        "Compute maximum burned area",
+        "Clip image to study area",
+        "Center map on study area",
+        "Add study area layer",
+        "Add burned area layer",
+        "Export clipped image to Drive"
+    ],
+    "output": "Raster of maximum burned area."
+}

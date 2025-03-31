@@ -1,0 +1,34 @@
+﻿{
+    "query": "Corn field area estimation",
+    "datasource": [
+        "Landsat8",
+        "region of interest"
+    ],
+    "raw_code": "//crop area detection\n\n// 设置研究区域：爱荷华州\nvar iowa = ee.Geometry.Rectangle([-96.6397, 40.3754, -90.1401, 43.5012]);\n\n// 设置时间范围\nvar start = '2023-04-01';\nvar end = '2023-10-31';\n\n// 加载Landsat 8影像\nvar landsat = ee.ImageCollection('LANDSAT/LC08/C02/T1')\n                .filterBounds(iowa)\n                .filterDate(start, end)\n                .median();\n\n// 选择波段进行玉米识别（这需要地面真实数据来校正）\nvar ndvi = landsat.normalizedDifference(['B5', 'B4']).rename('NDVI');\n\n// 设置NDVI阈值来识别玉米田\nvar cornFields = ndvi.gt(0.4);\n\n// 可视化\nMap.centerObject(iowa, 7);\nMap.addLayer(cornFields, {min: 0, max: 1, palette: ['yellow', 'green']}, 'Corn Fields');\n\n// 计算玉米种植面积\nvar area = cornFields.multiply(ee.Image.pixelArea()).reduceRegion({\n  reducer: ee.Reducer.sum(),\n  geometry: iowa,\n  scale: 30,\n  maxPixels: 1e9\n});\n\n// 输出面积结果\nprint('Corn Field Area in Iowa:', area);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.median",
+        "ee.Image.normalizedDifference",
+        "ee.Image.rename",
+        "ee.Image.gt",
+        "Map.centerObject",
+        "Map.addLayer",
+        "ee.Image.multiply",
+        "ee.Image.pixelArea",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.sum"
+    ],
+    "processing step": [
+        "Define study area rectangle",
+        "Set time range for analysis",
+        "Load Landsat 8 image collection",
+        "Calculate NDVI from selected bands",
+        "Apply NDVI threshold to detect crops",
+        "Visualize detected crop fields",
+        "Compute area of detected crops",
+        "Print total crop area"
+    ],
+    "output": "Numerical output: Corn field area in hectares."
+}

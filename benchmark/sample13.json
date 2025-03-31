@@ -1,0 +1,26 @@
+﻿{
+    "query": "Calculate NDVI difference over time",
+    "datasource": [
+        "Landsat5 TOA imagery",
+        "SRTM DEM"
+    ],
+    "raw_code": "//NDVI mask\n\n// This function gets NDVI from Landsat 5 imagery.\nvar getNDVI = function(image) {\n  return image.normalizedDifference(['B4', 'B3']);\n};\n\n// Load two Landsat 5 images, 20 years apart.\nvar image1 = ee.Image('LANDSAT/LT05/C02/T1_TOA/LT05_044034_19900604');\nvar image2 = ee.Image('LANDSAT/LT05/C02/T1_TOA/LT05_044034_20100611');\n\n// Compute NDVI from the scenes.\nvar ndvi1 = getNDVI(image1);\nvar ndvi2 = getNDVI(image2);\n\n// Compute the difference in NDVI.\nvar ndviDifference = ndvi2.subtract(ndvi1);\n// Load the land mask from the SRTM DEM.\nvar landMask = ee.Image('CGIAR/SRTM90_V4').mask();\n\n// Update the NDVI difference mask with the land mask.\nvar maskedDifference = ndviDifference.updateMask(landMask);\n\n// Display the masked result.\nvar vizParams = {min: -0.5, max: 0.5, palette: ['FF0000', 'FFFFFF', '0000FF']};\nMap.setCenter(-122.2531, 37.6295, 9);\nMap.addLayer(maskedDifference, vizParams, 'NDVI difference');",
+    "api": [
+        "ee.Image.normalizedDifference",
+        "ee.Image.subtract",
+        "ee.Image.mask",
+        "ee.Image.updateMask",
+        "Map.setCenter",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define NDVI calculation function",
+        "Load two Landsat 5 images",
+        "Calculate NDVI for each image",
+        "Compute NDVI difference between images",
+        "Load land mask from SRTM DEM",
+        "Apply land mask to NDVI difference",
+        "Visualize masked NDVI difference"
+    ],
+    "output": "NDVI difference raster map."
+}

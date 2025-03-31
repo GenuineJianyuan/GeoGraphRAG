@@ -1,0 +1,42 @@
+﻿{
+    "query": "Analyze Leaf Area Index trends",
+    "datasource": [
+        "MODIS remote sensing data",
+        "Administrative boundary vector data"
+    ],
+    "raw_code": "var Hubei = ee.FeatureCollection(table);\nvar MODIS_LAI = ee.ImageCollection('MODIS/061/MOD15A2H')\n                .select('Lai_500m')\n                .filterBounds(Hubei)\n                .filterDate('2011-01-01', '2021-12-31');\n\nMap.centerObject(Hubei, 7);\nMap.addLayer(Hubei, {color: 'FFFFFF'}, 'Hubei');\n\nfunction createTimeBand(img) {\n    var year = img.date().difference(ee.Date('1990-01-01'), 'year');\n    var year_image = ee.Image(year).float().rename('Year');\n    return year_image.addBands(img.multiply(0.1));\n}\n\nfunction getYearCol(sDate, eDate, lxCol, region) {\n  var yearList = ee.List.sequence(ee.Date(sDate).get(\"year\"), ee.Number(ee.Date(eDate).get(\"year\")).subtract(1));\n  var yearImgList = yearList.map(function(year) {\n    year = ee.Number(year);\n    var _sdate = ee.Date.fromYMD(year, 1, 1);\n    var _edate = ee.Date.fromYMD(year.add(1), 1, 1);\n    var tempCol = lxCol.filterDate(_sdate, _edate).map(createTimeBand);\n    var img = tempCol.mean().clip(region);\n    img = img.set(\"year\", year);\n    img = img.set(\"system:index\", ee.String(year.toInt()));\n    return img;\n  });\n  var yearImgCol = ee.ImageCollection.fromImages(yearImgList);\n  return yearImgCol;\n}\n\nvar yearImgCol = getYearCol('2011-01-01', '2022-01-01', MODIS_LAI, Hubei);\nvar fit = yearImgCol.reduce(ee.Reducer.linearFit());\n\nvar scale_fit = fit.select('scale');\nvar viz = {\n  min: -0.0149,\n  max: 0.0502,\n  palette: [\n    'FFFFFF', 'CE7E45', 'DF923D', 'F1B555', 'FCD163', '99B718', '74A901',\n    '66A000', '529400', '3E8601', '207401', '056201', '004C00', '023B01',\n    '012E01', '011D01', '011301'\n  ]\n};\nMap.addLayer(scale_fit, viz, 'LAI Trend');",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.filterDate",
+        "Map.centerObject",
+        "Map.addLayer",
+        "ee.Date.difference",
+        "ee.Image.rename",
+        "ee.Image.addBands",
+        "ee.List.sequence",
+        "ee.Date.get",
+        "ee.Number.subtract",
+        "ee.Date.fromYMD",
+        "ee.ImageCollection.map",
+        "ee.Image.multiply",
+        "ee.ImageCollection.mean",
+        "ee.Image.clip",
+        "ee.Image.set",
+        "ee.String.toInt",
+        "ee.ImageCollection.fromImages",
+        "ee.Reducer.linearFit",
+        "ee.Image.select",
+        "ee.Image.visualize"
+    ],
+    "processing step": [
+        "Load feature collection for the region.",
+        "Filter MODIS LAI data by region and date.",
+        "Create time band for each image.",
+        "Compute yearly mean LAI for the region.",
+        "Fit linear trend to yearly LAI data.",
+        "Visualize LAI trend on the map."
+    ],
+    "output": "Raster of LAI trend over time."
+}

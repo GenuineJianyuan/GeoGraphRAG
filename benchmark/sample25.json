@@ -1,0 +1,27 @@
+﻿{
+    "query": "Calculate total tree cover for the year 2000",
+    "datasource": [
+        "Hansen Global Forest Change v1.8 (2020)",
+        "Vector data (user-provided FeatureCollection)"
+    ],
+    "raw_code": "var MAP = ee.FeatureCollection(\"users/bidyutsarania/1k\");\n\nvar tree = ee.Image(\"UMD/hansen/global_forest_change_2020_v1_8\")\n            .select(['treecover2000']).clip(MAP);\n\nvar forestArea = tree.multiply(ee.Image.pixelArea()).divide(10000);\nvar forestSize = forestArea.reduceRegion({\n    reducer: ee.Reducer.sum(),\n    geometry: MAP,\n    scale: 30,\n    maxPixels: 1e13\n});\nprint('Year 2000 tree cover (ha) \\nmeeting minimum canopy cover and \\nforest area thresholds \\n ', forestSize.get('treecover2000'));",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.Image.select",
+        "ee.Image.clip",
+        "ee.Image.multiply",
+        "ee.Image.divide",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.sum",
+        "ee.Image.pixelArea"
+    ],
+    "processing step": [
+        "Load feature collection for the study area.",
+        "Select tree cover layer from global forest dataset.",
+        "Clip tree cover layer to study area boundaries.",
+        "Calculate forest area in hectares per pixel.",
+        "Sum forest area within the study region.",
+        "Print total forest area in hectares."
+    ],
+    "output": "Numerical (tree cover area in hectares)"
+}

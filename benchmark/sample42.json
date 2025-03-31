@@ -1,0 +1,42 @@
+﻿{
+    "query": "Analyze NDVI trends and classify greening/browning areas",
+    "datasource": [
+        "MODIS NDVI data",
+        "Region of interest"
+    ],
+    "raw_code": "var region = ee.FeatureCollection(table);\nvar mod13 = ee.ImageCollection('MODIS/006/MOD13Q1').filter(ee.Filter.calendarRange(6,8,'month')).filter(ee.Filter.calendarRange(2000,2020,'year'));\nvar summerStats = ee.ImageCollection(ee.Join.saveAll('same_year').apply({\n  primary: mod13.distinct('year'),\n  secondary: mod13,\n  condition: ee.Filter.equals({leftField: 'year', rightField: 'year'})\n}).map(function(img) {\n  return ee.Image.cat(ee.Image.constant(img.get('year')).toShort(), ee.ImageCollection.fromImages(img.get('same_year')).select('NDVI').max())\n}));\nvar sens = summerStats.reduce(ee.Reducer.sensSlope());\nvar type = sens.select('slope').gt(0).multiply(1).add(sens.select('slope').lte(0).multiply(2));\ntype.eq(1).updateMask(type.eq(1)).multiply(ee.Image.pixelArea()).reduceRegion({\n  reducer: ee.Reducer.sum(),\n  geometry: region,\n  scale: 250\n});",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.ImageCollection",
+        "ee.Filter.calendarRange",
+        "ee.Join.saveAll",
+        "ee.Join.apply",
+        "ee.Image.cat",
+        "ee.Image.constant",
+        "ee.Image.toShort",
+        "ee.ImageCollection.fromImages",
+        "ee.Image.select",
+        "ee.Reducer.sensSlope",
+        "ee.Image.select",
+        "ee.Image.gt",
+        "ee.Image.multiply",
+        "ee.Image.add",
+        "ee.Image.lte",
+        "ee.Image.eq",
+        "ee.Image.updateMask",
+        "ee.Image.pixelArea",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.sum"
+    ],
+    "processing step": [
+        "Load feature collection as region",
+        "Filter MODIS NDVI data by month and year",
+        "Join images by year and group same-year data",
+        "Compute max NDVI for each year",
+        "Calculate Sen's slope for trend analysis",
+        "Classify slopes into positive and non-positive",
+        "Mask and sum positive slope areas",
+        "Calculate area of positive trends in region"
+    ],
+    "output": "Numerical sum of increasing NDVI areas."
+}

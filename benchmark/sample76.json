@@ -1,0 +1,30 @@
+﻿{
+    "query": "Land cover classification merge",
+    "datasource": [
+        "MODIS land cover data (LC_Type1)",
+        "User-defined geometry region"
+    ],
+    "raw_code": "var geometry = ee.Geometry.Polygon([[[-65.16152981392987, -0.7051900433200275], [-65.16152981392987, -17.938910240101567], [-43.935943876429874, -17.938910240101567], [-43.935943876429874, -0.7051900433200275]]], null, false);\nvar landcover2020 = ee.Image('MODIS/006/MCD12Q1/2020_01_01').select('LC_Type1');\nvar classe10 = landcover2020.eq(10).multiply(10).rename('10');\nvar classe12 = landcover2020.eq(12).multiply(12).rename('12');\nvar classe14 = landcover2020.eq(14).multiply(14).rename('14');\nvar merge = classe10.add(classe12).add(classe14);\nvar final_image = merge.reproject('EPSG:4326', null, 500);\nMap.addLayer(merge);\nExport.image.toDrive({\n  image: final_image.clip(geometry),\n  description: 'Teste_Giovana_3',\n  folder: 'MODIS',\n  scale: 500,\n  region: geometry,\n  fileFormat: 'GeoTIFF'\n});",
+    "api": [
+        "ee.Geometry.Polygon",
+        "ee.Image.select",
+        "ee.Image.eq",
+        "ee.Image.multiply",
+        "ee.Image.rename",
+        "ee.Image.add",
+        "ee.Image.reproject",
+        "Map.addLayer",
+        "Export.image.toDrive",
+        "ee.Image.clip"
+    ],
+    "processing step": [
+        "Define study area geometry",
+        "Load MODIS land cover data",
+        "Extract specific land cover classes",
+        "Combine extracted classes into single image",
+        "Reproject image to EPSG:4326",
+        "Add combined image to map",
+        "Export clipped image to Google Drive"
+    ],
+    "output": "Raster of selected land cover classes."
+}

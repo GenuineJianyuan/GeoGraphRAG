@@ -1,0 +1,31 @@
+﻿{
+    "query": "Calculate weighted GDP per capita statistics",
+    "datasource": [
+        "GDP raster data",
+        "Population raster data",
+        "Region boundary vector data"
+    ],
+    "raw_code": "// ================== Module1: Environment Setup ==================\n// Define input file paths\nvar gdpPath = \"users/yourusername/BTHGDP2020_ProR\";\nvar popPath = \"users/yourusername/BTHPOP2020_ProR\";\nvar regionsPath = \"users/yourusername/BTH\";\n\n// ================== Module2: Load Data ==================\nvar regions = ee.FeatureCollection(regionsPath);\n\n// ================== Module3: Prepare Raster Data ==================\nvar gdp = ee.Image(gdpPath);\nvar pop = ee.Image(popPath);\ngdp = gdp.updateMask(gdp.gte(0));\npop = pop.updateMask(pop.gte(0));\n\n// ================== Module4: Regional Calculations ==================\nvar calculateStats = function(region) {\n  var gdpRegion = gdp.clip(region.geometry());\n  var popRegion = pop.clip(region.geometry());\n  var weightedGdp = gdpRegion.multiply(popRegion);\n  \n  var gdpSum = weightedGdp.reduceRegion({\n    reducer: ee.Reducer.sum(),\n    geometry: region.geometry(),\n    scale: 1000,\n    maxPixels: 1e8\n  }).get('BTHGDP2020_ProR');\n  \n  var popSum = popRegion.reduceRegion({\n    reducer: ee.Reducer.sum(),\n    geometry: region.geometry(),\n    scale: 1000,\n    maxPixels: 1e8\n  }).get('BTHPOP2020_ProR');\n  \n  var weightedGdpPerCapita = ee.Number(gdpSum).divide(ee.Number(popSum));\n};\n\nregions.evaluate(function(regionsList) {\n  regionsList.features.forEach(function(region) {\n    calculateStats(ee.Feature(region));\n  });\n});",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.Image",
+        "ee.Image.updateMask",
+        "ee.Image.clip",
+        "ee.Image.multiply",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.sum",
+        "ee.Number",
+        "ee.Number.divide"
+    ],
+    "processing step": [
+        "Define input file paths for GDP, population, and regions.",
+        "Load regions as a feature collection.",
+        "Prepare and mask GDP and population raster data.",
+        "Clip GDP and population data to each region.",
+        "Calculate weighted GDP by multiplying GDP and population.",
+        "Summarize GDP and population sums for each region.",
+        "Compute weighted GDP per capita for each region.",
+        "Evaluate and process each region in the feature collection."
+    ],
+    "output": "Weighted GDP per capita numerical values."
+}

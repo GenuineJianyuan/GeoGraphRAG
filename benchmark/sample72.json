@@ -1,0 +1,35 @@
+﻿{
+    "query": "Land cover classification using SVM",
+    "datasource": [
+        "Landsat5",
+        "vector data (region boundary)",
+        "vector data (irrigation areas)"
+    ],
+    "raw_code": "/**** Start of imports. If edited, may not auto-convert in the playground. ****/\nvar L5 = ee.Image(\"users/bennamin1988/Nebraska/L5_Mosaic_2012\"),\n    NE_state = ee.FeatureCollection(\"ft:1DbNcXdcxOrQSDA5dPitTui40c_RSlwHi3Gvs584p\"),\n    Irr = ee.FeatureCollection(\"ft:13H8PO0KYYEYXakQnybVCA5lcrnDPG_lp4ridYvmQ\");\n/***** End of imports. If edited, may not auto-convert in the playground. *****/\n\n\n\nvar addNDVI = function(image) {\n  var ndvi = image.normalizedDifference(['B4', 'B3']).rename('NDVI');\n  var b6 = image.select(\"B6\").divide(300);\n  return image.addBands(ndvi).addBands(b6, [\"B6\"], true);\n};\n\n//Limit data and remap\nvar data_lim = Irr;\nvar training = data_lim.remap([1,2],[0,1],'class');\n\n//Calc NDVI\nvar bands = ['B2','B3','B4'];\nvar L5wNDVI = addNDVI(L5).clip(NE_state);\n\n//Sample data and train\n//var bands = ['B2', 'B3', 'B4','NDVI'];\nvar training_sites = L5wNDVI.sampleRegions(training,['class'], 30)\n    .randomColumn(\"random\")\n    .filter(ee.Filter.lt(\"random\", 0.1))\nprint(training_sites.first())\nvar trained = ee.Classifier.svm().train(training_sites, 'class', bands);\n\nvar classified = L5wNDVI.select(bands).classify(trained);\n//Map.addLayer(Irr);\nMap.addLayer(training,{},'Training');\nMap.addLayer(classified, {min: 0, max: 1, palette: ['00FF00', 'FF0000']},\n  'classification');",
+    "api": [
+        "ee.Image.normalizedDifference",
+        "ee.Image.rename",
+        "ee.Image.select",
+        "ee.Image.divide",
+        "ee.Image.addBands",
+        "ee.Image.clip",
+        "ee.FeatureCollection.remap",
+        "ee.Image.sampleRegions",
+        "ee.Filter.lt",
+        "ee.Classifier.svm",
+        "ee.Classifier.train",
+        "ee.Image.classify",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Import necessary datasets and feature collections.",
+        "Define function to calculate NDVI and adjust B6 band.",
+        "Limit and remap irrigation data for classification.",
+        "Calculate NDVI and clip image to study area.",
+        "Sample regions and filter for training data.",
+        "Train SVM classifier using selected bands.",
+        "Classify image using trained classifier.",
+        "Visualize training data and classification results."
+    ],
+    "output": "Classification map of irrigation areas."
+}

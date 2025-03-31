@@ -1,0 +1,29 @@
+﻿{
+    "query": "Healthcare facility density analysis",
+    "datasource": [
+        "vector data (village boundaries)",
+        "vector data (healthcare facilities)"
+    ],
+    "raw_code": "// Load the village boundary and healthcare POI shapefiles\nvar villages = ee.FeatureCollection('users/yourusername/Village_boundary');\nvar medicalPois = ee.FeatureCollection('users/yourusername/HealthcarePOI');\n\n// Define a function to compute density for each village\nvar computeDensity = function(village) {\n  var villageArea = village.geometry().area();\n  var poiCount = medicalPois.filterBounds(village.geometry()).size();\n  var density = poiCount.divide(villageArea);\n  return village.set({'density': density, 'area': villageArea});\n};\n\n// Apply the density calculation to all villages\nvar villagesWithDensity = villages.map(computeDensity);\n\n// Classify villages by density\nvar densityStats = villagesWithDensity.aggregate_stats('density');\nvar minDensity = densityStats.get('min');\nvar maxDensity = densityStats.get('max');\nvar numClasses = 5;\nvar classInterval = (ee.Number(maxDensity).subtract(minDensity)).divide(numClasses);\nvar classify = function(village) {\n  var density = ee.Number(village.get('density'));\n  var densityClass = density.subtract(minDensity).divide(classInterval).floor().add(1);\n  return village.set('density_class', densityClass);\n};\n\n// Apply classification\nvar villagesClassified = villagesWithDensity.map(classify);\n\n// Visualize the villages\nvar visualizeVillages = function(village) {\n  var classId = ee.Number(village.get('density_class')).subtract(1);\n  return village.set('color', colors[classId]);\n};\nvar villagesWithColors = villagesClassified.map(visualizeVillages);\n\n// Display results\nMap.centerObject(villages, 10);\nMap.addLayer(villagesWithColors, {color: 'color'}, 'Villages by Medical Facility Density');\nMap.addLayer(medicalPois, {color: '",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.FeatureCollection.filterBounds",
+        "ee.FeatureCollection.map",
+        "ee.FeatureCollection.aggregate_stats",
+        "ee.Number.subtract",
+        "ee.Number.divide",
+        "ee.Number.floor",
+        "ee.Number.add",
+        "Map.centerObject",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load village and healthcare POI shapefiles.",
+        "Calculate medical facility density per village.",
+        "Compute density statistics for all villages.",
+        "Classify villages into density intervals.",
+        "Assign colors based on density class.",
+        "Visualize villages and medical POIs on map."
+    ],
+    "output": "Map showing villages by medical facility density."
+}

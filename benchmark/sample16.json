@@ -1,0 +1,33 @@
+﻿{
+    "query": "Surface soil moisture and NDVI analysis",
+    "datasource": [
+        "Landsat8 Collection 2 Tier1",
+        "SMAP10KM soil moisture",
+        "region of interest (rectangular geometry)"
+    ],
+    "raw_code": "//surface soil moisture\n\n// 定义中国东北三省的边界\nvar dongbei = ee.Geometry.Rectangle([121.5, 38.5, 135, 53.5]);\n\n// 设置时间范围\nvar start = '2022-06-01';\nvar end = '2022-09-30';\n\n// 加载Landsat 8数据并计算NDVI\nvar landsat = ee.ImageCollection('LANDSAT/LC08/C02/T1')\n                 .filterDate(start, end)\n                 .filterBounds(dongbei);\n\n// 计算NDVI函数\nfunction calcNDVI(image) {\n  var ndvi = image.normalizedDifference(['B5', 'B4']).rename('NDVI');\n  return image.addBands(ndvi);\n}\n\n// 应用NDVI计算\nvar withNDVI = landsat.map(calcNDVI);\n\n// 加载并筛选土壤水分数据\nvar soilMoisture = ee.ImageCollection('NASA_USDA/HSL/SMAP10KM_soil_moisture')\n                      .filterDate(start, end)\n                      .filterBounds(dongbei);\n\n// 可视化参数\nvar visParamsNDVI = {min: 0, max: 1, palette: ['white', 'green']};\nvar visParamsMoisture = {min: -5, max: 25, palette: ['blue', 'limegreen', 'yellow', 'orange', 'red']};\n\n// 将NDVI和土壤水分数据裁剪到东北三省的范围\nvar clippedNDVI = withNDVI.mean().clip(dongbei);\nvar clippedMoisture = soilMoisture.mean().clip(dongbei);\n\n// 可视化\nMap.centerObject(dongbei, 6);\nMap.addLayer(clippedNDVI.select('NDVI'), visParamsNDVI, 'NDVI');\nMap.addLayer(clippedMoisture.select('ssm'), visParamsMoisture, 'Soil Moisture');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filterBounds",
+        "ee.Image.normalizedDifference",
+        "ee.Image.rename",
+        "ee.Image.addBands",
+        "ee.ImageCollection.map",
+        "ee.Image.mean",
+        "ee.Image.clip",
+        "Map.centerObject",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define study area boundary",
+        "Set time range for analysis",
+        "Load Landsat 8 image collection",
+        "Calculate NDVI for each image",
+        "Load soil moisture image collection",
+        "Clip NDVI to study area",
+        "Clip soil moisture to study area",
+        "Visualize NDVI and soil moisture"
+    ],
+    "output": "Map displaying NDVI and soil moisture."
+}

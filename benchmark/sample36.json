@@ -1,0 +1,29 @@
+﻿{
+    "query": "Center-pivot irrigation detection using edge detection and ring kernel convolution",
+    "datasource": [
+        "Landsat5"
+    ],
+    "raw_code": "// Center-pivot Irrigation Detector.\n// Edges detection and convoloution with ring kernel.\n\nMap.setCenter(-106.06, 37.71, 12);\nvar palette = [\n  'FFFFFF', 'CE7E45', 'DF923D', 'F1B555', 'FCD163', '99B718',\n  '74A901', '66A000', '529400', '3E8601', '207401', '056201',\n  '004C00', '023B01', '012E01', '011D01', '011301'];\n\n// Just display the image with the palette.\nvar image = ee.Image('LT5_L1T_8DAY_EVI/20110618');\nvar threshold = image.gt(0.3)    // Pick a threshold for \"active\" vegetation,\nMap.addLayer(image, {min:0, max: 1, palette: palette}, 'Landsat EVI');\nMap.addLayer(threshold, null, \"Threshold\", false)\nvar farmSize = 500\n\n// Detect the edges of the features.  Discard the edges with lower intensity. \nvar canny = ee.Algorithms.CannyEdgeDetector(image, 0).gt(0.3)\nMap.addLayer(canny, {}, \"V2 - Edges\")\n\n// Create a \"ring\" kernel from two circular kernels.\nvar inner = ee.Kernel.circle(farmSize - 20, 'meters', false, -1);\nvar outer = ee.Kernel.circle(farmSize + 20, 'meters', false, 1);\nvar ring = outer.add(inner, true);\n\n// Highlight the places where the edges best match the ring kernel.\nvar centers = canny.convolve(ring).gt(0.49)\n\n// Color the found circles.\ncenters = centers.focal_max({kernel: ring})\ncenters = centers.updateMask(centers)\nMap.addLayer(centers, {palette: 'aqua'}, 'V2 - Results');",
+    "api": [
+        "ee.Image",
+        "ee.Image.gt",
+        "Map.setCenter",
+        "Map.addLayer",
+        "ee.Algorithms.CannyEdgeDetector",
+        "ee.Kernel.circle",
+        "ee.Kernel.add",
+        "ee.Image.convolve",
+        "ee.Image.focal_max",
+        "ee.Image.updateMask"
+    ],
+    "processing step": [
+        "Load and display EVI image with custom palette.",
+        "Apply threshold to identify active vegetation.",
+        "Detect edges using Canny edge detector.",
+        "Create ring kernel for feature matching.",
+        "Convolve edges with ring kernel.",
+        "Highlight areas matching ring kernel.",
+        "Apply focal max to refine detected centers."
+    ],
+    "output": "**Map highlighting circular irrigation patterns.**"
+}

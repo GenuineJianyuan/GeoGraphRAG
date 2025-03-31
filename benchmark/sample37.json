@@ -1,0 +1,39 @@
+﻿{
+    "query": "Analyze NDVI in relation to elevation zones",
+    "datasource": [
+        "Landsat8",
+        "SRTM DEM",
+        "Region of interest (vector)"
+    ],
+    "raw_code": "var geometry = ee.Geometry.Point([-73.245849609375, -11.60919340793894]);\nvar landsat = ee.ImageCollection(\"LANDSAT/LC8_L1T\")\n    .filterDate('2016-01-01','2017-01-01')\n    .filterBounds(geometry);\n\nvar ndvi = landsat.map(function(image) {\n  var result = image.normalizedDifference([\"B5\", \"B4\"]).rename(\"ndvi\");\n  return image.addBands(result);\n});\n\nvar maxNDVI = ndvi.max().select(\"ndvi\");\nvar region = geometry.buffer(20000);\nvar elevation = ee.Image(\"USGS/SRTMGL1_003\");\nvar zones = ee.Image(0)\n    .where(elevation.gt(200), 200)\n    .where(elevation.gt(400), 400)\n    .where(elevation.gt(600), 600)\n    .where(elevation.gt(800), 800)\n    .updateMask(elevation.neq(0))\n    .clip(region);\n\nMap.addLayer(maxNDVI, {min:0, max:1}, \"Max_NDVI\");\nMap.addLayer(region,{color: \"yellow\"}, \"Region\");\nMap.addLayer(zones,{},\"Elevation zones\");\nMap.centerObject(geometry, 10);\n\nvar stats = maxNDVI.addBands(zones).reduceRegion({\n  reducer: ee.Reducer.mean().group(1),\n  geometry: region,\n  scale: 30\n});\nprint(stats);",
+    "api": [
+        "ee.Geometry.Point",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filterBounds",
+        "ee.Image.normalizedDifference",
+        "ee.Image.rename",
+        "ee.Image.addBands",
+        "ee.ImageCollection.map",
+        "ee.ImageCollection.max",
+        "ee.Image.select",
+        "ee.Geometry.buffer",
+        "ee.Image.where",
+        "ee.Image.updateMask",
+        "ee.Image.clip",
+        "Map.addLayer",
+        "Map.centerObject",
+        "ee.Reducer.mean.group",
+        "ee.Image.reduceRegion"
+    ],
+    "processing step": [
+        "Define a point geometry for analysis.",
+        "Filter Landsat 8 image collection by date and location.",
+        "Calculate NDVI for each image in the collection.",
+        "Extract maximum NDVI value across the collection.",
+        "Create a buffer region around the point geometry.",
+        "Classify elevation into zones based on thresholds.",
+        "Clip elevation zones to the defined region.",
+        "Compute mean NDVI grouped by elevation zones."
+    ],
+    "output": "**Table** of mean NDVI by elevation zones."
+}

@@ -1,0 +1,28 @@
+﻿{
+    "query": "Urban nightlight intensity analysis",
+    "datasource": [
+        "Remote sensing imagery (nightlight)",
+        "Vector data (urban areas)"
+    ],
+    "raw_code": "// ================== Module1: Environment Setup ==================\n// 加载夜间灯光数据和城市区域矢量数据\nvar nightlight = ee.Image(\"users/your_username/LongNTL_2023_BTH\");  // 上传的夜间灯光数据\nvar urbanAreas = ee.FeatureCollection(\"users/your_username/BTH\");  // 上传的城市区域矢量数据\n\n// ================== Module2: Load and Clip Data ==================\n// 使用城市区域边界裁剪夜间灯光影像\nvar clippedNightlight = nightlight.clip(urbanAreas);\n\n// ================== Module3: Statistical Analysis ==================\n// 计算夜间灯光强度统计信息（均值、标准差、最大值）\nvar meanIntensity = clippedNightlight.reduceRegion({\n  reducer: ee.Reducer.mean(),\n  geometry: urbanAreas,\n  scale: 30,  // 根据数据的分辨率调整\n  maxPixels: 1e8\n});\n\nvar stdIntensity = clippedNightlight.reduceRegion({\n  reducer: ee.Reducer.stdDev(),\n  geometry: urbanAreas,\n  scale: 30,\n  maxPixels: 1e8\n});\n\nvar maxIntensity = clippedNightlight.reduceRegion({\n  reducer: ee.Reducer.max(),\n  geometry: urbanAreas,\n  scale: 30,\n  maxPixels: 1e8\n});\n\nprint(\"Nightlight Intensity Statistics:\", meanIntensity);\nprint(\"Standard Deviation:\", stdIntensity);\nprint(\"Max Intensity:\", maxIntensity);\n\n// ================== Module4: Visualization ==================\n// 可视化夜间灯光强度的空间分布\nMap.centerObject(urbanAreas, 10);  // 根据城市区域居中地图\nMap.addLayer(clippedNightlight, {min: 0, max: 100, palette: ['black', 'yellow', 'white']}, \"Nightlight Intensity\");\n\n// ================== Module5: Histogram Analysis ==================\n// 计算夜间灯光强度的直方图\nvar hist = clippedNightlight.reduceRegion({\n  reducer: ee.Reducer.histogram(),\n  geometry: urbanAreas,\n  scale: 30,\n  maxPixels: 1e8\n});\n\nprint(\"Nightlight Intensity Histogram:\", hist);",
+    "api": [
+        "ee.Image",
+        "ee.FeatureCollection",
+        "ee.Image.clip",
+        "ee.Reducer.mean",
+        "ee.Reducer.stdDev",
+        "ee.Reducer.max",
+        "ee.Reducer.histogram",
+        "ee.Image.reduceRegion"
+    ],
+    "processing step": [
+        "Load nightlight and urban area data",
+        "Clip nightlight data with urban boundaries",
+        "Calculate mean nightlight intensity",
+        "Calculate standard deviation of intensity",
+        "Calculate maximum nightlight intensity",
+        "Visualize clipped nightlight data",
+        "Compute nightlight intensity histogram"
+    ],
+    "output": "**Map** of nightlight intensity distribution."
+}

@@ -1,0 +1,32 @@
+﻿{
+    "query": "Forest cover analysis",
+    "datasource": [
+        "vector data (administrative boundaries)",
+        "raster data (MODIS tree cover)"
+    ],
+    "raw_code": "// ================== Module 1: Data Retrieval ==================\nvar france = ee.FeatureCollection('FAO/GAUL/2015/level1').filter(ee.Filter.eq('ADM0_NAME', 'France'));\nvar treeCover = ee.Image('MODIS/006/MOD44B').select('Percent_Tree_Cover');\n\n// ================== Module 2: Data Processing ==================\nMap.centerObject(france, 6);\nMap.addLayer(treeCover, {min: 0, max: 100, palette: ['white', 'green']}, 'Tree Cover');\nvar treeCoverMasked = treeCover.clip(france);\nMap.addLayer(treeCoverMasked, {min: 0, max: 100, palette: ['white', 'green']}, 'Forest Cover (Cropped)');\n\n// ================== Module 3: Zonal Statistics ==================\nvar zonalStats = treeCoverMasked.reduceRegions({\n  collection: france,\n  reducer: ee.Reducer.sum(),\n  scale: 500\n});\nvar forestStats = zonalStats.map(function(feature) {\n  var area = feature.get('sum');\n  var area_km2 = ee.Number(area).multiply(1e-6);\n  return feature.set('Forest_Area_km2', area_km2);\n});\nprint('Forest Cover Statistics:', forestStats);\n\n// ================== Module 4: Visualization ==================\nMap.addLayer(forestStats, {min: 0, max: 1000, palette: ['white', 'green', 'brown', 'darkgreen']}, 'Forest Area by Region');",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.Filter.eq",
+        "ee.Image.select",
+        "Map.centerObject",
+        "Map.addLayer",
+        "ee.Image.clip",
+        "ee.Image.reduceRegions",
+        "ee.Reducer.sum",
+        "ee.Number.multiply",
+        "ee.Feature.set"
+    ],
+    "processing step": [
+        "Retrieve administrative boundary data.",
+        "Load tree cover percentage image.",
+        "Center map on selected region.",
+        "Visualize tree cover layer.",
+        "Clip tree cover to region.",
+        "Calculate zonal statistics for tree cover.",
+        "Convert area to square kilometers.",
+        "Print forest cover statistics.",
+        "Visualize forest area by region."
+    ],
+    "output": "Table (Forest cover statistics by region)"
+}

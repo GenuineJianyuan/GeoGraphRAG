@@ -1,0 +1,23 @@
+﻿{
+    "query": "Filter small area counties",
+    "datasource": [
+        "TIGER/2016/Counties vector data"
+    ],
+    "raw_code": "// Computed area filter.\n// Find US counties smaller than 3k square kilometers in area.\n\n// Load counties from TIGER boundaries table\nvar counties = ee.FeatureCollection('TIGER/2016/Counties');\n\n// Map a function over the counties to set the area of each\nvar countiesWithArea = counties.map(function(f) {\n  // Compute area in square meters.  Convert to hectares.\n  var areaHa = f.area().divide(100 * 100);\n\n  // A new property called 'area' will be set on each feature.\n  return f.set({area: areaHa});\n});\n\n// Filter to get only smaller counties.\nvar smallCounties = countiesWithArea.filter(ee.Filter.lt('area', 3e5));\n\nMap.addLayer(smallCounties, {color: '900000'});\n\nMap.setCenter(-119.7, 38.26, 7);",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.Filter.lt",
+        "Map.addLayer",
+        "Map.setCenter"
+    ],
+    "processing step": [
+        "Load county boundaries dataset",
+        "Compute area for each county",
+        "Convert area to hectares",
+        "Set area as new property",
+        "Filter counties by area threshold",
+        "Visualize filtered counties on map",
+        "Set map center and zoom level"
+    ],
+    "output": "map displaying small US counties"
+}

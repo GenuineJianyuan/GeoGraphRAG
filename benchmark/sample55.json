@@ -1,0 +1,42 @@
+﻿{
+    "query": "Analyze desertification area change",
+    "datasource": [
+        "Landsat8",
+        "region of interest"
+    ],
+    "raw_code": "// Module 1: Define Region of Interest (ROI) and Initial Map Setup\n// This module initializes the ROI and sets up the map visualization.\nvar geometry = ee.Geometry.Polygon([[[109.7, 38.8], [110.3, 38.8], [110.3, 38.4], [109.7, 38.4], [109.7, 38.8]]]);\nvar roi = ee.FeatureCollection(ee.Feature(geometry));\nMap.centerObject(geometry, 9);\nMap.addLayer(roi, {color: \"000000\", fillColor: \"000000\"}, \"ROI\", false);\n\n// Module 2: Process Images for NDVI and Desertification Index\n// This module calculates NDVI for a specific year, applies cloud masking\nfunction processImage(year, roi) {\n    var l8Col = ee.ImageCollection(\"LANDSAT/LC08/C01/T1_SR\")\n        .filterBounds(roi)\n        .filterDate(year + \"-04-01\", year + \"-10-01\")\n        .select([\"B4\", \"B5\", \"QA60\"])\n        .map(function(image) {\n            var b4 = image.select(\"B4\");\n            var b5 = image.select(\"B5\");\n            var ndvi = b5.subtract(b4).divide(b5.add(b4));\n            var cloudMask = image.select(\"QA60\").bitwiseAnd(1 << 4).eq(0);  // QA60 is used for cloud masking\n            ndvi = ndvi.updateMask(cloudMask).updateMask(ndvi.lt(0.1));  // Mask out low NDVI\n            return ndvi.rename(\"ndvi\");\n        });\n\n    var yearImg = l8Col.max().clip(roi);\n    return yearImg;\n}\n\n// Module 4: Calculate Desertification Area\n// This module calculates the desertification area (NDVI < 0.1) for each year.\nvar img1 = processImage(2015, geometry);\nMap.addLayer(img1, {min: -1, max: 1, palette: \"c7c7c7\"}, \"2015\", false); // grey\nvar img2 = processImage(2016, geometry);\nMap.addLayer(img2, {min: -1, max: 1, palette: \"ffff00\"}, \"2016\", false); // yellow\nvar img3 = processImage(2017, geometry);\nMap.addLayer(img3, {min: -1, max: 1, palette: \"0000ff\"}, \"2017\", false); // blue\nvar img4 = processImage(2018, geometry);\nMap.addLayer(img4, {min: -1, max: 1, palette: \"00ff00\"}, \"2018\", false); // green\nvar img5 = processImage(2019, geometry);\nMap.addLayer(img5, {min: -1, max: 1, palette: \"ff0000\"}, \"2019\", false); // red\nMap.addLayer(roi, {color: \"000000\", fillColor: \"000000\"}, \"roi\", true);\n\n// Module 4: Calculate Desertification Area\n// This module calculates the desertification area for each year.\nfunction calcArea(yearImg, roi) {\n    var areaImage = yearImg.pixelArea().multiply(yearImg.lt(0.1));\n    var area = areaImage.reduceRegion({\n        reducer: ee.Reducer.sum(),\n        geometry: roi,\n        scale: 30\n    });\n    return area;\n}\n\n// Module 5: Compute and Print Desertification Area for 2015–2019\n// This module computes the annual desertification area and logs the results.\nvar areaValues = [\n    calcArea(img1, geometry),\n    calcArea(img2, geometry),\n    calcArea(img3, geometry),\n    calcArea(img4, geometry),\n    calcArea(img5, geometry)\n];\n\nvar xSeries = [2015, 2016, 2017, 2018, 2019];\nareaValues.forEach(function(area, index) {\n    print('Year ' + (2015 + index) + ' Desertification Area: ', area);\n});\n\n// Module 6: Visualize Desertification Trends with a Line Chart\n// This module visualizes the annual desertification area changes using a line chart.\nvar lineChart = ui.Chart.array.values({\n    array: ee.Array(areaValues).slice(0, 0),\n    axis: 0\n}).setOptions({\n    title: 'Desertification area change in northern Shaanxi from 2015 to 2019',\n    legend: [\"Desertification area\"],\n    vAxis: {title: \"Desertification area (km²)\"},\n    hAxis: {title: \"Year\"},\n    lineWidth: 2\n});\nlineChart.style().set({width: '800px', height: '400px'});\nprint(lineChart);",
+    "api": [
+        "ee.Geometry.Polygon",
+        "ee.FeatureCollection",
+        "ee.Feature",
+        "Map.centerObject",
+        "Map.addLayer",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.map",
+        "ee.Image.select",
+        "ee.Image.subtract",
+        "ee.Image.divide",
+        "ee.Image.updateMask",
+        "ee.Image.rename",
+        "ee.Image.max",
+        "ee.Image.clip",
+        "ee.Reducer.sum",
+        "ee.Image.pixelArea",
+        "ee.Image.multiply",
+        "ee.Image.lt",
+        "ee.Image.reduceRegion",
+        "ui.Chart.array.values"
+    ],
+    "processing step": [
+        "Define ROI and initialize map setup.",
+        "Filter and process Landsat images for NDVI.",
+        "Mask clouds and low NDVI values.",
+        "Calculate maximum NDVI for each year.",
+        "Compute desertification area using NDVI threshold.",
+        "Log annual desertification area results.",
+        "Visualize desertification trends with a line chart."
+    ],
+    "output": "Chart of desertification area change"
+}

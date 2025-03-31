@@ -1,0 +1,37 @@
+﻿{
+    "query": "Calculate bird habitat forest cover area",
+    "datasource": [
+        "Global Forest Change 2018 (Hansen)",
+        "GTOPO30 DEM",
+        "Birdlife2017 species distribution vector data",
+        "Birdlife2017 sample vector data"
+    ],
+    "raw_code": "var gfc = ee.Image(\"UMD/hansen/global_forest_change_2018_v1_6\"),\n    gtopo30 = ee.Image(\"USGS/GTOPO30\"),\n    sample = ee.ImageCollection(\"users/rspb/birdlife2017_sample\"),\n    birds = ee.ImageCollection(\"users/rspb/birdlife2017\");\n\nvar scale = 1920;\nvar maxPixels = 1e12;\n\nvar forest2000 = gfc.select(['treecover2000']).divide(100);\nvar areaImage2000 = forest2000.multiply(ee.Image.pixelArea()); \n\nvar allAreas = sample.map(function f(image)\n{\n  var id = image.get(\"objectid_1\");\n  var alt_min = ee.Number(image.get(\"Min_altitude_m\"));\n  var alt_max = ee.Number(image.get(\"Max_altitude_m\"));\n  var alt_range = gtopo30.gte(alt_min).and(gtopo30.lte(alt_max));\n  var aoo = alt_range.and(image);\n  \n  var feature = areaImage2000.reduceRegion({\n    geometry: aoo.geometry(scale),\n    reducer: 'sum',\n    scale: scale,\n    maxPixels: maxPixels\n  }).get('treecover2000');\n\n  return ee.Feature(null, ee.Dictionary({'objectid_1': image.get(\"objectid_1\"), 'sisid': image.get('sisid'), 'tree': feature}));\n});\n\nExport.table.toDrive({\n  collection: allAreas,\n  description: 'Birdlife2017_treecover2000_test',\n  folder: 'EarthEngine',\n  fileFormat: 'CSV'\n});",
+    "api": [
+        "ee.Image",
+        "ee.ImageCollection",
+        "ee.Image.select",
+        "ee.Image.divide",
+        "ee.Image.multiply",
+        "ee.Image.pixelArea",
+        "ee.ImageCollection.map",
+        "ee.Number",
+        "ee.Image.gte",
+        "ee.Image.lte",
+        "ee.Image.and",
+        "ee.Image.reduceRegion",
+        "ee.Feature",
+        "ee.Dictionary",
+        "Export.table.toDrive"
+    ],
+    "processing step": [
+        "Load global forest cover image",
+        "Load elevation data",
+        "Load sample and bird data",
+        "Calculate forest cover area",
+        "Filter by altitude range",
+        "Compute forest area within altitude range",
+        "Export results to CSV"
+    ],
+    "output": "**Table of tree cover area by species**"
+}

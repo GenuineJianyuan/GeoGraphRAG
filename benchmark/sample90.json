@@ -1,0 +1,23 @@
+﻿{
+    "query": "Calculate maximum pixel value in region",
+    "datasource": [
+        "DEM (SRTM90_V4)",
+        "Region of Interest (user-defined polygon)"
+    ],
+    "raw_code": "// Image.reduceRegion example\n//\n// Computes a simple reduction over a region of an image.  A reduction\n// is any process that takes an arbitrary number of inputs (such as\n// all the pixels of an image in a given region) and computes one or\n// more fixed outputs.  The result is a dictionary that contains the\n// computed values, which in this example is the maximum pixel value\n// in the region.\n\n// This example shows how to print the resulting dictionary to the\n// console, which is useful when developing and debugging your\n// scripts, but in a larger workflow you might instead use the\n// Dicitionary.get() function to extract the values you need from the\n// dictionary for use as inputs to other functions.\n\n// The input image to reduce, in this case an SRTM elevation map.\nvar image = ee.Image('CGIAR/SRTM90_V4');\n\n// The region to reduce within.\nvar poly = ee.Geometry.Rectangle([-109.05, 41, -102.05, 37]);\n\n// Reduce the image within the given region, using a reducer that\n// computes the max pixel value.  We also specify the spatial\n// resolution at which to perform the computation, in this case 200\n// meters.\nvar max = image.reduceRegion({\n  reducer: ee.Reducer.max(),\n  geometry: poly,\n  scale: 200\n});\n\n// Print the result (a Dictionary) to the console.\nprint(max);",
+    "api": [
+        "ee.Image",
+        "ee.Geometry.Rectangle",
+        "ee.Reducer.max",
+        "ee.Image.reduceRegion"
+    ],
+    "processing step": [
+        "Load the SRTM elevation map image",
+        "Define a rectangular region of interest",
+        "Apply a reducer to compute max pixel value",
+        "Specify the spatial resolution for computation",
+        "Execute the reduction over the defined region",
+        "Print the result as a dictionary"
+    ],
+    "output": "Numerical (maximum elevation value)"
+}

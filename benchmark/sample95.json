@@ -1,0 +1,28 @@
+﻿{
+    "query": "Terrain and surface water analysis",
+    "datasource": [
+        "DEM (SRTM90_V4)",
+        "GlobalSurfaceWater",
+        "region of interest"
+    ],
+    "raw_code": "/**** Start of imports. If edited, may not auto-convert in the playground. ****/\nvar srtm = ee.Image(\"CGIAR/SRTM90_V4\"),\n    water = ee.Image(\"JRC/GSW1_0/GlobalSurfaceWater\"),\n    geometry = /* color: #d63000 */ee.Geometry.Polygon(\n        [[[-99.14023674751556, 26.804927831107772],\n          [-99.29825873437669, 26.816922506543893],\n          [-99.27671064297638, 26.577599041115178],\n          [-99.16054603703279, 26.545887778535814],\n          [-99.07493436275246, 26.574949775093465]]]);\n/***** End of imports. If edited, may not auto-convert in the playground. *****/\n//////////////// Analysis ////////////////\nvar slope = ee.Terrain.slope(srtm);\n\n// Statistics for an area\nvar slopeDict = slope.reduceRegion({\n  reducer: ee.Reducer.mean(),\n  geometry: geometry,\n  scale: 30\n});\nprint('slopeDict', slopeDict);\n\nvar waterDict = water.select('occurrence').gt(90)\n    .multiply(ee.Image.pixelArea())\n    .reduceRegion({\n      reducer: ee.Reducer.sum(),\n      geometry: geometry,\n      scale: 30\n    });\nprint('waterDict', waterDict);\n\n//////////////// User Interface ////////////////\nMap.addLayer(srtm, {min:0, max:3000}, 'srtm');\nMap.addLayer(slope, {min:0, max:45}, 'slope');\nMap.addLayer(water, {bands:'occurrence', min:25, max:75, palette:'lightblue,blue'}, 'occurrence');",
+    "api": [
+        "ee.Image",
+        "ee.Geometry.Polygon",
+        "ee.Terrain.slope",
+        "ee.Reducer.mean",
+        "ee.Reducer.sum",
+        "ee.Image.pixelArea",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Import SRTM and water datasets.",
+        "Define a polygon geometry for analysis.",
+        "Calculate slope from SRTM data.",
+        "Compute mean slope within the geometry.",
+        "Identify water occurrence above 90%.",
+        "Calculate total water area within geometry.",
+        "Display SRTM, slope, and water layers on map."
+    ],
+    "output": "**Numerical (mean slope, total water area)**"
+}

@@ -1,0 +1,29 @@
+﻿{
+    "query": "Analyze provincial population density distribution",
+    "datasource": [
+        "Population density data",
+        "Administrative boundaries"
+    ],
+    "raw_code": "var boundaries = ee.FeatureCollection('FAO/GAUL/2015/level1');\nvar population = ee.Image('WorldPop/GP/100m/pop').select('population').divide(1000);\n\nvar processed = boundaries.map(function(feature) {\n  var stats = population.reduceRegion({\n    reducer: ee.Reducer.mean(),\n    geometry: feature.geometry(),\n    scale: 1000\n  });\n  return feature.set('pop_density', stats.get('population'));\n});\n\nvar chart = ui.Chart.feature.byProperty({\n  features: processed,\n  xProperties: ['ADM1_NAME'],\n  yProperties: ['pop_density']\n}).setChartType('ColumnChart')\n .setOptions({\n   title: 'Provincial Population Density',\n   hAxis: {title: 'Province'},\n   vAxis: {title: 'Density (people/km²)'}\n });\n\nprint(chart);",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.Image.select",
+        "ee.Image.divide",
+        "ee.FeatureCollection.map",
+        "ee.Reducer.mean",
+        "ee.Image.reduceRegion",
+        "ee.Feature.set",
+        "ui.Chart.feature.byProperty",
+        "ui.Chart.setChartType",
+        "ui.Chart.setOptions"
+    ],
+    "processing step": [
+        "Load administrative boundaries dataset.",
+        "Load population raster and normalize values.",
+        "Map over boundaries to compute mean population density.",
+        "Set population density as a new feature property.",
+        "Create a chart of population density by province.",
+        "Print the chart."
+    ],
+    "output": "**Chart** displaying provincial population density."
+}

@@ -1,0 +1,30 @@
+﻿{
+    "query": "Land cover classification using K-means clustering",
+    "datasource": [
+        "vector data (user provided)",
+        "Landsat8 TOA imagery"
+    ],
+    "raw_code": "/**** Start of imports. If edited, may not the playground. ****/\nvar table = ee.FeatureCollection(\"users/brianchelloti/L_Nakuru\");\n/***** End of imports. If edited, may not auto-convert in the playground. *****/\nvar region = ee.FeatureCollection(table);\nMap.centerObject(region, 10);\nvar l8 = ee.ImageCollection('LANDSAT/LC08/C01/T1').filterBounds(region);\nvar image = ee.Algorithms.Landsat.simpleComposite({\n  collection: l8.filterDate('2020-12-01', '2020-12-30'),\n  asFloat: true\n});\nprint(image);\nMap.addLayer(ee.Image().paint(region, 0, 2), {}, 'region');\nvar training = image.sample({\n  region: region,\n  scale: 30,\n  numPixels: 5000\n});\nvar clusterer = ee.Clusterer.wekaKMeans(2).train(training);\nvar result = image.cluster(clusterer);\nvar colorizedVis = {\n  min: 0.0,\n  max: 1.0,\n  palette: ['00FFFF', '0000FF']\n};\nMap.addLayer(result.clip(region), colorizedVis, 'clusters');",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.ImageCollection.filterBounds",
+        "ee.Algorithms.Landsat.simpleComposite",
+        "ee.Image.paint",
+        "ee.Image.sample",
+        "ee.Clusterer.wekaKMeans",
+        "ee.Clusterer.train",
+        "ee.Image.cluster",
+        "ee.Image.clip"
+    ],
+    "processing step": [
+        "Import feature collection for the region of interest",
+        "Center map on the specified region",
+        "Filter Landsat 8 imagery within the region",
+        "Create composite image from filtered Landsat data",
+        "Sample composite image for training data",
+        "Train k-means clusterer with sampled data",
+        "Apply clustering to composite image",
+        "Visualize clustered results within the region"
+    ],
+    "output": "The output is a **raster** showing clustered land cover."
+}

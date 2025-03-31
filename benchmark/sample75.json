@@ -1,0 +1,32 @@
+﻿{
+    "query": "Calculate NDVI",
+    "datasource": [
+        "Landsat8",
+        "Thailand boundary (vector data)"
+    ],
+    "raw_code": "var start = ee.Date('2021-01-01');\n\nvar finish = ee.Date('2021-5-30');\n\nvar thailand = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017').filterMetadata('country_co', 'equals', 'TH');\n\n\nvar dataset = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR')\n        .filterDate(start, finish)\n        .select(['B5','B4'])\n        .filterMetadata('CLOUD_COVER', 'less_than', 20)\n        .filterBounds(thailand)\n        .median();\n\nvar NDVI = dataset.normalizedDifference(['B5', 'B4']);\n\nMap.setCenter(100, 13, 5);\n\nMap.addLayer(NDVI, { min: -1, max: 1 }, 'NDVI (Thailand)');\n\nprint(NDVI)\n\nvar NDVIVis = {\n  min: -0.5,\n  max: 1,\n  palette: [\n    '040274', '040281', '0502a3', '0502b8', '0502ce', '0502e6',\n    '0602ff', '235cb1', '307ef3', '269db1', '30c8e2', '32d3ef',\n    '3be285', '3ff38f', '86e26f', '3ae237', 'b5e22e', 'd6e21f',\n    'fff705', 'ffd611', 'ffb613', 'ff8b13', 'ff6e08', 'ff500d',\n    'ff0000', 'de0101', 'c21301', 'a71001', '911003'\n  ],\n};\nMap.addLayer(NDVI, NDVIVis,'NDVI (Thailand) Color ');",
+    "api": [
+        "ee.Date",
+        "ee.FeatureCollection.filterMetadata",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterMetadata",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.median",
+        "ee.Image.normalizedDifference",
+        "Map.setCenter",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define start and end dates for data collection.",
+        "Filter feature collection to specific country boundaries.",
+        "Select Landsat 8 image collection within date range.",
+        "Filter images based on cloud cover percentage.",
+        "Clip images to specified country boundaries.",
+        "Calculate median composite of filtered images.",
+        "Compute NDVI using selected spectral bands.",
+        "Set map center and zoom level.",
+        "Visualize NDVI layer with predefined color palette."
+    ],
+    "output": "Raster of NDVI values for Thailand."
+}
