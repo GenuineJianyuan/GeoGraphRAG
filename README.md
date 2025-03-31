@@ -6,6 +6,8 @@
 - Reference implementations of the approach
 - Essential information about the underlying **S-GMKG**
 
+**An official reference for S-GMKG is coming soon—stay tuned for its release!**
+
 By leveraging **S-GMKG**, GeoGraphRAG enhances geospatial knowledge representation, facilitating more accurate and context-aware geospatial reasoning.
 
-For more information, please contact: **jliang@whu.edu.cn**.
+For more information, please contact: **xxx@example.com**.
