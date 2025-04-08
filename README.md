@@ -1,20 +1,36 @@
 # GeoGraphRAG
 
-**GeoGraphRAG** is a graph-based Retrieval-Augmented Generation (RAG) approach designed for geospatial modeling, built upon the **S-GMKG** framework. This repository provides:
+**GeoGraphRAG** is a graph-based Retrieval-Augmented Generation (RAG) approach designed for geospatial modeling, built upon the **S-GMKG** framework.
 
-- Benchmarks for evaluating performance, which include 100 sample cases
-- Reference implementations of the approach
-- Essential information about the underlying **S-GMKG**
+---
 
-An instance of **S-GMKG** is available in the `sgmkg.db` file, containing two tables: `schema_entity` and `schema_relation`. In total, it includes 15,224 entities and 77,134 relationships.
+## 📌 Overview
 
-The `core` folder stores the core methods for GeoGraphRAG (still being actively loaded and updated). Basic configurations for LLM can be found in the `llm_config.py` file within the `utils` directory.
+GeoGraphRAG enhances geospatial knowledge representation by leveraging the semantic structure of **S-GMKG**, enabling more accurate and context-aware geospatial reasoning.
 
-For more details about **S-GMKG**, please refer to the official publication:  
-**Design and application of a semantic-driven geospatial modeling knowledge graph based on large language models**  
-*Geo-Spatial Information Science*, 2025.  
-DOI: [10.1080/10095020.2025.2483884](https://doi.org/10.1080/10095020.2025.2483884)
+---
 
-By leveraging **S-GMKG**, GeoGraphRAG enhances geospatial knowledge representation, facilitating more accurate and context-aware geospatial reasoning.
+## 📂 Repository Contents
 
-For more information, please contact: **jliang@whu.edu.cn**.
+- **Benchmarks**: Contains 100 sample cases for evaluating performance.
+- **`core/` folder**: Stores the core methods of GeoGraphRAG (still under active development).
+- **`utils/llm_config.py`**: Defines the basic configuration for LLM usage.
+- **`sgmkg.db`**: An instance of the S-GMKG including:
+  - `schema_entity` table: 15,224 entities
+  - `schema_relation` table: 77,134 relationships
+
+---
+
+## 📖 Reference for S-GMKG
+
+Please refer to the official publication for a detailed introduction to **S-GMKG**:
+
+> **Design and application of a semantic-driven geospatial modeling knowledge graph based on large language models**  
+> *Geo-Spatial Information Science*, 2025  
+> DOI: [10.1080/10095020.2025.2483884](https://doi.org/10.1080/10095020.2025.2483884)
+
+---
+
+## 📬 Contact
+
+For questions or collaboration, please contact: **jliang@whu.edu.cn**
