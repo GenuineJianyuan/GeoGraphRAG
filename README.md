@@ -11,7 +11,9 @@ An instance of **S-GMKG** is available in the `sgmkg.db` file, containing two ta
 The `core` folder stores the core methods for GeoGraphRAG (still being actively loaded and updated). Basic configurations for LLM can be found in the `llm_config.py` file within the `utils` directory.
 
 For more details about **S-GMKG**, please refer to the official publication:  
-**[Design and application of a semantic-driven geospatial modeling knowledge graph based on large language models](https://www.tandfonline.com/doi/full/10.1080/10095020.2025.2483884#d1e2516)**, *Geo-Spatial Information Science*, 2025.
+**Design and application of a semantic-driven geospatial modeling knowledge graph based on large language models**  
+*Geo-Spatial Information Science*, 2025.  
+DOI: [10.1080/10095020.2025.2483884](https://doi.org/10.1080/10095020.2025.2483884)
 
 By leveraging **S-GMKG**, GeoGraphRAG enhances geospatial knowledge representation, facilitating more accurate and context-aware geospatial reasoning.
 
