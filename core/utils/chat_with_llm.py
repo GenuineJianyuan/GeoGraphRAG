@@ -3,7 +3,7 @@ from llm_config import LLMConfig
 from openai import OpenAI
 import  qianfan
 
-
+## Please set local proxy by yourself if required
 def interact_with_llm(prompt, model="deepseek-v3"):  ## qwen-max
     content = None
     if model in LLMConfig.ALI_MODELS:
