@@ -14,7 +14,7 @@ GeoGraphRAG enhances geospatial knowledge representation by leveraging the seman
 
 - **Benchmarks**: Contains 100 sample cases for evaluating performance.
 - **`core/` folder**: Stores the core methods of GeoGraphRAG (still under active development).
-- **`utils/llm_config.py`**: Defines the basic configuration for LLM usage.
+- **`core/utils/llm_config.py`**: Defines the basic configuration for LLM usage.
 - **`sgmkg.db`**: An instance of the S-GMKG including:
   - `schema_entity` table: 15,224 entities
   - `schema_relation` table: 77,134 relationships
