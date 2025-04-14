@@ -45,19 +45,11 @@ Current Demand Description:
     
 Please analysis current demand description and reply in the format exactly as the example.
 '''
-
-import sys
-import os
-
-current_dir = os.getcwd()
-parent_dir = os.path.dirname(current_dir)
-utils_dir = os.path.join(parent_dir, 'utils')
-sys.path.append(utils_dir)
-import chat_with_llm
+from utils.chat_with_llm import interact_with_llm
 
 ## An instance tha shows the demand identification using example in the benchmark
 demand_description_instance = '''Please generate a landslide susceptibility map for Xunwu County in 2024.I have Landsat 8 
                                  images, DEM, ROl, and land use/coverimage for this region as datasource.'''
 
-response = chat_with_llm.interact_with_llm(demand_description_instance, "gpt-4o")
+response = interact_with_llm(demand_description_instance, "gpt-4o")
 
