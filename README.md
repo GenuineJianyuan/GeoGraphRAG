@@ -28,7 +28,7 @@ Please refer to the official publication for a detailed introduction to **S-GMKG
 > **Design and application of a semantic-driven geospatial modeling knowledge graph based on large language models**  
 > *Geo-Spatial Information Science*, 2025  
 > DOI: [10.1080/10095020.2025.2483884](https://doi.org/10.1080/10095020.2025.2483884)
-> ![1744609189215](https://github.com/user-attachments/assets/43c5ee7e-9437-49be-92e6-d5c0762db8ce)
+> ![S-GMKG Architecture](images/S-GMKG Structure.png)
 
 
 ---
