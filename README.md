@@ -42,7 +42,7 @@ The following table provides a concise reference of the core schema for S-GMKG, 
 |                   | **StepDescr**: Description of functionality | Semantic explanation of operation |
 |                   | **inSeries**: List of IO-Data (input) | Input data series |
 |                   | **outSeries**: List of IO-Data (output) | Output data series |
-|                   | **CodeSnippet**: Code implementation reference {code fragment / API sequence / API list} | May include code fragment, API sequence (e.g., api1 → api2 → api3), or simple API list |
+|                   | **CodeSnippet** (Optional): Code implementation reference {code fragment / API sequence / API list} | May include code fragment, API sequence (e.g., api1 → api2 → api3), or simple API list |
 | **IO-Data**       | **DataName**: Short name of data | Semantic identifier of data |
 |                   | **DataRole**: {Input, Output, Intermediate} | Data role in modeling flow |
 |                   | **Format**: Data format (Remote sensing, Vector, Constant, etc.) | Type of data |
