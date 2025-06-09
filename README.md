@@ -26,7 +26,7 @@ GeoGraphRAG enhances geospatial knowledge representation by leveraging the seman
 Please refer to the official publication for a detailed introduction to **S-GMKG**:
 
 > **Design and application of a semantic-driven geospatial modeling knowledge graph based on large language models**  
-> *Geo-Spatial Information Science*, 2025  
+> *Geo-Spatial Information Science*, 2025: 1-20  
 > DOI: [10.1080/10095020.2025.2483884](https://doi.org/10.1080/10095020.2025.2483884)
 > ![S-GMKG Architecture](images/S-GMKG%20Structure.png)
 
