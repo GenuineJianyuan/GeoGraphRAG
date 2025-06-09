@@ -32,7 +32,7 @@ The following figure illustrates the overall architecture of **S-GMKG**, includi
 
 ![S-GMKG Architecture](images/S-GMKG%20Structure.png)  
 
-In addition, the following table provides a concise reference of the core schema for S-GMKG, focusing on **Functional Step** and **IO-Data** entities, and their associated relations (**Invoke**, **Transfer**). The *Modeling Task* entity and *Contain* relation are omitted here for simplicity.
+The following table provides a concise reference of the core schema for S-GMKG, focusing on **Functional Step** and **IO-Data** entities, and their associated relations (**Invoke**, **Transfer**). The *Modeling Task* entity and *Contain* relation are omitted here for simplicity.
 
 ## 📋 Core Schema of S-GMKG
 
