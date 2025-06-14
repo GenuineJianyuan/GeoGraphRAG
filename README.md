@@ -12,7 +12,7 @@ GeoGraphRAG enhances geospatial knowledge representation by leveraging the seman
 
 ## 📂 Repository Contents
 
-- **Benchmarks**: Contains 100 sample cases for evaluating performance.
+- **Benchmarks**: Contains 300 sample cases for performance evaluation, including 100 complex tasks (5–10 steps, sample1–100.json) and 200 simple tasks (1–4 steps, sample101–300.json).
 - **`core/` folder**: Stores the core methods of GeoGraphRAG.
 - **`core/utils/llm_config.py`**: Defines the basic configuration for LLM usage.
 - **`sgmkg.db`**: An instance of the S-GMKG including:
