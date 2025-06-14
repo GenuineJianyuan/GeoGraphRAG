@@ -18,6 +18,14 @@ GeoGraphRAG enhances geospatial knowledge representation by leveraging the seman
 - **`sgmkg.db`**: An instance of the S-GMKG including:
   - `schema_entity` table: 15,224 entities
   - `schema_relation` table: 77,134 relationships
+- **demo/ folder**: Contains demonstration materials including a video that visually represents the geospatial modeling using the proposed GeoGraphRAG approach in landslide susceptibility evaluations.
+
+
+---
+
+## 📊 Baseline Data Distribution
+
+The baseline dataset used for benchmarking GeoGraphRAG consists of 300 modeling tasks with diverse complexity levels. Among them, 100 tasks are classified as complex, each involving 5 to 10 sequential functional steps, while the remaining 200 tasks are simple, containing 1 to 4 steps. This distribution ensures a balanced evaluation across a spectrum of geospatial modeling scenarios, enabling comprehensive assessment of the method's robustness and scalability.
 
 ---
 
