@@ -1,0 +1,20 @@
+﻿{
+    "query": "Merge two FeatureCollections",
+    "datasource": [
+        "FeatureCollection"
+    ],
+    "raw_code": "task descr: Merge two FeatureCollections\n// Load two FeatureCollections (example: countries and a specific country)\nvar fc1 = ee.FeatureCollection(\"FAO/GAUL/2015/level0\");\nvar fc2 = ee.FeatureCollection(\"FAO/GAUL/2015/level0\").filter(ee.Filter.eq('ADM0_NAME', 'China'));\n\n// Merge the two collections into one\nvar merged = fc1.merge(fc2);\n\n// Output the result to the console\nprint('Merged FeatureCollection:', merged);",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.Filter.eq",
+        "ee.FeatureCollection.filter",
+        "ee.FeatureCollection.merge"
+    ],
+    "processing step": [
+        "Load the first FeatureCollection",
+        "Load the second FeatureCollection and filter it by a specific condition",
+        "Merge the two FeatureCollections into one",
+        "Print the merged FeatureCollection to the console"
+    ],
+    "output": "Merged FeatureCollection"
+}

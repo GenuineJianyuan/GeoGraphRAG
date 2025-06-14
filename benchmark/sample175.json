@@ -1,0 +1,21 @@
+﻿{
+    "query": "Count images in collection",
+    "datasource": [
+        "Landsat8",
+        "region of interest"
+    ],
+    "raw_code": "task descr: Show the number of images in the image collection\n// Define region\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load Landsat collection\nvar landsatCol = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR')\n  .filterBounds(region);\n\n// Count images\nvar count = landsatCol.size();\nprint('Number of images:', count);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.size"
+    ],
+    "processing step": [
+        "Define a region of interest",
+        "Load a Landsat image collection",
+        "Filter the collection by the defined region",
+        "Count the number of images in the filtered collection"
+    ],
+    "output": "Number of images in the collection"
+}

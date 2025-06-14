@@ -1,0 +1,25 @@
+﻿{
+    "query": "Uniformly sample raster images by vector zones",
+    "datasource": [
+        "region of interest",
+        "MODIS imagery"
+    ],
+    "raw_code": "task descr: Uniformly sample raster images by vector zones\n// Define region of interest\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load NDVI image and clip\nvar ndviImage = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .first()\n  .clip(region);\n\n// Generate regular grid points\nvar grid = ndviImage.sample({\n  region: region,\n  scale: 250,\n  projection: ndviImage.projection(),\n  geometries: true\n});\n\n// Export grid samples to CSV\nExport.table.toDrive({\n  collection: grid,\n  description: 'Regular_Grid_Samples',\n  fileFormat: 'CSV'\n});",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "ee.Image.clip",
+        "ee.Image.sample",
+        "ee.Image.projection",
+        "Export.table.toDrive"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load and clip the NDVI image",
+        "Generate a regular grid of points",
+        "Export the grid samples to CSV"
+    ],
+    "output": "CSV file of grid samples"
+}

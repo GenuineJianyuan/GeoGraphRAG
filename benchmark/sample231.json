@@ -1,0 +1,22 @@
+﻿{
+    "query": "Calculate the average slope within the vector area",
+    "datasource": [
+        "vector region",
+        "DEM"
+    ],
+    "raw_code": "task descr: Calculate the average slope within the vector area\n// Define vector region\nvar vectorRegion = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load DEM and compute slope\nvar slope = ee.Terrain.slope(ee.Image('USGS/SRTMGL1_003')).clip(vectorRegion);\n\n// Compute mean slope\nvar meanSlope = slope.reduceRegion({\n  reducer: ee.Reducer.mean(),\n  geometry: vectorRegion,\n  scale: 30,\n  maxPixels: 1e9\n});\nprint('Mean Slope:', meanSlope);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Terrain.slope",
+        "ee.Image.clip",
+        "ee.Reducer.mean",
+        "ee.Image.reduceRegion"
+    ],
+    "processing step": [
+        "Define the vector region of interest",
+        "Load the DEM and compute the slope",
+        "Clip the slope image to the vector region",
+        "Compute the mean slope within the vector region"
+    ],
+    "output": "Mean slope value"
+}

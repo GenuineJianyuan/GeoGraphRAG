@@ -1,0 +1,16 @@
+﻿{
+    "query": "Draw a rectangular vector boundary and print its attributes",
+    "datasource": [
+        "vector data"
+    ],
+    "raw_code": "var rect = ee.Geometry.Rectangle([-120, 30, -110, 40], 'EPSG:4326', false);\\nprint('Rectangle Properties', rect.coordinates());",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "rect.coordinates"
+    ],
+    "processing step": [
+        "Create a rectangle geometry using the specified coordinates and projection",
+        "Print the properties of the rectangle, specifically the coordinates"
+    ],
+    "output": "Rectangle properties (coordinates)"
+}

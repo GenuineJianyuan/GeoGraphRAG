@@ -1,0 +1,23 @@
+﻿{
+    "query": "Calculate the standard deviation of EVI within the vector area",
+    "datasource": [
+        "vector region",
+        "MODIS EVI"
+    ],
+    "raw_code": "task descr: Calculate the standard deviation of EVI within the vector area\\n// Define vector region\\nvar vectorRegion = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load MODIS EVI\\nvar eviImage = ee.ImageCollection('MODIS/061/MOD13Q1')\\n  .select('EVI')\\n  .first()\\n  .clip(vectorRegion);\\n\\n// Compute EVI stdDev\\nvar stdDevEVI = eviImage.reduceRegion({\\n  reducer: ee.Reducer.stdDev(),\\n  geometry: vectorRegion,\\n  scale: 250,\\n  maxPixels: 1e9\\n});\\nprint('EVI stdDev:', stdDevEVI);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "ee.Image.clip",
+        "ee.Reducer.stdDev",
+        "ee.Image.reduceRegion"
+    ],
+    "processing step": [
+        "Define a vector region using a rectangle",
+        "Load and select the EVI band from the MODIS image collection",
+        "Clip the EVI image to the defined vector region",
+        "Compute the standard deviation of EVI within the vector region"
+    ],
+    "output": "EVI standard deviation"
+}

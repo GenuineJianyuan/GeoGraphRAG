@@ -1,0 +1,23 @@
+﻿{
+    "query": "Calculate the minimum value composite image of the image collection",
+    "datasource": [
+        "region of interest",
+        "MODIS/061/MOD13Q1"
+    ],
+    "raw_code": "task descr: Calculate the minimum value composite image of the image collection\\n// Define region of interest\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load NDVI image collection\\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\\n  .select('NDVI')\\n  .filterBounds(region);\\n\\n// Min composite\\nvar ndviMinImage = ndviCol.min().clip(region);\\nMap.addLayer(ndviMinImage, {min: 0, max: 9000, palette: ['white', 'brown']}, 'NDVI Min');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.min",
+        "ee.Image.clip",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load and filter the NDVI image collection",
+        "Calculate the minimum value composite image",
+        "Clip the composite image to the region of interest"
+    ],
+    "output": "NDVI Min composite image"
+}

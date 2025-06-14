@@ -1,0 +1,22 @@
+﻿{
+    "query": "Crop the slope layer to the city boundary",
+    "datasource": [
+        "DEM",
+        "city boundary"
+    ],
+    "raw_code": "task descr: Crop the slope layer to the city boundary\\n// Define city boundary (example rectangle here)\\nvar cityBoundary = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load DEM\\nvar dem = ee.Image('USGS/SRTMGL1_003');\\n\\n// Compute slope\\nvar slope = ee.Terrain.slope(dem);\\n\\n// Clip slope to city boundary\\nvar clippedSlope = slope.clip(cityBoundary);\\n\\n// Add clipped slope layer\\nMap.addLayer(clippedSlope, {min: 0, max: 60, palette: ['white', 'red']}, 'Slope clipped to city boundary');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Image",
+        "ee.Terrain.slope",
+        "ee.Image.clip",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define city boundary as a geometry",
+        "Load DEM image",
+        "Compute slope from DEM",
+        "Clip slope to city boundary"
+    ],
+    "output": "Slope layer clipped to city boundary"
+}

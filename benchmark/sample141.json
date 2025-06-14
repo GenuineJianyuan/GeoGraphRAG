@@ -1,0 +1,19 @@
+﻿{
+    "query": "Calculate NDVI for Landsat 5 imagery",
+    "datasource": [
+        "Landsat5"
+    ],
+    "raw_code": "task descr: Calculate NDVI for Landsat 5 imagery\n// Load a Landsat 5 image (choose a specific date and location if needed)\nvar image = ee.Image('LANDSAT/LT05/C02/T1_L2');\n\n// Compute NDVI using the near-infrared (SR_B4) and red (SR_B3) bands\nvar ndvi = image.normalizedDifference(['SR_B4', 'SR_B3']).rename('NDVI');\n\n// Output the result to the console\nprint('NDVI Image:', ndvi);",
+    "api": [
+        "ee.Image",
+        "ee.Image.normalizedDifference",
+        "ee.Image.rename"
+    ],
+    "processing step": [
+        "Load a Landsat 5 image",
+        "Compute NDVI using the near-infrared and red bands",
+        "Rename the resulting NDVI image",
+        "Output the NDVI image to the console"
+    ],
+    "output": "NDVI Image"
+}

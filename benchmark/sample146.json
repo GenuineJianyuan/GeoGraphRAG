@@ -1,0 +1,20 @@
+﻿{
+    "query": "Extract the maximum value layer from the image",
+    "datasource": [
+        "Landsat8"
+    ],
+    "raw_code": "var collection = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2').select('SR_B.'); var maxImage = collection.max(); print('Max Value Image:', maxImage);",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.max",
+        "print"
+    ],
+    "processing step": [
+        "Load an image collection (e.g., Landsat 8 surface reflectance)",
+        "Select reflective bands",
+        "Reduce the collection to get the maximum value for each pixel",
+        "Output the result"
+    ],
+    "output": "Max Value Image"
+}

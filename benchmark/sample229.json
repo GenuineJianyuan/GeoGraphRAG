@@ -1,0 +1,23 @@
+﻿{
+    "query": "Extract raster values at the centroid of vector zones",
+    "datasource": [
+        "vector region",
+        "MODIS NDVI"
+    ],
+    "raw_code": "task descr: Extract raster values at the centroid of vector zones\n// Define vector region\nvar vectorRegion = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load MODIS NDVI\nvar ndviImage = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .first();\n\n// Compute centroid\nvar centroid = vectorRegion.centroid();\n\n// Sample raster at centroid\nvar value = ndviImage.sample({\n  region: centroid,\n  scale: 250\n});\n\nprint('NDVI at centroid:', value);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "ee.Geometry.centroid",
+        "ee.Image.sample"
+    ],
+    "processing step": [
+        "Define a vector region using a rectangle geometry",
+        "Load MODIS NDVI image collection and select the 'NDVI' band",
+        "Get the first image from the NDVI image collection",
+        "Compute the centroid of the vector region",
+        "Sample the NDVI value at the centroid with a specified scale"
+    ],
+    "output": "NDVI value at the centroid of the vector region"
+}

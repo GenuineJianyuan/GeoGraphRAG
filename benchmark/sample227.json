@@ -1,0 +1,23 @@
+﻿{
+    "query": "Reproject raster data to vector area",
+    "datasource": [
+        "vector region",
+        "MODIS NDVI"
+    ],
+    "raw_code": "task descr: Reproject raster data to vector area\n// Define vector region\nvar vectorRegion = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load MODIS NDVI\nvar ndviImage = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .first();\n\n// Reproject raster to EPSG:3857\nvar reprojectedNDVI = ndviImage.reproject({\n  crs: 'EPSG:3857',\n  scale: 250\n}).clip(vectorRegion);\n\nMap.addLayer(reprojectedNDVI, {min: 0, max: 9000, palette: ['white', 'green']}, 'Reprojected NDVI');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "ee.Image.reproject",
+        "ee.Image.clip",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define a vector region",
+        "Load and select the first image from MODIS NDVI collection",
+        "Reproject the NDVI image to EPSG:3857",
+        "Clip the reprojected NDVI image to the vector region"
+    ],
+    "output": "Reprojected NDVI clipped to vector region"
+}

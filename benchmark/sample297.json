@@ -1,0 +1,18 @@
+﻿{
+    "query": "Export FeatureCollection as Shapefile",
+    "datasource": [
+        "FeatureCollection"
+    ],
+    "raw_code": "task descr: Export FeatureCollection as Shapefile\\n// Create example FeatureCollection\\nvar points = ee.FeatureCollection([\\n  ee.Feature(ee.Geometry.Point([116.4, 39.9]), {'id': 1}),\\n  ee.Feature(ee.Geometry.Point([116.41, 39.91]), {'id': 2})\\n]);\\n\\n// Export FeatureCollection as Shapefile\\nExport.table.toDrive({\\n  collection: points,\\n  description: 'Points_Shapefile',\\n  fileFormat: 'SHP'\\n});",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.Feature",
+        "ee.Geometry.Point",
+        "Export.table.toDrive"
+    ],
+    "processing step": [
+        "Create a FeatureCollection with example points",
+        "Export the FeatureCollection to a Shapefile and save it to Google Drive"
+    ],
+    "output": "Shapefile of FeatureCollection"
+}

@@ -1,0 +1,24 @@
+﻿{
+    "query": "Get the last image in the image collection",
+    "datasource": [
+        "Landsat8"
+    ],
+    "raw_code": "var landsatCol = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR').filterDate('2020-05-01', '2020-09-30').filterBounds(ee.Geometry.Point([116.4, 39.9])).filter(ee.Filter.lt('CLOUD_COVER', 10));\nvar lastImage = landsatCol.sort('system:time_start', false).first();\nprint(lastImage);",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filterBounds",
+        "ee.Geometry.Point",
+        "ee.Filter.lt",
+        "ee.ImageCollection.filter",
+        "ee.ImageCollection.sort",
+        "ee.ImageCollection.first",
+        "print"
+    ],
+    "processing step": [
+        "Load and filter Landsat image collection",
+        "Sort the image collection by time in ascending order",
+        "Select the last image from the sorted collection"
+    ],
+    "output": "Last image in the image collection"
+}

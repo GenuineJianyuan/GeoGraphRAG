@@ -1,0 +1,23 @@
+﻿{
+    "query": "Uniformly sample 50 points from the grid image",
+    "datasource": [
+        "region of interest",
+        "MODIS NDVI image"
+    ],
+    "raw_code": "task descr: Uniformly sample 50 points from the grid image\\n// Define region of interest\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load NDVI image and clip\\nvar ndviImage = ee.ImageCollection('MODIS/061/MOD13Q1')\\n  .select('NDVI')\\n  .first()\\n  .clip(region);\\n\\n// Uniform grid sampling via .sample() — picks points aligned to the image grid\\nvar gridSamples = ndviImage.sample({\\n  region: region,\\n  scale: 250,\\n  geometries: true\\n});\\n\\n// Export grid samples to CSV\\nExport.table.toDrive({\\n  collection: gridSamples.limit(50), // limit to 50 points if needed\\n  description: 'Uniform_Grid_50_Samples',\\n  fileFormat: 'CSV'\\n});",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "ee.Image.clip",
+        "ee.Image.sample",
+        "Export.table.toDrive"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load and clip the NDVI image",
+        "Sample 50 points from the grid",
+        "Export the sampled points to a CSV file"
+    ],
+    "output": "CSV file with 50 uniformly sampled points"
+}

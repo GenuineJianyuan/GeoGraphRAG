@@ -1,0 +1,16 @@
+﻿{
+    "query": "Display Image Band Information",
+    "datasource": [
+        "DEM"
+    ],
+    "raw_code": "var image = ee.Image('USGS/SRTMGL1_003'); print('Image Band Names:', image.bandNames());",
+    "api": [
+        "ee.Image",
+        "ee.Image.bandNames"
+    ],
+    "processing step": [
+        "Load a DEM image from the USGS/SRTMGL1_003 dataset",
+        "Print the band names of the loaded image"
+    ],
+    "output": "Band names of the DEM image"
+}

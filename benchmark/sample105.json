@@ -1,0 +1,17 @@
+﻿{
+    "query": "Visualize a VIIRS nighttime light image",
+    "datasource": [
+        "VIIRS Nighttime Light Image"
+    ],
+    "raw_code": "var image = ee.ImageCollection('NOAA/VIIRS/DNB/MONTHLY_V1/VCMCFG').first(); Map.addLayer(image, {}, 'VIIRS Night Lights');",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.first",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load the first image from the VIIRS Nighttime Light Image Collection",
+        "Add the image to the map for visualization"
+    ],
+    "output": "Nighttime Light Visualization"
+}

@@ -1,0 +1,21 @@
+﻿{
+    "query": "Filter MODIS NDVI time period",
+    "datasource": [
+        "MODIS imagery",
+        "region of interest"
+    ],
+    "raw_code": "task descr: Filter MODIS NDVI time period\\n// Define region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load and filter MODIS NDVI\\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\\n  .select('NDVI')\\n  .filterDate('2020-06-01', '2020-08-31')\\n  .filterBounds(region);\\n\\nprint('Filtered NDVI collection:', ndviCol);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filterBounds"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load MODIS NDVI image collection",
+        "Select the NDVI band",
+        "Filter by date and region"
+    ],
+    "output": "Filtered NDVI collection"
+}

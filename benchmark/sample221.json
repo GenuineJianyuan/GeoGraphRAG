@@ -1,0 +1,22 @@
+﻿{
+    "query": "Clip raster images using vector zones",
+    "datasource": [
+        "vector region",
+        "MODIS NDVI"
+    ],
+    "raw_code": "task descr: Use vector zones to clip raster images\\n// Define vector region\\nvar vectorRegion = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load MODIS NDVI\\nvar ndviImage = ee.ImageCollection('MODIS/061/MOD13Q1')\\n  .select('NDVI')\\n  .first();\\n\\n// Clip to vector region\\nvar clippedNDVI = ndviImage.clip(vectorRegion);\\nMap.addLayer(clippedNDVI, {min: 0, max: 9000, palette: ['white', 'green']}, 'Clipped NDVI');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "ee.Image.clip",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define a vector region",
+        "Load MODIS NDVI data",
+        "Clip the NDVI image to the vector region",
+        "Add the clipped NDVI layer to the map"
+    ],
+    "output": "Clipped NDVI image"
+}

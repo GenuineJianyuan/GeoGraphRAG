@@ -1,0 +1,18 @@
+﻿{
+    "query": "Visualize WorldClim monthly average temperature",
+    "datasource": [
+        "WorldClim monthly mean temperature"
+    ],
+    "raw_code": "task descr: Load and visualize the WorldClim monthly average temperature data\n// Load and visualize WorldClim monthly mean temperature (minimal version)\nvar temp = ee.Image(\"WORLDCLIM/V1/BIO\").select('bio12');  // bio12 = Mean Temperature of Coldest Month\n\n// Display the temperature data\nMap.addLayer(temp, {min: -10, max: 30, palette: ['blue', 'white', 'red']}, 'Temp');",
+    "api": [
+        "ee.Image",
+        "ee.Image.select",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load WorldClim monthly mean temperature data",
+        "Select the 'bio12' band (Mean Temperature of Coldest Month)",
+        "Display the temperature data on the map with a specified color palette"
+    ],
+    "output": "Temperature map visualization"
+}

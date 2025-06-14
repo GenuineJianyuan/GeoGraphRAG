@@ -1,0 +1,27 @@
+﻿{
+    "query": "Calculate the proportion of cells in a specific elevation range in the DEM",
+    "datasource": [
+        "DEM"
+    ],
+    "raw_code": "task descr: Calculate the proportion of cells in a specific elevation range in the DEM\n// Load DEM\nvar dem = ee.Image('USGS/SRTMGL1_003');\n\n// Define elevation range\nvar minElev = 800;\nvar maxElev = 1200;\n\n// Define region\nvar region = ee.Geometry.Rectangle([100.5, 23.0, 101.5, 24.0]);\n\n// Create mask\nvar inRange = dem.gte(minElev).and(dem.lte(maxElev));\n\n// Count pixels\nvar targetCount = inRange.reduceRegion({\n  reducer: ee.Reducer.sum(),\n  geometry: region,\n  scale: 30\n});\n\nvar totalCount = dem.mask().reduceRegion({\n  reducer: ee.Reducer.count(),\n  geometry: region,\n  scale: 30\n});\n\n// Compute ratio\nvar proportion = ee.Number(targetCount.get('elevation'))\n  .divide(totalCount.get('elevation'))\n  .multiply(100);\n\nprint('Proportion (%):', proportion);",
+    "api": [
+        "ee.Image",
+        "ee.Geometry.Rectangle",
+        "ee.Image.gte",
+        "ee.Image.lte",
+        "ee.Image.and",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.sum",
+        "ee.Reducer.count",
+        "ee.Image.mask",
+        "ee.Number.divide",
+        "ee.Number.multiply"
+    ],
+    "processing step": [
+        "Load the DEM image",
+        "Define the elevation range and region of interest",
+        "Create a mask for the specified elevation range",
+        "Count the number of pixels within and outside the range"
+    ],
+    "output": "Proportion of cells in the specified elevation range"
+}

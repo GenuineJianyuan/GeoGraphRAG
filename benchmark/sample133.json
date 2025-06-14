@@ -1,0 +1,17 @@
+﻿{
+    "query": "Filter the vector set by attribute",
+    "datasource": [
+        "vector data"
+    ],
+    "raw_code": "var countries = ee.FeatureCollection(\"FAO/GAUL/2015/level0\");\nvar unitedStates = countries.filter(ee.Filter.eq('ADM0_NAME', 'United States'));\nprint('United States Feature:', unitedStates);",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.Filter.eq",
+        "ee.FeatureCollection.filter"
+    ],
+    "processing step": [
+        "load a feature collection",
+        "filter the feature collection by an attribute"
+    ],
+    "output": "filtered feature collection"
+}

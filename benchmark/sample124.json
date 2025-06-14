@@ -1,0 +1,18 @@
+﻿{
+    "query": "Draw a circular buffer and display it",
+    "datasource": [
+        "Point"
+    ],
+    "raw_code": "task descr: Draw a circular buffer and display it\n// Create and display a circular buffer (minimal version)\nvar point = ee.Geometry.Point([-115, 30]);\nvar buffer = point.buffer(100000); // 100 km radius\nMap.addLayer(buffer, {color: 'blue'}, 'Buffer');",
+    "api": [
+        "ee.Geometry.Point",
+        "ee.Geometry.buffer",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Create a point geometry",
+        "Generate a circular buffer around the point",
+        "Add the buffer to the map with a blue color"
+    ],
+    "output": "Circular buffer displayed on the map"
+}

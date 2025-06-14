@@ -1,0 +1,22 @@
+﻿{
+    "query": "Print the cloud cover of each image in the image collection",
+    "datasource": [
+        "Landsat8",
+        "region of interest"
+    ],
+    "raw_code": "task descr: Print the cloud cover of each image in the image collection\\n// Define region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load Landsat collection\\nvar landsatCol = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR')\\n  .filterBounds(region);\\n\\n// Map to extract cloud cover\\nvar cloudInfo = landsatCol.map(function(img) {\\n  return ee.Feature(null, {\\n    'system:index': img.get('system:index'),\\n    'CLOUD_COVER': img.get('CLOUD_COVER')\\n  });\\n});\\n\\nprint('Cloud cover of images:', cloudInfo);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection",
+        "ee.ImageCollection.filterBounds",
+        "ee.Image.get",
+        "ee.Feature"
+    ],
+    "processing step": [
+        "Define a region of interest",
+        "Load and filter Landsat image collection by the defined region",
+        "Map over the image collection to extract cloud cover information",
+        "Print the cloud cover information"
+    ],
+    "output": "Cloud cover information of images"
+}

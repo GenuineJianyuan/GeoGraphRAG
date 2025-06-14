@@ -1,0 +1,19 @@
+﻿{
+    "query": "Visualize MODIS LST image",
+    "datasource": [
+        "MODIS LST imagery"
+    ],
+    "raw_code": "var image = ee.ImageCollection('MODIS/006/MOD11A2').first(); Map.addLayer(image.select('LST_Day_1km'), {}, 'MODIS LST');",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.first",
+        "Map.addLayer",
+        "ee.Image.select"
+    ],
+    "processing step": [
+        "Load the first image from the MODIS LST collection",
+        "Select the 'LST_Day_1km' band from the image",
+        "Add the selected band to the map for visualization"
+    ],
+    "output": "Visualization of MODIS LST image"
+}

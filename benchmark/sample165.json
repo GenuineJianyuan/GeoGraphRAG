@@ -1,0 +1,19 @@
+﻿{
+    "query": "Image collection sorted by time",
+    "datasource": [
+        "Landsat8"
+    ],
+    "raw_code": "task descr: Image collection sorted by time\\n// Load and filter Landsat image collection\\nvar landsatCol = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR')\\n  .filterDate('2020-05-01', '2020-09-30')\\n  .filterBounds(ee.Geometry.Point([116.4, 39.9]));\\n\\n// Sort collection by time ascending\\nvar sortedCol = landsatCol.sort('system:time_start');\\nprint(sortedCol);",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filterBounds",
+        "ee.Geometry.Point",
+        "ee.ImageCollection.sort"
+    ],
+    "processing step": [
+        "Load and filter Landsat image collection",
+        "Sort collection by time ascending"
+    ],
+    "output": "Sorted image collection"
+}

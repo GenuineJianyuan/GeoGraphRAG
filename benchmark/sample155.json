@@ -1,0 +1,19 @@
+﻿{
+    "query": "Display the histogram of a band in the image",
+    "datasource": [
+        "Landsat8"
+    ],
+    "raw_code": "var image = ee.Image('LANDSAT/LC08/C01/T1_SR/LC08_123032_20140515').select('B4'); var region = ee.Geometry.Rectangle([116.2, 39.7, 116.6, 40.0]); var histogram = ui.Chart.image.histogram({ image: image, region: region, scale: 30, maxPixels: 1e8 }).setChartType('ColumnChart').setOptions({ title: 'Red Band Histogram', hAxis: {title: 'Reflectance'}, vAxis: {title: 'Pixel count'}, colors: ['#e31a1c'] }); print(histogram);",
+    "api": [
+        "ee.Image",
+        "ee.Geometry.Rectangle",
+        "ui.Chart.image.histogram"
+    ],
+    "processing step": [
+        "Select the B4 band from the Landsat8 image",
+        "Define a rectangular region of interest",
+        "Generate a histogram for the selected band within the defined region",
+        "Print the histogram to the console"
+    ],
+    "output": "Histogram of the red band"
+}

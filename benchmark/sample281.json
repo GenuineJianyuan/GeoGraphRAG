@@ -1,0 +1,20 @@
+﻿{
+    "query": "Classify the DEM by elevation levels",
+    "datasource": [
+        "dem"
+    ],
+    "raw_code": "task descr: Classify the DEM by elevation levels\nvar dem = ee.Image('USGS/SRTMGL1_003');\nvar demClass = dem.expression(\n  '(b < 100) ? 1 : (b < 500) ? 2 : (b < 1000) ? 3 : 4',\n  {'b': dem}).rename('dem_class');\nMap.addLayer(demClass, {min:1, max:4, palette:['blue','green','yellow','brown']}, 'DEM Classified');",
+    "api": [
+        "ee.Image",
+        "ee.Image.expression",
+        "ee.Image.rename",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load the SRTM DEM data",
+        "Classify the DEM based on elevation levels using an expression",
+        "Rename the classified image",
+        "Add the classified DEM to the map with a specified color palette"
+    ],
+    "output": "Classified DEM"
+}

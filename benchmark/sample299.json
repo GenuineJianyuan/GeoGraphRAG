@@ -1,0 +1,25 @@
+﻿{
+    "query": "Export NDVI time series to CSV",
+    "datasource": [
+        "MODIS imagery"
+    ],
+    "raw_code": "task descr: Export NDVI time series to CSV\n// Assume NDVI collection is ready: ndviCollection\nvar ndviCollection = ee.ImageCollection('MODIS/061/MOD13A2').select('NDVI');\n\nvar ndviMean = ndviCollection.map(function(img) {\n  return ee.Feature(null, {\n    'date': img.date().format('YYYY-MM-dd'),\n    'NDVI': img.reduceRegion({\n      reducer: ee.Reducer.mean(),\n      geometry: img.geometry(),  // Use image bounds\n      scale: 500,\n      maxPixels: 1e13\n    }).get('NDVI')\n  });\n});\n\nExport.table.toDrive({\n  collection: ee.FeatureCollection(ndviMean),\n  description: 'NDVI_TimeSeries',\n  fileFormat: 'CSV'\n});",
+    "api": [
+        "ee.ImageCollection.select",
+        "ee.Image.date",
+        "ee.Image.format",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.mean",
+        "ee.Image.geometry",
+        "ee.Feature",
+        "ee.FeatureCollection",
+        "Export.table.toDrive"
+    ],
+    "processing step": [
+        "Select the NDVI band from MODIS imagery",
+        "Map over the NDVI collection to calculate mean NDVI for each image",
+        "Format the date and extract mean NDVI value",
+        "Export the resulting table to a CSV file"
+    ],
+    "output": "CSV file of NDVI time series"
+}

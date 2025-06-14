@@ -1,0 +1,19 @@
+﻿{
+    "query": "Display the SWIR band layer of Landsat 8",
+    "datasource": [
+        "Landsat 8"
+    ],
+    "raw_code": "var image = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2').first(); Map.addLayer(image.select('SR_B6'), {}, 'SWIR');",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.first",
+        "Map.addLayer",
+        "ee.Image.select"
+    ],
+    "processing step": [
+        "Load the first image from the Landsat 8 collection",
+        "Select the SWIR band from the image",
+        "Add the selected SWIR band as a layer to the map"
+    ],
+    "output": "SWIR band layer displayed on the map"
+}

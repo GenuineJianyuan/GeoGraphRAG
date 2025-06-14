@@ -1,0 +1,18 @@
+﻿{
+    "query": "Extract the minimum value layer from the image",
+    "datasource": [
+        "Landsat 8 surface reflectance"
+    ],
+    "raw_code": "var collection = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2').select('SR_B.'); var minImage = collection.mix(); print('Max Value Image:', minImage);",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.mix"
+    ],
+    "processing step": [
+        "Load an image collection (e.g., Landsat 8 surface reflectance)",
+        "Select reflective bands",
+        "Reduce the collection to get the minimum value for each pixel"
+    ],
+    "output": "Minimum Value Image"
+}

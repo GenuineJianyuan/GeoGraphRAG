@@ -1,0 +1,20 @@
+﻿{
+    "query": "Calculate the residual by subtracting a reference elevation from the DEM",
+    "datasource": [
+        "DEM"
+    ],
+    "raw_code": "task descr: Calculate the residual by subtracting a reference elevation from the DEM\n// Define region\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load DEM\nvar dem = ee.Image('USGS/SRTMGL1_003').clip(region);\n\n// Compute residual: DEM - 500m\nvar residual = dem.subtract(500);\n\n// Add residual layer\nMap.addLayer(residual, {min: -500, max: 1500, palette: ['blue', 'white', 'brown']}, 'DEM - 500m Residual');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Image.clip",
+        "ee.Image.subtract",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load the DEM and clip it to the region",
+        "Compute the residual by subtracting 500 meters from the DEM",
+        "Add the residual layer to the map"
+    ],
+    "output": "DEM - 500m Residual"
+}

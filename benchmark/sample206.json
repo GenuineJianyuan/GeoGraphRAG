@@ -1,0 +1,23 @@
+﻿{
+    "query": "Get the size of the MODIS NDVI image collection",
+    "datasource": [
+        "MODIS NDVI",
+        "region of interest"
+    ],
+    "raw_code": "task descr: Get the size of the MODIS NDVI image collection\\n// Define region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load MODIS NDVI\\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\\n  .select('NDVI')\\n  .filterBounds(region);\\n\\n// Get collection size\\nvar count = ndviCol.size();\\nprint('NDVI collection size:', count);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.size"
+    ],
+    "processing step": [
+        "Define a region of interest using a rectangle",
+        "Load the MODIS NDVI image collection",
+        "Select the 'NDVI' band from the image collection",
+        "Filter the image collection by the defined region",
+        "Get the size (number of images) in the filtered image collection",
+        "Print the size of the NDVI image collection"
+    ],
+    "output": "Size of the MODIS NDVI image collection"
+}

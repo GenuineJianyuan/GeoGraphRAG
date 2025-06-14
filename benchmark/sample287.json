@@ -1,0 +1,22 @@
+﻿{
+    "query": "Mask the areas where EVI is greater than 0.5",
+    "datasource": [
+        "MODIS imagery (MOD13Q1)"
+    ],
+    "raw_code": "var evi = ee.ImageCollection('MODIS/061/MOD13Q1').select('EVI').first(); var eviMask = evi.gt(5000).selfMask(); Map.addLayer(eviMask, {palette:['blue']}, 'EVI > 0.5 Mask');",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "ee.Image.gt",
+        "ee.Image.selfMask",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Select the EVI band from the MODIS image collection",
+        "Get the first image in the collection",
+        "Create a mask where EVI is greater than 5000",
+        "Add the masked layer to the map"
+    ],
+    "output": "EVI > 0.5 Mask"
+}

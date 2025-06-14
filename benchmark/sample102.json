@@ -1,0 +1,18 @@
+﻿{
+    "query": "Display Sentinel-2 RGB bands",
+    "datasource": [
+        "Sentinel-2 imagery"
+    ],
+    "raw_code": "var image = ee.ImageCollection('COPERNICUS/S2').first(); Map.addLayer(image, {bands: ['B4','B3','B2']}, 'Sentinel-2 RGB');",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.first",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load Sentinel-2 imagery into an ImageCollection",
+        "Get the first image from the ImageCollection",
+        "Add the RGB bands of the image to the map"
+    ],
+    "output": "RGB visualization of Sentinel-2 imagery"
+}

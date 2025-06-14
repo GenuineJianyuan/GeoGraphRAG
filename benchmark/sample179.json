@@ -1,0 +1,23 @@
+﻿{
+    "query": "Reproject the image collection",
+    "datasource": [
+        "Landsat8",
+        "region of interest"
+    ],
+    "raw_code": "task descr: Reproject the image collection\\n// Define region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load Landsat collection\\nvar landsatCol = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR')\\n  .filterBounds(region);\\n\\n// Reproject first image\\nvar firstImage = landsatCol.first()\\n  .reproject({\\n    crs: 'EPSG:3857',\\n    scale: 30\\n  });\\n\\nMap.addLayer(firstImage, {bands: ['B4', 'B3', 'B2'], min: 0, max: 3000}, 'Reprojected Image');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.first",
+        "ee.Image.reproject",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define a region of interest",
+        "Load and filter Landsat image collection by the defined region",
+        "Select the first image from the collection",
+        "Reproject the selected image to EPSG:3857 with a scale of 30 meters"
+    ],
+    "output": "Reprojected Image"
+}

@@ -1,0 +1,20 @@
+﻿{
+    "query": "Set vector layer fill color",
+    "datasource": [
+        "vector data"
+    ],
+    "raw_code": "var polygon = ee.Feature(ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]));\n\nMap.addLayer(ee.FeatureCollection([polygon]).style({\n  color: 'black',\n  fillColor: 'yellow'\n}), {}, 'Polygon with Fill');",
+    "api": [
+        "ee.Feature",
+        "ee.Geometry.Rectangle",
+        "ee.FeatureCollection",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Create a rectangle geometry",
+        "Convert the geometry to a feature",
+        "Create a feature collection from the feature",
+        "Add the styled feature collection to the map"
+    ],
+    "output": "Styled polygon on the map"
+}

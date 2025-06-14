@@ -1,0 +1,19 @@
+﻿{
+    "query": "Load Sentinel-1 VV polarization image",
+    "datasource": [
+        "Sentinel-1"
+    ],
+    "raw_code": "var image = ee.ImageCollection('COPERNICUS/S1_GRD').first(); Map.addLayer(image.select('VV'), {}, 'Sentinel-1 VV');",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.first",
+        "Map.addLayer",
+        "ee.Image.select"
+    ],
+    "processing step": [
+        "Load Sentinel-1 VV polarization image collection",
+        "Select the first image from the collection",
+        "Add the VV band of the selected image to the map"
+    ],
+    "output": "Sentinel-1 VV polarization image on the map"
+}

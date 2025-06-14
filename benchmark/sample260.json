@@ -1,0 +1,16 @@
+﻿{
+    "query": "Add map layer description text",
+    "datasource": [],
+    "raw_code": "var legendPanel = ui.Panel({\n  style: {position: 'bottom-left', padding: '8px'}\n});\nlegendPanel.add(ui.Label('Layer: DEM Elevation (m)'));\nMap.add(legendPanel);",
+    "api": [
+        "ui.Panel",
+        "ui.Label",
+        "Map.add"
+    ],
+    "processing step": [
+        "Create a UI panel with specified style",
+        "Add a label to the panel",
+        "Add the panel to the map"
+    ],
+    "output": "Map with added layer description text"
+}

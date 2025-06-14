@@ -1,0 +1,24 @@
+﻿{
+    "query": "Composite the image set into an RGB layer",
+    "datasource": [
+        "Landsat8",
+        "region of interest"
+    ],
+    "raw_code": "task descr: Composite the image set into an RGB layer\\n// Define region of interest\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load Landsat collection\\nvar landsatCol = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR')\\n  .select(['B4', 'B3', 'B2'])\\n  .filterBounds(region);\\n\\n// Median composite as RGB\\nvar rgbComposite = landsatCol.median().clip(region);\\nMap.addLayer(rgbComposite, {min: 0, max: 3000}, 'RGB Composite');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection",
+        "select",
+        "filterBounds",
+        "median",
+        "clip",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load and select bands from the Landsat collection",
+        "Filter the collection by the region of interest",
+        "Create a median composite and clip it to the region"
+    ],
+    "output": "RGB Composite"
+}

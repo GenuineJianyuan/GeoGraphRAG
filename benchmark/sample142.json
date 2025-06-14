@@ -1,0 +1,17 @@
+﻿{
+    "query": "Calculate NDWI for Landsat 5 imagery",
+    "datasource": [
+        "Landsat5"
+    ],
+    "raw_code": "task descr: Calculate NDWI for Landsat 5 imagery\n// Load a Landsat 5 image (choose a specific date and location if needed)\nvar image = ee.Image('LANDSAT/LT05/C02/T1_L2');\n\n// Compute NDWI using green (SR_B2) and near-infrared (SR_B4) bands\nvar ndwi = image.normalizedDifference(['SR_B2', 'SR_B4']).rename('NDWI');\n\n// Output the result to the console\nprint('NDWI Image:', ndwi);",
+    "api": [
+        "ee.Image"
+    ],
+    "processing step": [
+        "Load a Landsat 5 image",
+        "Compute NDWI using green and near-infrared bands",
+        "Rename the resulting NDWI band",
+        "Output the NDWI image to the console"
+    ],
+    "output": "NDWI Image"
+}

@@ -1,0 +1,21 @@
+﻿{
+    "query": "Show areas with elevation below 100 meters",
+    "datasource": [
+        "DEM"
+    ],
+    "raw_code": "task descr: Show areas with elevation below 100 meters\n// Define region\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load DEM\nvar dem = ee.Image('USGS/SRTMGL1_003').clip(region);\n\n// Mask elevation < 100m\nvar lowElevation = dem.lt(100).selfMask();\nMap.addLayer(lowElevation, {palette: ['blue']}, 'Elevation < 100m');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Image.clip",
+        "ee.Image.lt",
+        "ee.Image.selfMask",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define a region of interest using a rectangle",
+        "Load the DEM and clip it to the defined region",
+        "Create a mask for areas with elevation less than 100 meters",
+        "Add the masked layer to the map with a blue palette"
+    ],
+    "output": "Masked elevation layer (Elevation < 100m)"
+}

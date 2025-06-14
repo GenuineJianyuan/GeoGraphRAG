@@ -1,0 +1,21 @@
+﻿{
+    "query": "Calculate the standard deviation of all pixels in the image",
+    "datasource": [
+        "Landsat8"
+    ],
+    "raw_code": "var image = ee.Image('LANDSAT/LC08/C02/T1_L2').select('SR_B.');\nvar stdDev = image.reduceRegion({\n  reducer: ee.Reducer.stdDev(),\n  geometry: image.geometry(),\n  scale: 30,\n  maxPixels: 1e10\n});\nprint('Pixel Standard Deviation:', stdDev);",
+    "api": [
+        "ee.Image",
+        "ee.Image.select",
+        "ee.Reducer.stdDev",
+        "ee.Image.geometry",
+        "ee.Image.reduceRegion"
+    ],
+    "processing step": [
+        "Load a Landsat 8 surface reflectance image",
+        "Select specific bands from the image",
+        "Calculate the standard deviation of all pixels in the image",
+        "Print the result"
+    ],
+    "output": "Pixel Standard Deviation"
+}

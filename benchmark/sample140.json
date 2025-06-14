@@ -1,0 +1,19 @@
+﻿{
+    "query": "Print all attribute fields in the vector data",
+    "datasource": [
+        "vector data"
+    ],
+    "raw_code": "task descr: Print all attribute fields in the vector data\n// Load a FeatureCollection (e.g., countries)\nvar fc = ee.FeatureCollection(\"FAO/GAUL/2015/level0\");\n\n// Get the first feature to extract property names\nvar firstFeature = fc.first();\n\n// Get the property names (attribute fields) of the feature\nvar propertyNames = firstFeature.propertyNames();\n\n// Output the list of attribute fields to the console\nprint('Attribute Fields:', propertyNames);",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.FeatureCollection.first",
+        "ee.Feature.propertyNames"
+    ],
+    "processing step": [
+        "Load a FeatureCollection",
+        "Get the first feature from the FeatureCollection",
+        "Extract the property names (attribute fields) of the first feature",
+        "Output the list of attribute fields to the console"
+    ],
+    "output": "List of attribute fields"
+}

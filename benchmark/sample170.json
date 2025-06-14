@@ -1,0 +1,22 @@
+﻿{
+    "query": "Calculate the median composite image of an image collection",
+    "datasource": [
+        "region of interest",
+        "MODIS/061/MOD13Q1 (NDVI)"
+    ],
+    "raw_code": "task descr: Calculate the median composite image of an image collection\\n// Define region of interest\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load NDVI image collection\\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\\n  .select('NDVI')\\n  .filterBounds(region);\\n\\n// Median composite\\nvar ndviMedianImage = ndviCol.median().clip(region);\\nMap.addLayer(ndviMedianImage, {min: 0, max: 9000, palette: ['white', 'lightgreen']}, 'NDVI Median');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.median",
+        "ee.Image.clip"
+    ],
+    "processing step": [
+        "Define a region of interest using a rectangle",
+        "Load and select the NDVI band from the MODIS image collection",
+        "Filter the image collection to the defined region",
+        "Calculate the median composite of the filtered image collection"
+    ],
+    "output": "NDVI Median Composite Image"
+}

@@ -1,0 +1,23 @@
+﻿{
+    "query": "Display LST time series line chart",
+    "datasource": [
+        "MODIS imagery (MOD11A2)"
+    ],
+    "raw_code": "var point = ee.Geometry.Point([116.4, 39.9]);\n\nvar lstCol = ee.ImageCollection('MODIS/061/MOD11A2')\n  .select('LST_Day_1km')\n  .filterBounds(point);\n\nvar lstChart = ui.Chart.image.series({\n  imageCollection: lstCol.map(function(img) {\n    return img.multiply(0.02).copyProperties(img, ['system:time_start']);\n  }),\n  region: point,\n  reducer: ee.Reducer.mean(),\n  scale: 1000\n});\nprint(lstChart);",
+    "api": [
+        "ee.Geometry.Point",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ee.Image.multiply",
+        "ee.Image.copyProperties",
+        "ui.Chart.image.series",
+        "ee.Reducer.mean"
+    ],
+    "processing step": [
+        "Create a point geometry",
+        "Select and filter MODIS LST data by the point",
+        "Scale and copy properties of the images in the collection",
+        "Generate a time series chart with mean LST values"
+    ],
+    "output": "LST time series line chart"
+}

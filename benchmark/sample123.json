@@ -1,0 +1,16 @@
+﻿{
+    "query": "Calculate LineString length",
+    "datasource": [
+        "LineString"
+    ],
+    "raw_code": "var line = ee.Geometry.LineString([[116.38, 39.90], [117.20, 39.13], [118.79, 32.07]]); var lengthMeters = line.length(); print('Length in meters:', lengthMeters);",
+    "api": [
+        "ee.Geometry.LineString",
+        "ee.Geometry.length"
+    ],
+    "processing step": [
+        "Define a LineString geometry",
+        "Calculate the length of the LineString"
+    ],
+    "output": "Length in meters"
+}

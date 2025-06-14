@@ -1,0 +1,24 @@
+﻿{
+    "query": "Calculate the minimum MODIS LST",
+    "datasource": [
+        "MODIS LST",
+        "region of interest"
+    ],
+    "raw_code": "task descr: Calculate the minimum MODIS LST\n// Define region\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load MODIS LST\nvar lstCol = ee.ImageCollection('MODIS/061/MOD11A2')\n  .select('LST_Day_1km')\n  .filterBounds(region);\n\n// Compute min LST\nvar lstMin = lstCol.min().multiply(0.02).clip(region);\nMap.addLayer(lstMin, {min: 250, max: 320, palette: ['blue', 'green', 'red']}, 'LST Min');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.min",
+        "ee.Image.multiply",
+        "ee.Image.clip",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load and select the MODIS LST data",
+        "Filter the MODIS LST data by the region",
+        "Compute the minimum LST and apply scaling factor"
+    ],
+    "output": "Minimum LST image"
+}

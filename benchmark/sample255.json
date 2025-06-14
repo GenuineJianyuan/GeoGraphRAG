@@ -1,0 +1,17 @@
+﻿{
+    "query": "Display current mouse position",
+    "datasource": [],
+    "raw_code": "var label = ui.Label();\nMap.add(label);\nMap.onMouseMove(function(coords) {\n  label.setValue('Lat: ' + coords.lat.toFixed(5) + ', Lon: ' + coords.lon.toFixed(5));\n});",
+    "api": [
+        "ui.Label",
+        "Map.add",
+        "Map.onMouseMove"
+    ],
+    "processing step": [
+        "Create a label for displaying coordinates",
+        "Add the label to the map",
+        "Set up an event listener for mouse movement on the map",
+        "Update the label with the current latitude and longitude of the mouse"
+    ],
+    "output": "Label with current mouse coordinates"
+}

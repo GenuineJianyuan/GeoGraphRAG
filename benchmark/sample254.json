@@ -1,0 +1,19 @@
+﻿{
+    "query": "Get cell values from SRTM DEM",
+    "datasource": [
+        "DEM"
+    ],
+    "raw_code": "var image = ee.Image('USGS/SRTMGL1_003'); Map.onClick(function(coords) { var point = ee.Geometry.Point([coords.lon, coords.lat]); var value = image.sample(point, 30).first(); print('Pixel Value at Click:', value); })",
+    "api": [
+        "ee.Image",
+        "ee.Geometry.Point",
+        "ee.Image.sample"
+    ],
+    "processing step": [
+        "Load the SRTM DEM image",
+        "Capture the click coordinates on the map",
+        "Create a point geometry from the click coordinates",
+        "Sample the DEM image at the clicked point"
+    ],
+    "output": "Pixel value at the clicked location"
+}

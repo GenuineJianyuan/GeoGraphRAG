@@ -1,0 +1,16 @@
+﻿{
+    "query": "Get coordinates from map click",
+    "datasource": [
+        "Map"
+    ],
+    "raw_code": "task descr: Click on the map to get coordinates\nMap.onClick(function(coords) {\n  print('Clicked Coordinates:', coords.lon, coords.lat);\n});",
+    "api": [
+        "Map.onClick",
+        "print"
+    ],
+    "processing step": [
+        "Set up a click event listener on the map",
+        "Print the longitude and latitude of the clicked point"
+    ],
+    "output": "Clicked coordinates (longitude, latitude)"
+}

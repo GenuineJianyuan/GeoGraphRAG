@@ -1,0 +1,20 @@
+﻿{
+    "query": "Calculate image band ratio",
+    "datasource": [
+        "Landsat8"
+    ],
+    "raw_code": "var image = ee.Image('LANDSAT/LC08/C02/T1_L2');\nvar ratio = image.select(['SR_B5', 'SR_B4']).addBands(image.select('SR_B5').divide(image.select('SR_B4')));\nprint('Band Ratio Image:', ratio);",
+    "api": [
+        "ee.Image",
+        "ee.Image.select",
+        "ee.Image.addBands",
+        "ee.Image.divide"
+    ],
+    "processing step": [
+        "Load a Landsat 8 surface reflectance image",
+        "Select the SWIR and NIR bands",
+        "Calculate the band ratio (SWIR / NIR)",
+        "Add the calculated band ratio to the original image"
+    ],
+    "output": "Band Ratio Image"
+}

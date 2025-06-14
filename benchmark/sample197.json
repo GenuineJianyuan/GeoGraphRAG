@@ -1,0 +1,24 @@
+﻿{
+    "query": "Calculate the coefficient of variation of DEM",
+    "datasource": [
+        "DEM"
+    ],
+    "raw_code": "task descr: Calculate the coefficient of variation of DEM\\n// Load DEM\\nvar dem = ee.Image('USGS/SRTMGL1_003');\\n\\n// Define kernel size (window size in pixels)\\nvar kernel = ee.Kernel.square({\\n  radius: 3,   // radius in pixels, e.g., 3 -> 7x7 window\\n  units: 'pixels',\\n  magnitude: 1\\n});\\n\\n// Compute local mean\\nvar mean = dem.reduceNeighborhood({\\n  reducer: ee.Reducer.mean(),\\n  kernel: kernel\\n});\\n\\n// Compute local std dev\\nvar std = dem.reduceNeighborhood({\\n  reducer: ee.Reducer.stdDev(),\\n  kernel: kernel\\n});\\n\\n// Compute coefficient of variation (CV = std / mean)\\nvar cv = std.divide(mean);\\n\\n// Visualization parameters\\nvar visParams = {\\n  min: 0,\\n  max: 1,\\n  palette: ['white', 'blue', 'green', 'yellow', 'red']\\n};\\n\\n// Display CV map\\nMap.centerObject(dem, 5);\\nMap.addLayer(cv, visParams, 'DEM CV');",
+    "api": [
+        "ee.Image",
+        "ee.Kernel.square",
+        "ee.Reducer.mean",
+        "ee.Reducer.stdDev",
+        "ee.Image.reduceNeighborhood",
+        "ee.Image.divide",
+        "Map.centerObject",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load DEM data",
+        "Define a square kernel for neighborhood operations",
+        "Compute the local mean using the defined kernel",
+        "Compute the local standard deviation using the defined kernel"
+    ],
+    "output": "Coefficient of variation map of DEM"
+}

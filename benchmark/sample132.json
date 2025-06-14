@@ -1,0 +1,16 @@
+﻿{
+    "query": "Calculate the perimeter of vector features",
+    "datasource": [
+        "vector data"
+    ],
+    "raw_code": "task descr: Calculate the perimeter of vector features\\n// Calculate the perimeter of a feature (e.g., polygon) in meters\\nvar polygon = ee.Geometry.Polygon([[[-120, 30], [-115, 30], [-115, 35], [-120, 35]]]);\\n\\nvar perimeter = polygon.perimeter({maxError: 1});\\n\\nprint('Perimeter (meters):', perimeter);",
+    "api": [
+        "ee.Geometry.Polygon",
+        "ee.Geometry.perimeter"
+    ],
+    "processing step": [
+        "Create a polygon geometry",
+        "Calculate the perimeter of the polygon"
+    ],
+    "output": "Perimeter (meters)"
+}

@@ -1,0 +1,19 @@
+﻿{
+    "query": "Calculate NDBI for Landsat 5 imagery",
+    "datasource": [
+        "Landsat5"
+    ],
+    "raw_code": "task descr: Calculate NDBI for Landsat 5 imagery\\n// Load a Landsat 5 image\\nvar image = ee.Image('LANDSAT/LT05/C02/T1_L2');\\n\\n// Compute NDBI using short-wave infrared (SR_B5) and near-infrared (SR_B4) bands\\nvar ndbi = image.normalizedDifference(['SR_B5', 'SR_B4']).rename('NDBI');\\n\\n// Output the result to the console\\nprint('NDBI Image:', ndbi);",
+    "api": [
+        "ee.Image",
+        "ee.Image.normalizedDifference",
+        "ee.Image.rename"
+    ],
+    "processing step": [
+        "Load a Landsat 5 image",
+        "Compute NDBI using short-wave infrared (SR_B5) and near-infrared (SR_B4) bands",
+        "Rename the computed NDBI band as 'NDBI'",
+        "Output the NDBI image to the console"
+    ],
+    "output": "NDBI Image"
+}

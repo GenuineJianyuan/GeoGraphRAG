@@ -1,0 +1,20 @@
+﻿{
+    "query": "Calculate slope direction layer",
+    "datasource": [
+        "DEM"
+    ],
+    "raw_code": "task descr: Calculate slope direction layer\\n// Define region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load DEM\\nvar dem = ee.Image('USGS/SRTMGL1_003').clip(region);\\n\\n// Compute aspect\\nvar aspect = ee.Terrain.aspect(dem);\\nMap.addLayer(aspect, {min: 0, max: 360, palette: ['blue', 'green', 'yellow', 'red']}, 'Aspect');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Image.clip",
+        "ee.Terrain.aspect",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load and clip the DEM to the region",
+        "Compute the aspect (slope direction) from the DEM",
+        "Add the aspect layer to the map"
+    ],
+    "output": "Slope direction layer"
+}

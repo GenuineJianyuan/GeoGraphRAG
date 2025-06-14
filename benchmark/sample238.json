@@ -1,0 +1,28 @@
+﻿{
+    "query": "Extract the minimum NDVI time for the vector area",
+    "datasource": [
+        "vector region",
+        "MODIS NDVI collection"
+    ],
+    "raw_code": "task descr: Extract the minimum NDVI time for the vector area\n// Define vector region\nvar vectorRegion = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load MODIS NDVI collection\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .filterBounds(vectorRegion);\n\n// Map NDVI mean per image\nvar ndviMean = ndviCol.map(function(img) {\n  var mean = img.reduceRegion({\n    reducer: ee.Reducer.mean(),\n    geometry: vectorRegion,\n    scale: 250\n  }).get('NDVI');\n  return img.set('NDVI_mean', mean);\n});\n\n// Sort by NDVI_mean ascending\nvar minNdviImage = ndviMean.sort('NDVI_mean', true).first();\nvar minDate = ee.Date(minNdviImage.get('system:time_start')).format('YYYY-MM-dd');\nprint('Min NDVI Date:', minDate);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.mean",
+        "ee.Image.set",
+        "ee.ImageCollection.map",
+        "ee.ImageCollection.sort",
+        "ee.Image.first",
+        "ee.Date",
+        "ee.Date.format"
+    ],
+    "processing step": [
+        "Define the vector region of interest",
+        "Load and filter the MODIS NDVI image collection",
+        "Calculate the mean NDVI for each image in the collection within the vector region",
+        "Sort the images by their mean NDVI value and select the image with the minimum NDVI"
+    ],
+    "output": "Minimum NDVI date"
+}

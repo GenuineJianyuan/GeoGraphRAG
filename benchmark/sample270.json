@@ -1,0 +1,29 @@
+﻿{
+    "query": "Calculate the trend of water body area change",
+    "datasource": [
+        "Landsat8",
+        "region of interest"
+    ],
+    "raw_code": "var region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\nvar ndwiCol = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR')\n  .filterBounds(region)\n  .filter(ee.Filter.lt('CLOUD_COVER', 10))\n  .map(function(img) {\n    return img.normalizedDifference(['B3', 'B5']).rename('NDWI')\n      .copyProperties(img, ['system:time_start']);\n  });\n\nvar waterAreaChart = ui.Chart.image.series({\n  imageCollection: ndwiCol.map(function(img) {\n    var water = img.gt(0).selfMask();\n    return water.multiply(ee.Image.pixelArea()).rename('WaterArea');\n  }),\n  region: region,\n  reducer: ee.Reducer.sum(),\n  scale: 30\n}).setChartType('LineChart');\n\nprint(waterAreaChart);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection",
+        "ee.Filter.lt",
+        "ee.Image.normalizedDifference",
+        "ee.Image.rename",
+        "ee.Image.copyProperties",
+        "ui.Chart.image.series",
+        "ee.Image.gt",
+        "ee.Image.selfMask",
+        "ee.Image.multiply",
+        "ee.Image.pixelArea",
+        "ee.Reducer.sum"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Filter and process Landsat8 images to calculate NDWI",
+        "Calculate water area for each image in the collection",
+        "Generate a line chart to show the trend of water area over time"
+    ],
+    "output": "Water area trend chart"
+}

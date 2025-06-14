@@ -1,0 +1,22 @@
+﻿{
+    "query": "Classify NDVI by vegetation levels",
+    "datasource": [
+        "MODIS imagery (MOD13Q1)"
+    ],
+    "raw_code": "var ndvi = ee.ImageCollection('MODIS/061/MOD13Q1').select('NDVI').first(); var ndviClass = ndvi.expression('(b < 2000) ? 1 : (b < 4000) ? 2 : (b < 6000) ? 3 : 4', {'b': ndvi}).rename('ndvi_class'); Map.addLayer(ndviClass, {min:1, max:4, palette:['white','lightgreen','green','darkgreen']}, 'NDVI Class');",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "ee.Image.expression",
+        "ee.Image.rename",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Select the NDVI band from the MODIS image collection",
+        "Extract the first image in the collection",
+        "Classify the NDVI values into four classes using an expression",
+        "Add the classified NDVI layer to the map with a color palette"
+    ],
+    "output": "Classified NDVI map"
+}

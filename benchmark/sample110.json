@@ -1,0 +1,19 @@
+﻿{
+    "query": "Visualize ESA CCI Landcover Data",
+    "datasource": [
+        "ESA/CCI/LC/PROBAV/3.0.1"
+    ],
+    "raw_code": "var image = ee.ImageCollection('ESA/CCI/LC/PROBAV/3.0.1').first(); Map.addLayer(image.select('landcover'), {}, 'ESA Landcover');",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.first",
+        "ee.Image.select",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load the first image from the ESA/CCI/LC/PROBAV/3.0.1 collection",
+        "Select the 'landcover' band from the image",
+        "Add the selected band to the map with a default visualization"
+    ],
+    "output": "ESA Landcover visualization on the map"
+}

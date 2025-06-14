@@ -1,0 +1,17 @@
+﻿{
+    "query": "Switch map projection coordinate system",
+    "datasource": [
+        "dem"
+    ],
+    "raw_code": "var image = ee.Image('USGS/SRTMGL1_003').reproject({ crs: 'EPSG:3857', scale: 30 }); Map.addLayer(image, {min: 0, max: 3000, palette: ['white', 'green', 'brown']}, 'Reprojected DEM');",
+    "api": [
+        "ee.Image.reproject",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load the SRTM DEM image",
+        "Reproject the DEM image to EPSG:3857 with a scale of 30 meters",
+        "Add the reprojected DEM image to the map with a specified color palette"
+    ],
+    "output": "Reprojected DEM"
+}

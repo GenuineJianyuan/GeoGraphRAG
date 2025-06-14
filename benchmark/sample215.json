@@ -1,0 +1,25 @@
+﻿{
+    "query": "MODIS vegetation index threshold mask",
+    "datasource": [
+        "region of interest",
+        "MODIS NDVI"
+    ],
+    "raw_code": "task descr: MODIS vegetation index threshold mask\n// Define region\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load MODIS NDVI\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .filterBounds(region);\n\n// NDVI threshold mask (NDVI > 4000)\nvar ndviImage = ndviCol.first();\nvar ndviMask = ndviImage.gt(4000).selfMask();\nMap.addLayer(ndviMask, {palette: ['green']}, 'NDVI > 4000 Mask');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.first",
+        "ee.Image.gt",
+        "ee.Image.selfMask",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load and select MODIS NDVI data",
+        "Filter the NDVI data by the region of interest",
+        "Create a mask for NDVI values greater than 4000"
+    ],
+    "output": "NDVI > 4000 Mask"
+}

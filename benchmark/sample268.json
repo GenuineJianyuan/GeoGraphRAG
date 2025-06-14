@@ -1,0 +1,26 @@
+﻿{
+    "query": "Calculate the number of snow-covered days in a certain area",
+    "datasource": [
+        "MODIS imagery (MOD10A1)"
+    ],
+    "raw_code": "var snowDays = ee.ImageCollection('MODIS/061/MOD10A1').filterDate('2023-01-01', '2023-12-31').select('NDSI_Snow_Cover').map(function(img) { return ee.Feature(null, { 'snow_day': img.gt(0).reduceRegion({ reducer: ee.Reducer.max(), geometry: ee.Geometry.Rectangle([100.5, 23.0, 101.5, 24.0]), scale: 500 }).get('NDSI_Snow_Cover') || 0 }); }); print('Snow cover days:', snowDays.aggregate_sum('snow_day'));",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.map",
+        "ee.Image.gt",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.max",
+        "ee.Geometry.Rectangle",
+        "ee.Feature",
+        "ee.ImageCollection.aggregate_sum"
+    ],
+    "processing step": [
+        "Filter MODIS image collection by date",
+        "Select NDSI_Snow_Cover band from images",
+        "Map over the image collection to calculate snow-covered days",
+        "Aggregate and sum the snow-covered days"
+    ],
+    "output": "Total number of snow-covered days"
+}

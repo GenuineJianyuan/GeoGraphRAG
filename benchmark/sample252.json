@@ -1,0 +1,16 @@
+﻿{
+    "query": "Map zoom to vector area",
+    "datasource": [
+        "vector data"
+    ],
+    "raw_code": "var vectorRegion = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\nMap.centerObject(vectorRegion, 10);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "Map.centerObject"
+    ],
+    "processing step": [
+        "Create a rectangular geometry from coordinates",
+        "Center the map on the created geometry with a specified zoom level"
+    ],
+    "output": "Map centered on the vector area"
+}

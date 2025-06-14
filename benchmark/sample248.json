@@ -1,0 +1,20 @@
+﻿{
+    "query": "Set the minimum and maximum stretch for the image layer",
+    "datasource": [
+        "MODIS/061/MOD13Q1"
+    ],
+    "raw_code": "var ndvi = ee.ImageCollection('MODIS/061/MOD13Q1').select('NDVI').first(); Map.addLayer(ndvi, { min: 1000, max: 8000, palette: ['white', 'green'] }, 'NDVI with Stretch');",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load MODIS NDVI image collection",
+        "Select the NDVI band from the collection",
+        "Get the first image in the collection",
+        "Add the image to the map with a specified color palette and stretch"
+    ],
+    "output": "NDVI image with specified stretch and color palette"
+}

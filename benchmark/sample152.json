@@ -1,0 +1,21 @@
+﻿{
+    "query": "Calculate the mean of all pixels in the image",
+    "datasource": [
+        "Landsat 8"
+    ],
+    "raw_code": "task descr: Calculate the mean of all pixels in the image\\n// Load an image (e.g., Landsat 8 surface reflectance)\\nvar image = ee.Image('LANDSAT/LC08/C02/T1_L2').select('SR_B.');\\n\\n// Calculate the mean of all pixels in the image\\nvar meanValue = image.reduceRegion({\\n  reducer: ee.Reducer.mean(),\\n  geometry: image.geometry(),  // or use a specific area of interest\\n  scale: 30,                   // spatial resolution of Landsat 8\\n  maxPixels: 1e10\\n});\\n\\n// Output the result\\nprint('Mean Pixel Value:', meanValue);",
+    "api": [
+        "ee.Image",
+        "ee.Image.select",
+        "ee.Reducer.mean",
+        "ee.Image.geometry",
+        "ee.Image.reduceRegion"
+    ],
+    "processing step": [
+        "Load an image (Landsat 8)",
+        "Select bands from the image",
+        "Calculate the mean value of all pixels in the image",
+        "Output the mean pixel value"
+    ],
+    "output": "Mean Pixel Value"
+}

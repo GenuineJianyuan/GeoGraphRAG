@@ -1,0 +1,22 @@
+﻿{
+    "query": "Filter Landsat image collection by image ID",
+    "datasource": [
+        "Landsat8",
+        "region of interest"
+    ],
+    "raw_code": "task descr: Image collection is filtered by image ID\\n// Define region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load Landsat collection\\nvar landsatCol = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR')\\n  .filterBounds(region);\\n\\n// Filter by image ID (system:index)\\nvar filteredById = landsatCol.filter(ee.Filter.eq('system:index', 'LC08_123032_20200715'));\\n\\nprint('Filtered by image ID:', filteredById);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection",
+        "ee.ImageCollection.filterBounds",
+        "ee.Filter.eq",
+        "ee.ImageCollection.filter"
+    ],
+    "processing step": [
+        "Define a region of interest",
+        "Load Landsat 8 image collection",
+        "Filter the collection by the defined region",
+        "Filter the collection by a specific image ID"
+    ],
+    "output": "Filtered Landsat 8 image collection"
+}

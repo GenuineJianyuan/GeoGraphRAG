@@ -1,0 +1,17 @@
+﻿{
+    "query": "Dynamically display zoom level on the map",
+    "datasource": [],
+    "raw_code": "var zoomLabel = ui.Label();\nMap.add(zoomLabel);\nMap.onChangeZoom(function(zoom) {\n  zoomLabel.setValue('Zoom Level: ' + zoom);\n});",
+    "api": [
+        "ui.Label",
+        "Map.add",
+        "Map.onChangeZoom"
+    ],
+    "processing step": [
+        "Create a label to display the zoom level",
+        "Add the label to the map",
+        "Set up an event listener for zoom changes",
+        "Update the label with the current zoom level"
+    ],
+    "output": "A label displaying the current zoom level on the map"
+}

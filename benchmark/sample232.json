@@ -1,0 +1,22 @@
+﻿{
+    "query": "Calculate the mean aspect within the vector area",
+    "datasource": [
+        "vector region",
+        "DEM (SRTM)"
+    ],
+    "raw_code": "task descr: Calculate the mean aspect within the vector area\\n// Define vector region\\nvar vectorRegion = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load DEM and compute aspect\\nvar aspect = ee.Terrain.aspect(ee.Image('USGS/SRTMGL1_003')).clip(vectorRegion);\\n\\n// Compute mean aspect\\nvar meanAspect = aspect.reduceRegion({\\n  reducer: ee.Reducer.mean(),\\n  geometry: vectorRegion,\\n  scale: 30,\\n  maxPixels: 1e9\\n});\\nprint('Mean Aspect:', meanAspect);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Terrain.aspect",
+        "ee.Image.clip",
+        "ee.Reducer.mean",
+        "ee.Image.reduceRegion"
+    ],
+    "processing step": [
+        "Define the vector region of interest",
+        "Load the DEM and compute the aspect",
+        "Clip the aspect image to the vector region",
+        "Compute the mean aspect within the vector region"
+    ],
+    "output": "Mean aspect value"
+}

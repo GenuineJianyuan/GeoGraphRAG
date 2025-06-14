@@ -1,0 +1,20 @@
+﻿{
+    "query": "Calculate the maximum elevation of the DEM",
+    "datasource": [
+        "DEM"
+    ],
+    "raw_code": "task descr: Calculate the maximum elevation of the DEM\n// Define region\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load DEM\nvar dem = ee.Image('USGS/SRTMGL1_003').clip(region);\n\n// Compute max elevation\nvar maxElevation = dem.reduceRegion({\n  reducer: ee.Reducer.max(),\n  geometry: region,\n  scale: 30,\n  maxPixels: 1e9\n});\n\nprint('Max elevation:', maxElevation);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Image",
+        "ee.Image.clip",
+        "ee.Reducer.max",
+        "ee.Image.reduceRegion"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load the DEM and clip it to the region",
+        "Compute the maximum elevation in the clipped region"
+    ],
+    "output": "Maximum elevation value"
+}

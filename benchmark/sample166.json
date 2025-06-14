@@ -1,0 +1,19 @@
+﻿{
+    "query": "Sort Landsat image collection by cloud cover",
+    "datasource": [
+        "Landsat8"
+    ],
+    "raw_code": "task descr: Image collection sorted by cloud cover\n// Load and filter Landsat image collection\nvar landsatCol = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR')\n  .filterDate('2020-05-01', '2020-09-30')\n  .filterBounds(ee.Geometry.Point([116.4, 39.9]));\n\n// Sort collection by cloud cover ascending\nvar sortedCol = landsatCol.sort('CLOUD_COVER');\nprint(sortedCol);",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filterBounds",
+        "ee.Geometry.Point",
+        "ee.ImageCollection.sort"
+    ],
+    "processing step": [
+        "Load and filter Landsat image collection",
+        "Sort the collection by cloud cover in ascending order"
+    ],
+    "output": "Sorted Landsat image collection by cloud cover"
+}

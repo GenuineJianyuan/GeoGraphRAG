@@ -1,0 +1,17 @@
+﻿{
+    "query": "Add north arrow to map",
+    "datasource": [],
+    "raw_code": "task descr: Add north arrow to map\nvar northArrow = ui.Panel({\n  style: {\n    position: 'top-right',\n    padding: '8px',\n    fontWeight: 'bold',\n    fontSize: '24px'\n  }\n});\nnorthArrow.add(ui.Label('↑ N'));\nMap.add(northArrow);",
+    "api": [
+        "ui.Panel",
+        "ui.Label",
+        "Map.add"
+    ],
+    "processing step": [
+        "Create a panel for the north arrow",
+        "Set the style of the panel",
+        "Add a label with the north arrow symbol to the panel",
+        "Add the north arrow panel to the map"
+    ],
+    "output": "Map with north arrow added"
+}

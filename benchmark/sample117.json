@@ -1,0 +1,19 @@
+﻿{
+    "query": "Load and display Landsat 5 imagery",
+    "datasource": [
+        "Landsat5"
+    ],
+    "raw_code": "var image = ee.Image(\"LANDSAT/LT05/C02/T1_L2\").filterDate('2008-01-01', '2009-01-01').first();\nMap.addLayer(image, {bands: ['SR_B3', 'SR_B2', 'SR_B1'], min: 0, max: 30000}, 'Landsat 5');",
+    "api": [
+        "ee.Image",
+        "ee.Image.filterDate",
+        "ee.Image.first",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load a Landsat 5 image within the specified date range",
+        "Select the first image from the filtered collection",
+        "Display the RGB composite of the selected image"
+    ],
+    "output": "RGB composite of Landsat 5 image"
+}

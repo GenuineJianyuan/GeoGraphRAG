@@ -1,0 +1,18 @@
+﻿{
+    "query": "Create a 1km buffer around a point",
+    "datasource": [
+        "point geometry"
+    ],
+    "raw_code": "task descr: Create a 1km buffer around a point\n// Create a 1 km buffer around a point (minimal version)\nvar point = ee.Geometry.Point([-115, 30]);\nvar buffer = point.buffer(1000); // 1 km in meters\n\nMap.addLayer(buffer, {color: 'green'}, '1 km Buffer');",
+    "api": [
+        "ee.Geometry.Point",
+        "ee.Geometry.buffer",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "create a point geometry",
+        "create a 1 km buffer around the point",
+        "add the buffer to the map with a green color"
+    ],
+    "output": "1 km buffer around the point"
+}

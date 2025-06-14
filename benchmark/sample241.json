@@ -1,0 +1,17 @@
+﻿{
+    "query": "Draw NDVI legend",
+    "datasource": [],
+    "raw_code": "task descr: Draw NDVI legend\nvar legend = ui.Panel({style: {position: 'bottom-left'}});\nlegend.add(ui.Label('NDVI Legend'));\nlegend.add(ui.Label('White → Green (Low → High NDVI)'));\nMap.add(legend);",
+    "api": [
+        "ui.Panel",
+        "ui.Label",
+        "Map.add"
+    ],
+    "processing step": [
+        "Create a panel for the NDVI legend",
+        "Add a label to the panel indicating it is an NDVI legend",
+        "Add another label to the panel explaining the color scale from white to green",
+        "Add the legend panel to the map"
+    ],
+    "output": "NDVI legend on the map"
+}

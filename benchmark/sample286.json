@@ -1,0 +1,22 @@
+﻿{
+    "query": "Extract areas with NDVI less than 0.2 as a mask",
+    "datasource": [
+        "MODIS imagery"
+    ],
+    "raw_code": "var ndvi = ee.ImageCollection('MODIS/061/MOD13Q1').select('NDVI').first(); var ndviMask = ndvi.lt(2000).selfMask(); Map.addLayer(ndviMask, {palette:['red']}, 'NDVI < 0.2 Mask');",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "ee.Image.lt",
+        "ee.Image.selfMask",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Select the NDVI band from the MODIS image collection",
+        "Get the first image in the collection",
+        "Create a mask where NDVI is less than 0.2",
+        "Add the mask layer to the map"
+    ],
+    "output": "NDVI < 0.2 Mask"
+}

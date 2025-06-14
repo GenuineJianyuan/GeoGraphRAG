@@ -1,0 +1,23 @@
+﻿{
+    "query": "Mask areas with a slope greater than 25 degrees",
+    "datasource": [
+        "region of interest",
+        "DEM"
+    ],
+    "raw_code": "task descr: Mask areas with a slope greater than 25 degrees\n// Define region of interest\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load DEM\nvar dem = ee.Image('USGS/SRTMGL1_003').clip(region);\n\n// Compute slope\nvar slope = ee.Terrain.slope(dem);\n\n// Mask slope > 25 deg\nvar slopeMask = slope.gt(25);\nvar maskedSlope = slope.updateMask(slopeMask);\n\n// Add to map\nMap.addLayer(maskedSlope, {min: 0, max: 60, palette: ['white', 'red']}, 'Slope > 25 deg');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Image.clip",
+        "ee.Terrain.slope",
+        "ee.Image.gt",
+        "ee.Image.updateMask",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load and clip the DEM",
+        "Compute the slope from the DEM",
+        "Mask areas with a slope greater than 25 degrees"
+    ],
+    "output": "Masked slope image"
+}

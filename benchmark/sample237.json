@@ -1,0 +1,27 @@
+﻿{
+    "query": "Extract the time of maximum NDVI in the vector area",
+    "datasource": [
+        "vector region",
+        "MODIS NDVI collection"
+    ],
+    "raw_code": "task descr: Extract the time of maximum NDVI in the vector area\\n// Define vector region\\nvar vectorRegion = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load MODIS NDVI collection\\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\\n  .select('NDVI')\\n  .filterBounds(vectorRegion);\\n\\n// Map NDVI mean per image\\nvar ndviMean = ndviCol.map(function(img) {\\n  var mean = img.reduceRegion({\\n    reducer: ee.Reducer.mean(),\\n    geometry: vectorRegion,\\n    scale: 250\\n  }).get('NDVI');\\n  return img.set('NDVI_mean', mean);\\n});\\n\\n// Sort by NDVI_mean descending\\nvar maxNdviImage = ndviMean.sort('NDVI_mean', false).first();\\nvar maxDate = ee.Date(maxNdviImage.get('system:time_start')).format('YYYY-MM-dd');\\nprint('Max NDVI Date:', maxDate);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.mean",
+        "ee.Image.set",
+        "ee.ImageCollection.map",
+        "ee.ImageCollection.sort",
+        "ee.Image.get",
+        "ee.Date.format"
+    ],
+    "processing step": [
+        "Define a vector region",
+        "Load and filter MODIS NDVI collection",
+        "Calculate the mean NDVI for each image in the collection",
+        "Sort the images by mean NDVI and select the one with the highest value"
+    ],
+    "output": "Max NDVI Date"
+}

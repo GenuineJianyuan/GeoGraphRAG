@@ -1,0 +1,19 @@
+﻿{
+    "query": "Calculate slope layer",
+    "datasource": [
+        "dem"
+    ],
+    "raw_code": "task descr: Calculate slope layer\\n// Define region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load DEM\\nvar dem = ee.Image('USGS/SRTMGL1_003').clip(region);\\n\\n// Compute slope\\nvar slope = ee.Terrain.slope(dem);\\nMap.addLayer(slope, {min: 0, max: 60, palette: ['white', 'red']}, 'Slope');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Image.clip",
+        "ee.Terrain.slope"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load the DEM and clip it to the region",
+        "Compute the slope from the clipped DEM",
+        "Add the slope layer to the map with a specified color palette"
+    ],
+    "output": "Slope layer"
+}

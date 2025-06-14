@@ -1,0 +1,17 @@
+﻿{
+    "query": "Display NOAA GFS weather forecast images",
+    "datasource": [
+        "NOAA GFS forecast image"
+    ],
+    "raw_code": "task descr: Display NOAA GFS weather forecast images\\n// Load NOAA GFS forecast image\\nvar gfs = ee.ImageCollection('NOAA/GFS0P25')\\n  .first();\\n\\n// Add to map\\nMap.addLayer(gfs, {}, 'NOAA GFS');",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.first",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load the first image from the NOAA GFS forecast image collection",
+        "Add the loaded image to the map"
+    ],
+    "output": "NOAA GFS weather forecast image on the map"
+}

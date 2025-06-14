@@ -1,0 +1,21 @@
+﻿{
+    "query": "Terrain analysis",
+    "datasource": [
+        "DEM"
+    ],
+    "raw_code": "task descr: Use layer groups to manage multiple layers\nvar slope = ee.Terrain.slope(ee.Image('USGS/SRTMGL1_003'));\nvar aspect = ee.Terrain.aspect(ee.Image('USGS/SRTMGL1_003'));\n\nMap.layers().add(ui.Map.Layer(slope, {min: 0, max: 60, palette: ['white', 'red']}, 'Slope Layer'));\nMap.layers().add(ui.Map.Layer(aspect, {min: 0, max: 360, palette: ['blue', 'green', 'yellow', 'red']}, 'Aspect Layer'));",
+    "api": [
+        "ee.Terrain.slope",
+        "ee.Terrain.aspect",
+        "ee.Image",
+        "ui.Map.Layer",
+        "Map.layers"
+    ],
+    "processing step": [
+        "Calculate the slope from a DEM",
+        "Calculate the aspect from a DEM",
+        "Add the slope layer to the map with a specified color palette",
+        "Add the aspect layer to the map with a specified color palette"
+    ],
+    "output": "Slope and Aspect Layers on the map"
+}

@@ -1,0 +1,23 @@
+﻿{
+    "query": "MODIS LST Visualization",
+    "datasource": [
+        "MODIS影像"
+    ],
+    "raw_code": "task descr: MODIS LST Visualization\\n// Define region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load MODIS LST\\nvar lstCol = ee.ImageCollection('MODIS/061/MOD11A2')\\n  .select('LST_Day_1km')\\n  .filterBounds(region);\\n\\n// Visualize first LST image\\nvar lstImage = lstCol.first().multiply(0.02);\\nMap.addLayer(lstImage, {min: 250, max: 320, palette: ['blue', 'green', 'red']}, 'MODIS LST');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.first",
+        "ee.Image.multiply",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "定义感兴趣区域",
+        "加载MODIS地表温度数据",
+        "选择特定波段并筛选区域",
+        "可视化第一张LST图像"
+    ],
+    "output": "可视化的MODIS LST图像"
+}

@@ -1,0 +1,26 @@
+﻿{
+    "query": "Calculate the mean NDWI within the vector area",
+    "datasource": [
+        "vector region",
+        "Landsat8"
+    ],
+    "raw_code": "task descr: Calculate the mean NDWI within the vector area\\n// Define vector region\\nvar vectorRegion = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load Landsat image\\nvar landsat = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR')\\n  .filterBounds(vectorRegion)\\n  .filter(ee.Filter.lt('CLOUD_COVER', 10))\\n  .first();\\n\\n// Compute NDWI\\nvar ndwi = landsat.normalizedDifference(['B3', 'B5']).rename('NDWI');\\n\\n// Compute mean NDWI\\nvar meanNDWI = ndwi.reduceRegion({\\n  reducer: ee.Reducer.mean(),\\n  geometry: vectorRegion,\\n  scale: 30,\\n  maxPixels: 1e9\\n});\\nprint('Mean NDWI:', meanNDWI);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.filter",
+        "ee.Filter.lt",
+        "ee.ImageCollection.first",
+        "ee.Image.normalizedDifference",
+        "ee.Image.rename",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.mean"
+    ],
+    "processing step": [
+        "Define the vector region",
+        "Load and filter Landsat image",
+        "Compute NDWI",
+        "Compute mean NDWI within the vector region"
+    ],
+    "output": "Mean NDWI value"
+}

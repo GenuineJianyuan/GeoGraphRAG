@@ -1,0 +1,23 @@
+﻿{
+    "query": "Extract image capture date from the image collection",
+    "datasource": [
+        "region of interest",
+        "MODIS imagery (MOD13Q1)"
+    ],
+    "raw_code": "task descr: Extract image capture date from the image collection\\n// Define region of interest\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load NDVI image collection\\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\\n  .select('NDVI')\\n  .filterBounds(region);\\n\\n// Map to extract dates\\nvar dates = ndviCol.map(function(img) {\\n  return ee.Feature(null, {\\n    'date': img.date().format('YYYY-MM-dd')\\n  });\\n});\\n\\n// Print dates FeatureCollection\\nprint('Image dates:', dates);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ee.Image.date",
+        "ee.Image.format",
+        "ee.Feature"
+    ],
+    "processing step": [
+        "Define a region of interest",
+        "Load and filter an NDVI image collection by the region",
+        "Map over the image collection to extract and format the image dates",
+        "Print the dates as a FeatureCollection"
+    ],
+    "output": "FeatureCollection of image dates"
+}

@@ -1,0 +1,20 @@
+﻿{
+    "query": "Classify and map DEM",
+    "datasource": [
+        "DEM"
+    ],
+    "raw_code": "task descr: DEM is used for graded and classified mapping\\n// Define region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load DEM\\nvar dem = ee.Image('USGS/SRTMGL1_003').clip(region);\\n\\n// Classify elevation\\nvar classified = dem.expression('\\n  (b < 100) ? 1 : (b < 500) ? 2 : (b < 1000) ? 3 : 4',\\n  {'b': dem}\\n);\\n\\n// Add classified DEM\\nMap.addLayer(classified, {min: 1, max: 4, palette: ['blue', 'green', 'yellow', 'brown']}, 'DEM Classified');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Image",
+        "ee.Image.clip",
+        "ee.Image.expression"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load the DEM and clip it to the region",
+        "Classify the elevation using an expression",
+        "Add the classified DEM to the map"
+    ],
+    "output": "Classified DEM map"
+}

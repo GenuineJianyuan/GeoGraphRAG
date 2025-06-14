@@ -1,0 +1,26 @@
+﻿{
+    "query": "Statistics of area after raster clipping",
+    "datasource": [
+        "MODIS NDVI",
+        "vector region"
+    ],
+    "raw_code": "task descr: Statistics of area after raster clipping\n// Define vector region\nvar vectorRegion = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load MODIS NDVI\nvar ndviImage = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .first()\n  .clip(vectorRegion);\n\n// Create mask\nvar ndviMask = ndviImage.gt(4000);\n\n// Compute area\nvar area = ndviMask.multiply(ee.Image.pixelArea())\n  .reduceRegion({\n    reducer: ee.Reducer.sum(),\n    geometry: vectorRegion,\n    scale: 250,\n    maxPixels: 1e9\n});\nprint('Area NDVI > 4000 (m²):', area);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "ee.Image.clip",
+        "ee.Image.gt",
+        "ee.Image.multiply",
+        "ee.Image.pixelArea",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.sum"
+    ],
+    "processing step": [
+        "Define the vector region",
+        "Load and clip the MODIS NDVI image",
+        "Create a mask for NDVI values greater than 4000",
+        "Compute the area of the masked region"
+    ],
+    "output": "Area NDVI > 4000 (m²)"
+}

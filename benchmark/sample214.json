@@ -1,0 +1,21 @@
+﻿{
+    "query": "Filter MODIS snow cover time period",
+    "datasource": [
+        "MODIS影像",
+        "感兴趣区域"
+    ],
+    "raw_code": "task descr: Filter MODIS snow cover time period\\n// Define region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load and filter MODIS snow cover\\nvar snowCol = ee.ImageCollection('MODIS/061/MOD10A1')\\n  .select('NDSI_Snow_Cover')\\n  .filterDate('2021-01-01', '2021-02-28')\\n  .filterBounds(region);\\n\\nprint('Filtered Snow Cover Collection:', snowCol);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filterBounds"
+    ],
+    "processing step": [
+        "定义感兴趣区域",
+        "加载并选择MODIS雪覆盖数据",
+        "按日期过滤雪覆盖数据",
+        "按空间范围过滤雪覆盖数据"
+    ],
+    "output": "Filtered Snow Cover Collection"
+}

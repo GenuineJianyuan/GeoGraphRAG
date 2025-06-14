@@ -1,0 +1,20 @@
+﻿{
+    "query": "Classify the slope direction by orientation",
+    "datasource": [
+        "DEM"
+    ],
+    "raw_code": "var aspect = ee.Terrain.aspect(ee.Image('USGS/SRTMGL1_003'));\n\nvar aspectClass = aspect.expression(\n  '(b <= 45 || b > 315) ? 1 : (b <= 135) ? 2 : (b <= 225) ? 3 : 4',\n  {'b': aspect}).rename('aspect_class');\n\nMap.addLayer(aspectClass, {min:1, max:4, palette:['red','green','blue','yellow']}, 'Aspect Class');",
+    "api": [
+        "ee.Terrain.aspect",
+        "ee.Image.expression",
+        "ee.Image.rename",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Calculate the aspect (slope direction) from the DEM",
+        "Classify the aspect into four categories based on orientation",
+        "Rename the classified aspect image",
+        "Add the classified aspect layer to the map"
+    ],
+    "output": "Aspect Class Image"
+}

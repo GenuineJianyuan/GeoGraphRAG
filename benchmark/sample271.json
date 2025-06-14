@@ -1,0 +1,27 @@
+﻿{
+    "query": "Calculate the average NDVI for elevation zones",
+    "datasource": [
+        "region of interest",
+        "DEM",
+        "MODIS NDVI"
+    ],
+    "raw_code": "var region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\nvar dem = ee.Image('USGS/SRTMGL1_003').clip(region);\n\nvar ndvi = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .first().clip(region);\n\nvar elevationClass = dem.expression(\n  '(b < 100) ? 1 : (b < 500) ? 2 : (b < 1000) ? 3 : 4',\n  {'b': dem}).rename('elev_class');\n\nvar zonalStats = ndvi.addBands(elevationClass).reduceRegion({\n  reducer: ee.Reducer.mean().group(1, 'elev_class'),\n  geometry: region,\n  scale: 250,\n  maxPixels: 1e9\n});\nprint('NDVI by Elevation:', zonalStats);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Image.clip",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "ee.Image.expression",
+        "ee.Image.rename",
+        "ee.Image.addBands",
+        "ee.Reducer.mean.group",
+        "ee.Image.reduceRegion"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Clip DEM to the region and select NDVI from MODIS collection",
+        "Classify elevation into different zones",
+        "Compute zonal statistics for NDVI in each elevation zone"
+    ],
+    "output": "NDVI by Elevation"
+}

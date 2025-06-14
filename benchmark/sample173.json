@@ -1,0 +1,25 @@
+﻿{
+    "query": "Print the metadata of the image collection",
+    "datasource": [
+        "region of interest",
+        "MODIS imagery"
+    ],
+    "raw_code": "task descr: Print the metadata of the image collection\n// Define region of interest\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load NDVI image collection\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .filterBounds(region);\n\n// Map to convert images to FeatureCollection with metadata\nvar metaFC = ndviCol.map(function(img) {\n  return ee.Feature(null, {\n    'system:index': img.get('system:index'),\n    'system:time_start': img.get('system:time_start'),\n    'system:time_end': img.get('system:time_end'),\n    'projection': img.projection().crs()\n  });\n});\n\n// Print metadata FeatureCollection\nprint('Image collection metadata:', metaFC);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.map",
+        "ee.Image.get",
+        "ee.Image.projection",
+        "ee.Projection.crs",
+        "ee.Feature"
+    ],
+    "processing step": [
+        "Define a region of interest",
+        "Load and filter an NDVI image collection",
+        "Map images to a FeatureCollection with metadata",
+        "Print the metadata FeatureCollection"
+    ],
+    "output": "Metadata FeatureCollection"
+}

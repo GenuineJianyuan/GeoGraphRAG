@@ -1,0 +1,19 @@
+﻿{
+    "query": "Create a FeatureCollection and print the number of elements",
+    "datasource": [
+        "Point features"
+    ],
+    "raw_code": "task descr: Create a FeatureCollection and print the number of elements\n// Create a FeatureCollection and print the number of elements (minimal version)\nvar features = ee.FeatureCollection([\n  ee.Feature(ee.Geometry.Point([-120, 30])),\n  ee.Feature(ee.Geometry.Point([-115, 35])),\n  ee.Feature(ee.Geometry.Point([-110, 30]))\n]);\n\nprint('Number of features:', features.size());",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.Feature",
+        "ee.Geometry.Point",
+        "ee.FeatureCollection.size"
+    ],
+    "processing step": [
+        "Create a list of point geometries",
+        "Convert the list into a FeatureCollection",
+        "Print the size of the FeatureCollection"
+    ],
+    "output": "Number of features in the FeatureCollection"
+}

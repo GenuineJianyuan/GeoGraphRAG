@@ -1,0 +1,28 @@
+﻿{
+    "query": "Stratified sampling by NDVI classification",
+    "datasource": [
+        "region of interest",
+        "MODIS/061/MOD13Q1"
+    ],
+    "raw_code": "task descr: Stratified sampling by NDVI classification\\n// Define region of interest\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load an NDVI image\\nvar ndviImage = ee.ImageCollection('MODIS/061/MOD13Q1')\\n  .select('NDVI')\\n  .first()\\n  .clip(region);\\n\\n// Define NDVI classes\\nvar ndviClass = ndviImage.expression(\\n  '(b < 2000) ? 0 : (b < 4000) ? 1 : (b < 6000) ? 2 : 3',\\n  {'b': ndviImage}\\n).rename('NDVI_class');\\n\\n// Add class to image\\nvar classified = ndviImage.addBands(ndviClass);\\n\\n// Generate stratified samples\\nvar stratSamples = classified.stratifiedSample({\\n  numPoints: 50,\\n  classBand: 'NDVI_class',\\n  region: region,\\n  scale: 250,\\n  geometries: true\\n});\\n\\n// Export stratified samples to CSV\\nExport.table.toDrive({\\n  collection: stratSamples,\\n  description: 'Stratified_NDVI_Samples',\\n  fileFormat: 'CSV'\\n});",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "ee.Image.clip",
+        "ee.Image.expression",
+        "ee.Image.rename",
+        "ee.Image.addBands",
+        "ee.Image.stratifiedSample",
+        "Export.table.toDrive"
+    ],
+    "processing step": [
+        "Define region of interest",
+        "Load and clip NDVI image",
+        "Define NDVI classes using expression",
+        "Add NDVI class band to the image",
+        "Generate stratified samples",
+        "Export stratified samples to CSV"
+    ],
+    "output": "Stratified_NDVI_Samples.csv"
+}

@@ -1,0 +1,27 @@
+﻿{
+    "query": "Calculate the area of the region facing south",
+    "datasource": [
+        "region of interest",
+        "DEM"
+    ],
+    "raw_code": "task descr: Calculate the area of the region facing south.\\n// Define region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load DEM\\nvar dem = ee.Image('USGS/SRTMGL1_003').clip(region);\\n\\n// Compute aspect\\nvar aspect = ee.Terrain.aspect(dem);\\n\\n// Mask aspect between 135 and 225 (south-facing)\\nvar southAspectMask = aspect.gte(135).and(aspect.lte(225));\\n\\n// Compute area\\nvar area = southAspectMask.multiply(ee.Image.pixelArea())\\n  .reduceRegion({\\n    reducer: ee.Reducer.sum(),\\n    geometry: region,\\n    scale: 30,\\n    maxPixels: 1e9\\n  });\\n\\nprint('South-facing area (m²):', area);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Image.clip",
+        "ee.Terrain.aspect",
+        "ee.Image.gte",
+        "ee.Image.lte",
+        "ee.Image.and",
+        "ee.Image.multiply",
+        "ee.Image.pixelArea",
+        "ee.Reducer.sum",
+        "ee.Image.reduceRegion"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Clip the DEM to the region",
+        "Compute the aspect from the DEM",
+        "Mask the aspect to select south-facing areas"
+    ],
+    "output": "South-facing area in square meters"
+}

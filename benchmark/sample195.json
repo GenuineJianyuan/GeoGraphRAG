@@ -1,0 +1,20 @@
+﻿{
+    "query": "Calculate the mean elevation of the DEM",
+    "datasource": [
+        "DEM"
+    ],
+    "raw_code": "task descr: Calculate the mean elevation of the DEM\\n// Define region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load DEM\\nvar dem = ee.Image('USGS/SRTMGL1_003').clip(region);\\n\\n// Compute mean elevation\\nvar meanElevation = dem.reduceRegion({\\n  reducer: ee.Reducer.mean(),\\n  geometry: region,\\n  scale: 30,\\n  maxPixels: 1e9\\n});\\n\\nprint('Mean elevation:', meanElevation);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Image",
+        "ee.Image.clip",
+        "ee.Reducer.mean",
+        "ee.Image.reduceRegion"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load the DEM image and clip it to the region",
+        "Compute the mean elevation within the region"
+    ],
+    "output": "Mean elevation"
+}

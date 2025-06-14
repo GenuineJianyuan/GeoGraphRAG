@@ -1,0 +1,21 @@
+﻿{
+    "query": "Display global soil moisture imagery (ESA SMOS)",
+    "datasource": [
+        "ESA/SMOS/Soil_Moisture"
+    ],
+    "raw_code": "task descr: Display global soil moisture imagery (ESA SMOS)\\n// Load and display ESA SMOS Soil Moisture (minimal version)\\nvar smos = ee.ImageCollection(\"ESA/SMOS/Soil_Moisture\").filterDate('2020-01-01', '2020-02-01').first();\\n\\n// Display surface soil moisture\\nMap.addLayer(smos.select('SSM'), {min: 0, max: 0.5, palette: ['white', 'blue']}, 'Soil Moisture');",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.first",
+        "ee.Image.select",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load the ESA SMOS Soil Moisture image collection",
+        "Filter the image collection by date",
+        "Select the first image in the filtered collection",
+        "Display the selected surface soil moisture band"
+    ],
+    "output": "Surface soil moisture map"
+}

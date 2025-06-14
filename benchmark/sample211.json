@@ -1,0 +1,20 @@
+﻿{
+    "query": "Retrieve MODIS fire point image collection",
+    "datasource": [
+        "MODIS imagery",
+        "region of interest"
+    ],
+    "raw_code": "task descr: Retrieve MODIS fire point image collection\\n// Define region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load MODIS fire collection\\nvar fireCol = ee.ImageCollection('MODIS/061/MCD14DL')\\n  .filterBounds(region);\\n\\nprint('MODIS Fire Collection:', fireCol);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection",
+        "ee.ImageCollection.filterBounds"
+    ],
+    "processing step": [
+        "define a region of interest",
+        "load the MODIS fire image collection",
+        "filter the collection by the defined region",
+        "print the filtered MODIS fire collection"
+    ],
+    "output": "filtered MODIS fire collection"
+}

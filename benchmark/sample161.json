@@ -1,0 +1,21 @@
+﻿{
+    "query": "Filter the Landsat image collection by time",
+    "datasource": [
+        "Landsat8"
+    ],
+    "raw_code": "var landsatCol = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR').filterDate('2020-05-01', '2020-09-30').filterBounds(ee.Geometry.Point([116.4, 39.9]));\nprint(landsatCol);",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filterBounds",
+        "ee.Geometry.Point",
+        "print"
+    ],
+    "processing step": [
+        "Load Landsat image collection",
+        "Filter the collection by date",
+        "Filter the collection by geographic bounds",
+        "Print the filtered collection"
+    ],
+    "output": "Filtered Landsat image collection"
+}

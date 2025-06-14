@@ -1,0 +1,22 @@
+﻿{
+    "query": "Dynamic visualization of MODIS EVI",
+    "datasource": [
+        "MODIS EVI",
+        "region of interest"
+    ],
+    "raw_code": "task descr: Dynamic visualization of MODIS EVI\\n// Define region\\nvar region = ee.Geometry.Point([116.4, 39.9]);\\n\\n// Load MODIS EVI\\nvar eviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\\n  .select('EVI')\\n  .filterBounds(region);\\n\\n// EVI time series chart\\nvar chart = ui.Chart.image.series(eviCol, region, ee.Reducer.mean(), 250);\\nprint(chart);",
+    "api": [
+        "ee.Geometry.Point",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ui.Chart.image.series",
+        "ee.Reducer.mean"
+    ],
+    "processing step": [
+        "Define a point geometry for the region of interest",
+        "Load and select the EVI band from the MODIS image collection",
+        "Filter the image collection to the defined region",
+        "Create a time series chart of mean EVI values"
+    ],
+    "output": "EVI time series chart"
+}

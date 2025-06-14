@@ -1,0 +1,22 @@
+﻿{
+    "query": "Calculate the maximum MODIS NDVI",
+    "datasource": [
+        "MODIS影像"
+    ],
+    "raw_code": "task descr: Calculate the maximum MODIS NDVI\n// Define region\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load MODIS NDVI\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .filterBounds(region);\n\n// Compute max NDVI image\nvar ndviMax = ndviCol.max().clip(region);\nMap.addLayer(ndviMax, {min: 0, max: 9000, palette: ['white', 'green']}, 'NDVI Max');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.max",
+        "ee.Image.clip"
+    ],
+    "processing step": [
+        "定义感兴趣区域",
+        "加载MODIS NDVI数据",
+        "筛选感兴趣区域内的数据",
+        "计算最大NDVI值并裁剪"
+    ],
+    "output": "最大NDVI影像"
+}

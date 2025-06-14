@@ -1,0 +1,25 @@
+﻿{
+    "query": "Calculate Maximum MODIS EVI",
+    "datasource": [
+        "MODIS imagery (MOD13Q1)"
+    ],
+    "raw_code": "task descr: Calculation of Maximum MODIS EVI\n// Define region\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load MODIS EVI\nvar eviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('EVI')\n  .filterBounds(region);\n\n// Compute max EVI\nvar eviMax = eviCol.max().clip(region);\nMap.addLayer(eviMax, {min: 0, max: 9000, palette: ['white', 'green']}, 'EVI Max');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.max",
+        "ee.Image.clip",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load the MODIS EVI image collection",
+        "Select the EVI band from the collection",
+        "Filter the collection by the region of interest",
+        "Compute the maximum EVI value over the time series",
+        "Clip the resulting image to the region of interest",
+        "Add the clipped image to the map with a specified visualization"
+    ],
+    "output": "Maximum MODIS EVI image"
+}

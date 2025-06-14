@@ -1,0 +1,18 @@
+﻿{
+    "query": "Generate a global vector grid",
+    "datasource": [
+        "region of interest"
+    ],
+    "raw_code": "task descr: Randomly generate a vector grid\n// Define an area of interest (e.g., the entire globe)\nvar region = ee.Geometry.Rectangle([-180, -90, 180, 90], 'EPSG:4326', false);\n\n// Create a fishnet (grid) of 1 degree by 1 degree cells\nvar grid = ee.FeatureCollection(ee.Geometry.Grid.region({\n  region: region,\n  crs: 'EPSG:4326',\n  dimensions: [360, 180]  // 1-degree spacing -> 360x180 grid\n}));\n\n// Output the result to the console\nprint('Grid FeatureCollection:', grid);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Geometry.Grid.region",
+        "ee.FeatureCollection"
+    ],
+    "processing step": [
+        "Define a rectangular region of interest covering the entire globe",
+        "Create a grid of 1 degree by 1 degree cells over the defined region",
+        "Output the generated grid as a FeatureCollection to the console"
+    ],
+    "output": "Grid FeatureCollection"
+}

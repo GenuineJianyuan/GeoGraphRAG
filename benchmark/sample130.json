@@ -1,0 +1,18 @@
+﻿{
+    "query": "Create a vector point set with attribute fields",
+    "datasource": [
+        "vector data"
+    ],
+    "raw_code": "task descr: Create a vector point set with attribute fields\\n// Create a FeatureCollection of points with attributes (minimal version)\\nvar points = ee.FeatureCollection([\\n  ee.Feature(ee.Geometry.Point([-120, 30]), {name: 'Point A', value: 10}),\\n  ee.Feature(ee.Geometry.Point([-115, 35]), {name: 'Point B', value: 20}),\\n  ee.Feature(ee.Geometry.Point([-110, 30]), {name: 'Point C', value: 30})\\n]);\\n\\nMap.addLayer(points, {color: 'blue'}, 'Points with Attributes');",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.Feature",
+        "ee.Geometry.Point",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Create a FeatureCollection of points with attributes",
+        "Add the created points to the map"
+    ],
+    "output": "Vector point set with attribute fields displayed on the map"
+}

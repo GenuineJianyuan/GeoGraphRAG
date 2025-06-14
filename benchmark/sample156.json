@@ -1,0 +1,23 @@
+﻿{
+    "query": "Display NDVI time series",
+    "datasource": [
+        "MODIS/061/MOD13Q1"
+    ],
+    "raw_code": "task descr: Display NDVI time series\\n// Load image collection\\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\\n  .select('NDVI')\\n  .filterDate('2020-01-01', '2020-12-31')\\n  .filterBounds(ee.Geometry.Point([116.4, 39.9]));\\n\\n// Visualize NDVI time series\\nvar chart = ui.Chart.image.series(ndviCol, ee.Geometry.Point([116.4, 39.9]), ee.Reducer.mean(), 250);\\nprint(chart);",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filterBounds",
+        "ee.Geometry.Point",
+        "ui.Chart.image.series",
+        "ee.Reducer.mean"
+    ],
+    "processing step": [
+        "Load MODIS NDVI image collection",
+        "Filter the collection by date and region of interest",
+        "Create a time series chart for NDVI",
+        "Print the chart"
+    ],
+    "output": "NDVI time series chart"
+}

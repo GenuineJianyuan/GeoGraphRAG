@@ -1,0 +1,20 @@
+﻿{
+    "query": "Customize color schemes for multi-band images",
+    "datasource": [
+        "Landsat8"
+    ],
+    "raw_code": "var landsat = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR').filterBounds(ee.Geometry.Point([116.4, 39.9])).first(); Map.addLayer(landsat, { bands: ['B4', 'B3', 'B2'], min: 0, max: 3000, gamma: 1.2 }, 'Landsat RGB Custom');",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.filterBounds",
+        "ee.Geometry.Point",
+        "ee.ImageCollection.first",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Filter Landsat 8 collection by a specific region of interest",
+        "Select the first image from the filtered collection",
+        "Add the selected image to the map with custom visualization parameters"
+    ],
+    "output": "Customized RGB visualization of Landsat 8 image"
+}

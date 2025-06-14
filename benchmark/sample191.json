@@ -1,0 +1,23 @@
+﻿{
+    "query": "Color stretching on DEM image",
+    "datasource": [
+        "DEM"
+    ],
+    "raw_code": "task descr: Perform color stretching on the DEM image\\n// Load DEM\\nvar dem = ee.Image('USGS/SRTMGL1_003');\\n\\n// Compute 2%-98% percentiles\\nvar stats = dem.reduceRegion({\\n  reducer: ee.Reducer.percentile([2, 98]),\\n  geometry: dem.geometry(),\\n  scale: 90,\\n  maxPixels: 1e9\\n});\\n\\n// Get min and max\\nvar min = stats.get('elevation_p2');\\nvar max = stats.get('elevation_p98');\\n\\n// Display DEM with dynamic stretching\\nMap.centerObject(dem, 5);\\nMap.addLayer(dem, {\\n  min: min,\\n  max: max,\\n  palette: ['0000ff', '00ffff', '00ff00', 'ffff00', 'ff0000', 'ffffff']\\n}, 'DEM dynamic stretch');",
+    "api": [
+        "ee.Image",
+        "ee.Reducer.percentile",
+        "ee.Image.reduceRegion",
+        "ee.Geometry",
+        "ee.Dictionary.get",
+        "Map.centerObject",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load the DEM image",
+        "Compute 2% and 98% percentiles of the DEM",
+        "Get the minimum and maximum values from the percentiles",
+        "Display the DEM with dynamic color stretching"
+    ],
+    "output": "DEM with dynamic color stretching"
+}

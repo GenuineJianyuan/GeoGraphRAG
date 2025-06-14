@@ -1,0 +1,23 @@
+﻿{
+    "query": "Calculate MODIS EVI minimum value",
+    "datasource": [
+        "MODIS EVI",
+        "region of interest"
+    ],
+    "raw_code": "task descr: Calculation of MODIS EVI minimum value\\n// Define region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load MODIS EVI\\nvar eviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\\n  .select('EVI')\\n  .filterBounds(region);\\n\\n// Compute min EVI\\nvar eviMin = eviCol.min().clip(region);\\nMap.addLayer(eviMin, {min: 0, max: 9000, palette: ['white', 'green']}, 'EVI Min');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.min",
+        "ee.Image.clip"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load MODIS EVI data and filter by region",
+        "Compute the minimum EVI value",
+        "Clip the result to the region and visualize"
+    ],
+    "output": "Minimum EVI image"
+}

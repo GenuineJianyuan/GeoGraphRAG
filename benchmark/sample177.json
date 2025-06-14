@@ -1,0 +1,22 @@
+﻿{
+    "query": "Filter Landsat collection by sensor",
+    "datasource": [
+        "Landsat8",
+        "region of interest"
+    ],
+    "raw_code": "task descr: Image collection filtered by sensor\\n// Define region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load Landsat collection\\nvar landsatCol = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR')\\n  .filterBounds(region)\\n  .filter(ee.Filter.eq('SENSOR_ID', 'OLI_TIRS')); // Example: OLI_TIRS sensor\\n\\nprint('Filtered by SENSOR_ID:', landsatCol);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection",
+        "ee.ImageCollection.filterBounds",
+        "ee.Filter.eq",
+        "ee.ImageCollection.filter"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load the Landsat 8 image collection",
+        "Filter the collection by the region of interest",
+        "Filter the collection by sensor ID"
+    ],
+    "output": "Filtered Landsat 8 image collection"
+}

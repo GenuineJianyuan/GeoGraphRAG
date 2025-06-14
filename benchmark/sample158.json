@@ -1,0 +1,26 @@
+﻿{
+    "query": "Calculate maximum NDVI in the area",
+    "datasource": [
+        "region of interest",
+        "MODIS/061/MOD13Q1"
+    ],
+    "raw_code": "task descr: Use reduceRegion to calculate the maximum NDVI in the area\\n// Define region of interest\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load image collection\\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\\n  .select('NDVI')\\n  .filterDate('2020-01-01', '2020-12-31')\\n  .filterBounds(region);\\n\\n// Map over collection to compute max NDVI per image\\nvar ndviMax = ndviCol.map(function(img) {\\n  var max = img.reduceRegion({\\n    reducer: ee.Reducer.max(),\\n    geometry: region,\\n    scale: 250\\n  }).get('NDVI');\\n  return img.set('NDVI_max', max);\\n});\\n\\n// Print max NDVI time series\\nvar chart = ui.Chart.feature.byFeature(ndviMax, 'system:time_start', 'NDVI_max');\\nprint(chart);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.map",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.max",
+        "ui.Chart.feature.byFeature"
+    ],
+    "processing step": [
+        "Define region of interest",
+        "Load and filter MODIS NDVI image collection",
+        "Compute maximum NDVI for each image in the collection",
+        "Generate and print a chart of the maximum NDVI time series"
+    ],
+    "output": "Maximum NDVI time series chart"
+}

@@ -1,0 +1,21 @@
+﻿{
+    "query": "Calculate the mean of DEM in the vector area",
+    "datasource": [
+        "vector region",
+        "DEM"
+    ],
+    "raw_code": "task descr: Calculate the mean of DEM in the vector area\\n// Define vector region\\nvar vectorRegion = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load DEM\\nvar dem = ee.Image('USGS/SRTMGL1_003').clip(vectorRegion);\\n\\n// Compute mean elevation\\nvar meanElevation = dem.reduceRegion({\\n  reducer: ee.Reducer.mean(),\\n  geometry: vectorRegion,\\n  scale: 30,\\n  maxPixels: 1e9\\n});\\nprint('Mean Elevation:', meanElevation);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Image",
+        "ee.Image.clip",
+        "ee.Reducer.mean",
+        "ee.Image.reduceRegion"
+    ],
+    "processing step": [
+        "Define a vector region",
+        "Load the DEM and clip it to the vector region",
+        "Compute the mean elevation within the vector region"
+    ],
+    "output": "Mean Elevation"
+}

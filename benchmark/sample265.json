@@ -1,0 +1,23 @@
+﻿{
+    "query": "Display NDVI time series line chart",
+    "datasource": [
+        "MODIS/061/MOD13Q1",
+        "Point geometry"
+    ],
+    "raw_code": "var point = ee.Geometry.Point([116.4, 39.9]);\n\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .filterBounds(point);\n\nvar ndviChart = ui.Chart.image.series({\n  imageCollection: ndviCol,\n  region: point,\n  reducer: ee.Reducer.mean(),\n  scale: 250\n});\nprint(ndviChart);",
+    "api": [
+        "ee.Geometry.Point",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ui.Chart.image.series",
+        "ee.Reducer.mean"
+    ],
+    "processing step": [
+        "Create a point geometry",
+        "Select the NDVI band from the MODIS image collection",
+        "Filter the image collection by the point geometry",
+        "Generate an NDVI time series chart using the mean reducer",
+        "Print the NDVI time series chart"
+    ],
+    "output": "NDVI time series line chart"
+}

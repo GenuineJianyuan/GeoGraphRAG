@@ -1,0 +1,20 @@
+﻿{
+    "query": "Fire situation analysis",
+    "datasource": [
+        "MODIS fire collection"
+    ],
+    "raw_code": "task descr: Show MODIS fire point count\n// Define region\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load MODIS fire collection\nvar fireCol = ee.ImageCollection('MODIS/061/MCD14DL')\n  .filterBounds(region);\n\n// Count images (days with fire detection)\nvar fireCount = fireCol.size();\nprint('Number of fire images:', fireCount);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.size"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load the MODIS fire collection",
+        "Filter the collection by the defined region",
+        "Count the number of images in the filtered collection"
+    ],
+    "output": "Number of fire images"
+}

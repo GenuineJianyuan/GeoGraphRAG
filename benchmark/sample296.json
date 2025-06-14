@@ -1,0 +1,24 @@
+﻿{
+    "query": "Export the sampling results as CSV",
+    "datasource": [
+        "region of interest",
+        "MODIS imagery"
+    ],
+    "raw_code": "task descr: Export the sampling results as CSV\n// Define region of interest\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load an NDVI image\nvar ndviImage = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .filterDate('2020-07-01', '2020-07-31')\n  .first();\n\n// Generate random points for sampling\nvar points = ee.FeatureCollection.randomPoints(region, 100);\n\n// Sample image at points\nvar samples = ndviImage.sampleRegions({\n  collection: points,\n  scale: 250,\n  geometries: true\n});\n\n// Export sampling results to CSV\nExport.table.toDrive({\n  collection: samples,\n  description: 'NDVI_Samples_Export',\n  fileFormat: 'CSV'\n});",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.first",
+        "ee.FeatureCollection.randomPoints",
+        "ee.Image.sampleRegions",
+        "Export.table.toDrive"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load and filter the NDVI image",
+        "Generate random points for sampling",
+        "Sample the NDVI image at the generated points"
+    ],
+    "output": "CSV file of NDVI samples"
+}

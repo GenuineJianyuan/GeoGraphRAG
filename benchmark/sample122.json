@@ -1,0 +1,16 @@
+﻿{
+    "query": "Draw the polygon boundary and display it on the map",
+    "datasource": [
+        "Polygon geometry"
+    ],
+    "raw_code": "task descr: Draw the polygon boundary and display it on the map\n// Draw a polygon geometry and add it to the map (minimal version)\nvar polygon = ee.Geometry.Polygon([[[-120, 30], [-115, 30], [-115, 35], [-120, 35]]]);\n\nMap.addLayer(polygon, {color: 'red'}, 'Polygon');",
+    "api": [
+        "ee.Geometry.Polygon",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Create a polygon geometry",
+        "Add the polygon to the map with a red color"
+    ],
+    "output": "Polygon displayed on the map"
+}

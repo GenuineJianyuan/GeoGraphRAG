@@ -1,0 +1,22 @@
+﻿{
+    "query": "Visualize MODIS NDVI",
+    "datasource": [
+        "MODIS imagery"
+    ],
+    "raw_code": "task descr: Load MODIS NDVI and visualize\n// Define region\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load MODIS NDVI\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .filterBounds(region);\n\n// Display first image\nvar ndviImage = ndviCol.first();\nMap.addLayer(ndviImage, {min: 0, max: 9000, palette: ['white', 'green']}, 'MODIS NDVI');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.first",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load MODIS NDVI data",
+        "Filter the collection by the defined region",
+        "Display the first image in the filtered collection"
+    ],
+    "output": "Visualization of MODIS NDVI"
+}

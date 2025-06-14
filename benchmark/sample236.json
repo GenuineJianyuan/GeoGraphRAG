@@ -1,0 +1,24 @@
+﻿{
+    "query": "Calculate elevation range within vector area",
+    "datasource": [
+        "vector data",
+        "DEM"
+    ],
+    "raw_code": "task descr: Calculate elevation range within vector area\n// Define vector region\nvar vectorRegion = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load DEM\nvar dem = ee.Image('USGS/SRTMGL1_003').clip(vectorRegion);\n\n// Compute elevation range\nvar elevationStats = dem.reduceRegion({\n  reducer: ee.Reducer.minMax(),\n  geometry: vectorRegion,\n  scale: 30,\n  maxPixels: 1e9\n});\nvar range = ee.Number(elevationStats.get('elevation_max'))\n  .subtract(elevationStats.get('elevation_min'));\nprint('Elevation Range:', range);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Image",
+        "ee.Image.clip",
+        "ee.Reducer.minMax",
+        "ee.Image.reduceRegion",
+        "ee.Dictionary.get",
+        "ee.Number.subtract"
+    ],
+    "processing step": [
+        "Define the vector region of interest",
+        "Load and clip the DEM to the vector region",
+        "Compute the minimum and maximum elevation within the region",
+        "Calculate the elevation range by subtracting the minimum from the maximum"
+    ],
+    "output": "Elevation range"
+}

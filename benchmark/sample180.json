@@ -1,0 +1,22 @@
+﻿{
+    "query": "Clip image collection to vector boundary",
+    "datasource": [
+        "Landsat8",
+        "vector data"
+    ],
+    "raw_code": "task descr: Clip image collection to vector boundary\\n// Define vector region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load Landsat collection\\nvar landsatCol = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR')\\n  .filterBounds(region);\\n\\n// Clip each image to vector region\\nvar clippedCol = landsatCol.map(function(img) {\\n  return img.clip(region);\\n});\\n\\nprint('Clipped image collection:', clippedCol);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.map",
+        "ee.Image.clip"
+    ],
+    "processing step": [
+        "Define the vector region",
+        "Load the Landsat image collection",
+        "Filter the Landsat collection by the vector region",
+        "Clip each image in the collection to the vector region"
+    ],
+    "output": "Clipped image collection"
+}

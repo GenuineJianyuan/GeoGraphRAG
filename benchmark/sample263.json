@@ -1,0 +1,24 @@
+﻿{
+    "query": "Calculate the annual average NDVI time series for a given administrative area",
+    "datasource": [
+        "MODIS imagery (MOD13Q1)",
+        "region of interest"
+    ],
+    "raw_code": "var region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .filterBounds(region);\n\nvar yearlyNDVI = ui.Chart.image.seriesByRegion({\n  imageCollection: ndviCol,\n  regions: ee.FeatureCollection([ee.Feature(region)]),\n  reducer: ee.Reducer.mean(),\n  band: 'NDVI',\n  scale: 250,\n  seriesProperty: 'system:time_start'\n}).setChartType('LineChart');\nprint(yearlyNDVI);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ui.Chart.image.seriesByRegion",
+        "ee.Reducer.mean",
+        "ee.FeatureCollection",
+        "ee.Feature"
+    ],
+    "processing step": [
+        "Define the region of interest as a rectangle",
+        "Select and filter MODIS NDVI images by the defined region",
+        "Generate a time series chart of mean NDVI values within the region",
+        "Set the chart type to LineChart and print it"
+    ],
+    "output": "Annual average NDVI time series chart"
+}

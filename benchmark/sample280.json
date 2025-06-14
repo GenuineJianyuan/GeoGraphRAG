@@ -1,0 +1,24 @@
+﻿{
+    "query": "Quarterly NDVI statistics",
+    "datasource": [
+        "MODIS/061/MOD13Q1",
+        "region of interest"
+    ],
+    "raw_code": "var region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .filterBounds(region);\n\nvar q1 = ndviCol.filterDate('2020-01-01', '2020-03-31').mean();\nvar q2 = ndviCol.filterDate('2020-04-01', '2020-06-30').mean();\nvar q3 = ndviCol.filterDate('2020-07-01', '2020-09-30').mean();\nvar q4 = ndviCol.filterDate('2020-10-01', '2020-12-31').mean();\n\nMap.addLayer(q1, {min: 0, max: 9000, palette: ['white', 'green']}, 'NDVI Q1');\nMap.addLayer(q2, {min: 0, max: 9000, palette: ['white', 'green']}, 'NDVI Q2');\nMap.addLayer(q3, {min: 0, max: 9000, palette: ['white', 'green']}, 'NDVI Q3');\nMap.addLayer(q4, {min: 0, max: 9000, palette: ['white', 'green']}, 'NDVI Q4');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.mean",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Select and filter MODIS NDVI images by region",
+        "Filter and calculate mean NDVI for each quarter",
+        "Add layers to the map for visualization"
+    ],
+    "output": "Quarterly NDVI mean images"
+}

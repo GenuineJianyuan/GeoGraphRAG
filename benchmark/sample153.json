@@ -1,0 +1,23 @@
+﻿{
+    "query": "Calculate the variance of all pixels in the image",
+    "datasource": [
+        "Landsat8"
+    ],
+    "raw_code": "task descr: Calculate the variance of all pixels in the image\\n// Load an image (e.g., Landsat 8 surface reflectance)\\nvar image = ee.Image('LANDSAT/LC08/C02/T1_L2').select('SR_B.');\\n\\n// Calculate the variance of all pixels in the image\\nvar variance = image.reduceRegion({\\n  reducer: ee.Reducer.variance(),\\n  geometry: image.geometry(),  // or use a specific area of interest\\n  scale: 30,                   // spatial resolution of Landsat 8\\n  maxPixels: 1e10\\n});\\n\\n// Output the result\\nprint('Pixel Variance:', variance);",
+    "api": [
+        "ee.Image",
+        "ee.Image.select",
+        "ee.Reducer.variance",
+        "ee.Image.reduceRegion",
+        "ee.Image.geometry"
+    ],
+    "processing step": [
+        "Load an image (e.g., Landsat 8 surface reflectance)",
+        "Select bands from the image",
+        "Calculate the variance of all pixels in the image",
+        "Define the geometry for the region of interest",
+        "Set the scale and maximum number of pixels for the reduction",
+        "Output the result"
+    ],
+    "output": "Pixel Variance"
+}

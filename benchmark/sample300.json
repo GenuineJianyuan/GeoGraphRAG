@@ -1,0 +1,27 @@
+﻿{
+    "query": "Export the spatial mean of NDVI within the vector area as CSV",
+    "datasource": [
+        "region of interest",
+        "MODIS/061/MOD13Q1"
+    ],
+    "raw_code": "task descr: Export the spatial mean of NDVI within the vector area as CSV\n// Define region of interest\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load NDVI image collection\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .filterDate('2020-01-01', '2020-12-31')\n  .filterBounds(region);\n\n// Map over collection to compute mean NDVI per image\nvar ndviMean = ndviCol.map(function(img) {\n  var mean = img.reduceRegion({\n    reducer: ee.Reducer.mean(),\n    geometry: region,\n    scale: 250\n  }).get('NDVI');\n  return ee.Feature(null, {\n    'date': img.date().format('YYYY-MM-dd'),\n    'NDVI_mean': mean\n  });\n});\n\n// Export to CSV\nExport.table.toDrive({\n  collection: ndviMean,\n  description: 'NDVI_Mean_Export',\n  fileFormat: 'CSV'\n});",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filterBounds",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.mean",
+        "ee.Feature",
+        "ee.Image.date",
+        "ee.Image.format",
+        "Export.table.toDrive"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load and filter the NDVI image collection",
+        "Compute the mean NDVI for each image in the collection",
+        "Export the results to a CSV file"
+    ],
+    "output": "CSV file containing mean NDVI values"
+}

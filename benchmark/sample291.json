@@ -1,0 +1,24 @@
+﻿{
+    "query": "Randomly sample 100 points from the grid image",
+    "datasource": [
+        "region of interest",
+        "MODIS imagery"
+    ],
+    "raw_code": "task descr: Randomly sample 100 points from the grid image\n// Define region of interest\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load NDVI image and clip\nvar ndviImage = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .first()\n  .clip(region);\n\n// Uniform sampling: randomPoints + sampleRegions\nvar points = ee.FeatureCollection.randomPoints(region, 100);\n\nvar samples = ndviImage.sampleRegions({\n  collection: points,\n  scale: 250,\n  geometries: true\n});\n\n// Export samples to CSV\nExport.table.toDrive({\n  collection: samples,\n  description: 'Uniform_100_Samples',\n  fileFormat: 'CSV'\n});",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "ee.Image.clip",
+        "ee.FeatureCollection.randomPoints",
+        "ee.Image.sampleRegions",
+        "Export.table.toDrive"
+    ],
+    "processing step": [
+        "Define a region of interest",
+        "Load and clip an NDVI image",
+        "Generate random points within the region",
+        "Sample the NDVI values at the generated points"
+    ],
+    "output": "CSV file with sampled NDVI values"
+}

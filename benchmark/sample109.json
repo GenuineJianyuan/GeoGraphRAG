@@ -1,0 +1,16 @@
+﻿{
+    "query": "Display USGS NED DEM",
+    "datasource": [
+        "DEM"
+    ],
+    "raw_code": "task descr: Load USGS NED DEM data and display\nvar dem = ee.Image('USGS/NED');\nMap.addLayer(dem, {}, 'USGS NED DEM');",
+    "api": [
+        "ee.Image",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load USGS NED DEM data",
+        "Add the DEM layer to the map"
+    ],
+    "output": "USGS NED DEM visualization"
+}

@@ -1,0 +1,21 @@
+﻿{
+    "query": "Calculate the area of regions with a slope greater than 30 degrees",
+    "datasource": [
+        "DEM"
+    ],
+    "raw_code": "task descr: Calculate the area of regions with a slope greater than 30 degrees\n// 1️⃣ 加载 DEM 数据（SRTM 举例，全球 30m 分辨率）\nvar dem = ee.Image('USGS/SRTMGL1_003');\n\n// 2️⃣ 计算坡度，单位是 degree\nvar slope = ee.Terrain.slope(dem);\n\n\n// 创建坡度大于 30° 的 mask（二值图）\nvar slopeThreshold = 30;\nvar steepArea = slope.gt(slopeThreshold);\n\n// 可视化高坡度区域\nMap.addLayer(steepArea.updateMask(steepArea), {palette: 'red'}, 'Slope > 30 deg');",
+    "api": [
+        "ee.Image",
+        "ee.Terrain.slope",
+        "ee.Image.gt",
+        "ee.Image.updateMask",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load DEM data",
+        "Calculate slope in degrees",
+        "Create a mask for areas with a slope greater than 30 degrees",
+        "Visualize the high slope areas"
+    ],
+    "output": "Masked image showing areas with a slope greater than 30 degrees"
+}

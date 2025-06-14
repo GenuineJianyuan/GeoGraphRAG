@@ -1,0 +1,21 @@
+﻿{
+    "query": "Dynamic visualization of MODIS NDVI",
+    "datasource": [
+        "MODIS imagery"
+    ],
+    "raw_code": "task descr: Dynamic visualization of MODIS NDVI\\n// Define region\\nvar region = ee.Geometry.Point([116.4, 39.9]);\\n\\n// Load MODIS NDVI\\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\\n  .select('NDVI')\\n  .filterBounds(region);\\n\\n// NDVI time series chart\\nvar chart = ui.Chart.image.series(ndviCol, region, ee.Reducer.mean(), 250);\\nprint(chart);",
+    "api": [
+        "ee.Geometry.Point",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ui.Chart.image.series",
+        "ee.Reducer.mean"
+    ],
+    "processing step": [
+        "Define a point geometry for the region of interest",
+        "Load and select the NDVI band from the MODIS image collection",
+        "Filter the image collection to the defined region",
+        "Generate a time series chart of mean NDVI values"
+    ],
+    "output": "NDVI time series chart"
+}

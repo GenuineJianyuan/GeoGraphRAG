@@ -1,0 +1,25 @@
+﻿{
+    "query": "Map raster areas to vector",
+    "datasource": [
+        "region of interest",
+        "MODIS imagery"
+    ],
+    "raw_code": "task descr: Map raster areas to vector\\n// Define region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load MODIS NDVI\\nvar ndviImage = ee.ImageCollection('MODIS/061/MOD13Q1')\\n  .select('NDVI')\\n  .first()\\n  .clip(region);\\n\\n// Create mask\\nvar ndviMask = ndviImage.gt(4000).selfMask();\\n\\n// Raster to vector\\nvar vector = ndviMask.reduceToVectors({\\n  geometry: region,\\n  scale: 250,\\n  geometryType: 'polygon'\\n});\\nMap.addLayer(vector, {}, 'Vector from Raster');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "ee.Image.clip",
+        "ee.Image.gt",
+        "ee.Image.selfMask",
+        "ee.Image.reduceToVectors"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load and select the first NDVI image from MODIS collection",
+        "Clip the NDVI image to the defined region",
+        "Create a mask for NDVI values greater than 4000",
+        "Convert the masked raster to vector polygons"
+    ],
+    "output": "Vector polygons from raster"
+}

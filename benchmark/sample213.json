@@ -1,0 +1,21 @@
+﻿{
+    "query": "Display MODIS snow cover image",
+    "datasource": [
+        "MODIS影像"
+    ],
+    "raw_code": "task descr: Display MODIS snow cover image\n// Define region\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load MODIS snow cover\nvar snowCol = ee.ImageCollection('MODIS/061/MOD10A1')\n  .select('NDSI_Snow_Cover')\n  .filterBounds(region);\n\n// Visualize first snow cover image\nvar snowImage = snowCol.first();\nMap.addLayer(snowImage, {min: 0, max: 100, palette: ['white', 'blue']}, 'MODIS Snow Cover');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.first",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "定义感兴趣区域",
+        "加载MODIS雪覆盖数据",
+        "筛选出感兴趣区域内的数据",
+        "可视化第一张雪覆盖图像"
+    ],
+    "output": "MODIS雪覆盖图像"
+}

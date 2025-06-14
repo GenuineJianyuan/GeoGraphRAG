@@ -1,0 +1,23 @@
+﻿{
+    "query": "Get the first image in the image collection",
+    "datasource": [
+        "Landsat8"
+    ],
+    "raw_code": "task descr: Get the first image in the image collection\\n// Load and filter Landsat image collection\\nvar landsatCol = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR')\\n  .filterDate('2020-05-01', '2020-09-30')\\n  .filterBounds(ee.Geometry.Point([116.4, 39.9]))\\n  .filter(ee.Filter.lt('CLOUD_COVER', 10));\\n\\n// Get the first image\\nvar firstImage = landsatCol.first();\\nprint(firstImage);",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.filter",
+        "ee.Filter.lt",
+        "ee.ImageCollection.first",
+        "ee.Geometry.Point"
+    ],
+    "processing step": [
+        "Load and filter Landsat image collection",
+        "Filter by date range",
+        "Filter by region of interest",
+        "Filter by cloud cover"
+    ],
+    "output": "First image from the filtered collection"
+}

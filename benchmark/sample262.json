@@ -1,0 +1,24 @@
+﻿{
+    "query": "Calculate LST time series",
+    "datasource": [
+        "MODIS imagery (MOD11A2)",
+        "point location"
+    ],
+    "raw_code": "var point = ee.Geometry.Point([116.4, 39.9]);\n\nvar lstCol = ee.ImageCollection('MODIS/061/MOD11A2')\n  .select('LST_Day_1km')\n  .filterBounds(point);\n\nvar lstChart = ui.Chart.image.series({\n  imageCollection: lstCol.map(function(img) {\n    return img.multiply(0.02).copyProperties(img, ['system:time_start']);\n  }),\n  region: point,\n  reducer: ee.Reducer.mean(),\n  scale: 1000\n});\nprint(lstChart);",
+    "api": [
+        "ee.Geometry.Point",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ui.Chart.image.series",
+        "ee.Image.multiply",
+        "ee.Image.copyProperties",
+        "ee.Reducer.mean"
+    ],
+    "processing step": [
+        "Define a point geometry",
+        "Select and filter MODIS LST images by the point",
+        "Convert LST values to temperature and copy properties",
+        "Generate a time series chart of LST at the point"
+    ],
+    "output": "LST time series chart"
+}

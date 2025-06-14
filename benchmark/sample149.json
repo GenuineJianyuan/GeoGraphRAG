@@ -1,0 +1,21 @@
+﻿{
+    "query": "Apply threshold filtering to the image",
+    "datasource": [
+        "Landsat8"
+    ],
+    "raw_code": "var image = ee.Image('LANDSAT/LC08/C02/T1_L2').normalizedDifference(['SR_B4', 'SR_B3']).rename('NDVI'); var thresholded = image.gt(0.3).selfMask().rename('Thresholded_NDVI'); print('Thresholded Image:', thresholded);",
+    "api": [
+        "ee.Image",
+        "ee.Image.normalizedDifference",
+        "ee.Image.rename",
+        "ee.Image.gt",
+        "ee.Image.selfMask"
+    ],
+    "processing step": [
+        "Load a Landsat 8 image and calculate NDVI",
+        "Apply a threshold to the NDVI image",
+        "Mask the image based on the threshold",
+        "Rename the resulting image"
+    ],
+    "output": "Thresholded NDVI image"
+}

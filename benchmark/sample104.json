@@ -1,0 +1,16 @@
+﻿{
+    "query": "Display global 30-meter resolution DEM",
+    "datasource": [
+        "DEM"
+    ],
+    "raw_code": "task descr: Load and display the global 30-meter resolution DEM\nvar dem = ee.Image('USGS/SRTMGL1_003');\nMap.addLayer(dem, {}, 'SRTM DEM');",
+    "api": [
+        "ee.Image",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load the global 30-meter resolution DEM from the USGS/SRTMGL1_003 dataset",
+        "Add the DEM layer to the map"
+    ],
+    "output": "SRTM DEM visualization on the map"
+}

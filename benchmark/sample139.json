@@ -1,0 +1,17 @@
+﻿{
+    "query": "Count the number of elements in a vector collection",
+    "datasource": [
+        "vector data"
+    ],
+    "raw_code": "task descr: Count the number of elements in a vector collection\\n// Load a FeatureCollection (e.g., countries)\\nvar fc = ee.FeatureCollection(\"FAO/GAUL/2015/level0\");\\n\\n// Count the number of features in the collection\\nvar count = fc.size();\\n\\n// Output the result to the console\\nprint('Number of Features:', count);",
+    "api": [
+        "ee.FeatureCollection",
+        "FeatureCollection.size"
+    ],
+    "processing step": [
+        "Load a FeatureCollection",
+        "Count the number of features in the collection",
+        "Output the result to the console"
+    ],
+    "output": "Number of Features"
+}

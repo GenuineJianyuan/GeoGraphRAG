@@ -1,0 +1,20 @@
+﻿{
+    "query": "Map the vector zone to a mask",
+    "datasource": [
+        "vector region"
+    ],
+    "raw_code": "task descr: Map the vector zone to a mask\n// Define vector region\nvar vectorRegion = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Convert vector to mask\nvar mask = ee.Image.constant(1).clip(vectorRegion).selfMask();\nMap.addLayer(mask, {palette: ['blue']}, 'Vector Mask');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Image.constant",
+        "ee.Image.clip",
+        "ee.Image.selfMask"
+    ],
+    "processing step": [
+        "Define a vector region using a rectangle",
+        "Create a constant image and clip it to the vector region",
+        "Apply self-masking to the clipped image",
+        "Add the masked image to the map"
+    ],
+    "output": "Vector Mask"
+}

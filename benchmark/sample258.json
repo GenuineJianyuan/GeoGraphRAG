@@ -1,0 +1,16 @@
+﻿{
+    "query": "Add scale to map",
+    "datasource": [],
+    "raw_code": "var scalePanel = ui.Panel({\n  style: {position: 'bottom-right', padding: '8px'}\n});\nscalePanel.add(ui.Label('Scale: 1:50000 (example)'));\nMap.add(scalePanel);",
+    "api": [
+        "ui.Panel",
+        "ui.Label",
+        "Map.add"
+    ],
+    "processing step": [
+        "Create a panel for the scale",
+        "Add a label to the panel indicating the scale",
+        "Add the panel to the map"
+    ],
+    "output": "Map with scale panel"
+}

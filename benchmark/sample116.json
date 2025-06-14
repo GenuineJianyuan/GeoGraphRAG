@@ -1,0 +1,18 @@
+﻿{
+    "query": "Display global water body dynamic change data",
+    "datasource": [
+        "Global Surface Water Dynamics"
+    ],
+    "raw_code": "task descr: Display global water body dynamic change data\\n// Load and display Global Surface Water Dynamics (minimal version)\\nvar waterDynamics = ee.Image(\"JRC/GSW1_3/GlobalSurfaceWater\");\\n\\n// Add water occurrence change layer to map\\nMap.addLayer(waterDynamics.select('change_abs'), {min: -50, max: 50, palette: ['blue', 'white', 'red']}, 'Water Change');",
+    "api": [
+        "ee.Image",
+        "Map.addLayer",
+        "ee.Image.select"
+    ],
+    "processing step": [
+        "Load the Global Surface Water Dynamics dataset",
+        "Select the 'change_abs' band from the loaded image",
+        "Add the selected band to the map with a specified color palette"
+    ],
+    "output": "Water Change Layer on Map"
+}

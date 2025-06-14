@@ -1,0 +1,24 @@
+﻿{
+    "query": "Add layer switch control",
+    "datasource": [
+        "MODIS imagery"
+    ],
+    "raw_code": "var ndvi = ee.ImageCollection('MODIS/061/MOD13Q1').select('NDVI').first(); var layer = ui.Map.Layer(ndvi, {min: 0, max: 9000, palette: ['white', 'green']}, 'NDVI Layer'); Map.layers().add(layer); var checkbox = ui.Checkbox('Show NDVI Layer', true); checkbox.onChange(function(checked) { layer.setShown(checked); }); Map.add(checkbox);",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "ui.Map.Layer",
+        "Map.layers.add",
+        "ui.Checkbox",
+        "ui.Checkbox.onChange",
+        "Map.add"
+    ],
+    "processing step": [
+        "Select the NDVI band from the MODIS image collection",
+        "Create a map layer with the NDVI image",
+        "Add the layer to the map",
+        "Create a checkbox to control layer visibility"
+    ],
+    "output": "Interactive map with a layer switch control for NDVI"
+}

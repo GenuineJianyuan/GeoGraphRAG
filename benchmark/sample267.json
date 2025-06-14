@@ -1,0 +1,22 @@
+﻿{
+    "query": "Calculate the frequency of fire occurrences in a certain area",
+    "datasource": [
+        "MODIS active fire data",
+        "region of interest"
+    ],
+    "raw_code": "task descr: Calculate the frequency of fire occurrences in a certain area\n// Load MODIS active fire data\nvar fire = ee.FeatureCollection('MODIS/061/MCD14DL')\n  .filterDate('2023-01-01', '2023-12-31');  // time range\n\n// Define target region\nvar region = ee.Geometry.Rectangle([100.5, 23.0, 101.5, 24.0]);\n\n// Filter fires in region\nvar fireInRegion = fire.filterBounds(region);\n\n// Count number of fire points\nvar fireCount = fireInRegion.size();\n\n// Print result\nprint('Number of fire points in region:', fireCount);",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.FeatureCollection.filterDate",
+        "ee.Geometry.Rectangle",
+        "ee.FeatureCollection.filterBounds",
+        "ee.FeatureCollection.size"
+    ],
+    "processing step": [
+        "Load MODIS active fire data within a specific time range",
+        "Define the target region as a rectangle",
+        "Filter the fire data to only include those within the defined region",
+        "Count the number of fire points in the filtered dataset"
+    ],
+    "output": "Number of fire points in the region"
+}

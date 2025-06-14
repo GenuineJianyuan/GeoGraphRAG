@@ -1,0 +1,18 @@
+﻿{
+    "query": "Load Copernicus Global Permanent Water Bodies Layer",
+    "datasource": [
+        "Copernicus Global Surface Water permanent layer"
+    ],
+    "raw_code": "task descr: Load Copernicus Global Permanent Water Bodies Layer\n// Load Copernicus Global Surface Water permanent layer\nvar water = ee.Image('JRC/GSW1_4/GlobalSurfaceWater')\n  .select('occurrence');\n\n// Add to map\nMap.addLayer(water, {min: 0, max: 100}, 'Permanent Water');",
+    "api": [
+        "ee.Image",
+        "ee.Image.select",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load the Copernicus Global Surface Water permanent layer",
+        "Select the 'occurrence' band from the loaded image",
+        "Add the selected band to the map with a specified visualization parameter"
+    ],
+    "output": "Permanent Water layer on the map"
+}

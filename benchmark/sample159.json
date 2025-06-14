@@ -1,0 +1,28 @@
+﻿{
+    "query": "Calculate minimum NDVI in the area",
+    "datasource": [
+        "region of interest",
+        "MODIS/061/MOD13Q1"
+    ],
+    "raw_code": "task descr: Use reduceRegion to calculate the minimum NDVI in the area\\n// Define region of interest\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load image collection\\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\\n  .select('NDVI')\\n  .filterDate('2020-01-01', '2020-12-31')\\n  .filterBounds(region);\\n\\n// Map over collection to compute min NDVI per image\\nvar ndviMin = ndviCol.map(function(img) {\\n  var min = img.reduceRegion({\\n    reducer: ee.Reducer.min(),\\n    geometry: region,\\n    scale: 250\\n  }).get('NDVI');\\n  return img.set('NDVI_min', min);\\n});\\n\\n// Print min NDVI time series\\nvar chart = ui.Chart.feature.byFeature(ndviMin, 'system:time_start', 'NDVI_min');\\nprint(chart);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.map",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.min",
+        "ee.Image.get",
+        "ee.Image.set",
+        "ui.Chart.feature.byFeature"
+    ],
+    "processing step": [
+        "Define region of interest",
+        "Load and filter MODIS NDVI image collection",
+        "Compute minimum NDVI for each image in the collection",
+        "Generate and print a chart of the minimum NDVI time series"
+    ],
+    "output": "Minimum NDVI time series chart"
+}

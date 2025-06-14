@@ -1,0 +1,28 @@
+﻿{
+    "query": "Calculate the average NDVI for slope zones",
+    "datasource": [
+        "region of interest",
+        "SRTM DEM",
+        "MODIS NDVI"
+    ],
+    "raw_code": "var region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\nvar slope = ee.Terrain.slope(ee.Image('USGS/SRTMGL1_003')).clip(region);\n\nvar ndvi = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .first().clip(region);\n\nvar slopeClass = slope.expression(\n  '(b < 5) ? 1 : (b < 15) ? 2 : (b < 30) ? 3 : 4',\n  {'b': slope}).rename('slope_class');\n\nvar zonalStats = ndvi.addBands(slopeClass).reduceRegion({\n  reducer: ee.Reducer.mean().group(1, 'slope_class'),\n  geometry: region,\n  scale: 250,\n  maxPixels: 1e9\n});\nprint('NDVI by Slope:', zonalStats);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Terrain.slope",
+        "ee.Image.clip",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "ee.Image.expression",
+        "ee.Image.rename",
+        "ee.Image.addBands",
+        "ee.Reducer.mean.group",
+        "ee.Image.reduceRegion"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Calculate the slope from SRTM DEM and clip to the region",
+        "Select and clip the first NDVI image from MODIS collection",
+        "Classify the slope into different zones and calculate zonal statistics"
+    ],
+    "output": "NDVI by Slope"
+}

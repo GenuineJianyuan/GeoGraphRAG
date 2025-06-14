@@ -1,0 +1,19 @@
+﻿{
+    "query": "Set vector layer line width",
+    "datasource": [
+        "vector data"
+    ],
+    "raw_code": "var vector = ee.FeatureCollection.randomPoints(ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]), 10); Map.addLayer(vector.style({width: 3, color: 'red'}), {}, 'Vector Line Width');",
+    "api": [
+        "ee.FeatureCollection.randomPoints",
+        "ee.Geometry.Rectangle",
+        "ee.FeatureCollection.style",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Generate random points within a specified rectangle to create a feature collection",
+        "Style the feature collection with a specified line width and color",
+        "Add the styled feature collection to the map"
+    ],
+    "output": "Styled vector layer on the map"
+}

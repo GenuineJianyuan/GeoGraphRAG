@@ -1,0 +1,28 @@
+﻿{
+    "query": "Calculate the average LST for elevation zones",
+    "datasource": [
+        "DEM",
+        "MODIS LST (Daytime)"
+    ],
+    "raw_code": "task descr: Calculate the average LST for elevation zones // Load DEM var dem = ee.Image('USGS/SRTMGL1_003'); // Load MODIS LST (Daytime) var lstCol = ee.ImageCollection('MODIS/061/MOD11A2') .filterDate('2023-01-01', '2023-12-31') .select('LST_Day_1km') .mean()  // mean over time .multiply(0.02);  // scale factor // Define region var region = ee.Geometry.Rectangle([100.5, 23.0, 101.5, 24.0]); // Define elevation zones var elevZones = [ {min: 0, max: 500}, {min: 500, max: 1000}, {min: 1000, max: 1500}, {min: 1500, max: 2000} ]; // Compute mean LST per elevation zone elevZones.forEach(function(zone) { var mask = dem.gt(zone.min).and(dem.lte(zone.max)); var lstMasked = lstCol.updateMask(mask); var meanLST = lstMasked.reduceRegion({ reducer: ee.Reducer.mean(), geometry: region, scale: 1000 }); print('Mean LST for ' + zone.min + '-' + zone.max + ' m:', meanLST.get('LST_Day_1km')); });",
+    "api": [
+        "ee.Image",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.mean",
+        "ee.Image.multiply",
+        "ee.Geometry.Rectangle",
+        "ee.Image.gt",
+        "ee.Image.lte",
+        "ee.Image.updateMask",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.mean"
+    ],
+    "processing step": [
+        "Load DEM and MODIS LST data",
+        "Define the region of interest",
+        "Define elevation zones",
+        "Compute mean LST for each elevation zone"
+    ],
+    "output": "Mean LST for each elevation zone"
+}

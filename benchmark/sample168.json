@@ -1,0 +1,23 @@
+﻿{
+    "query": "Calculate the maximum value composite image of the image collection",
+    "datasource": [
+        "region of interest",
+        "MODIS/061/MOD13Q1 (NDVI)"
+    ],
+    "raw_code": "task descr: Calculate the maximum value composite image of the image collection\n// Define region of interest\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load NDVI image collection\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .filterBounds(region);\n\n// Max composite\nvar ndviMaxImage = ndviCol.max().clip(region);\nMap.addLayer(ndviMaxImage, {min: 0, max: 9000, palette: ['white', 'darkgreen']}, 'NDVI Max');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.max",
+        "ee.Image.clip",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define a rectangular region of interest",
+        "Load and select the NDVI band from the MODIS image collection within the defined region",
+        "Compute the maximum value composite of the NDVI images",
+        "Clip the resulting image to the region of interest"
+    ],
+    "output": "NDVI Max Composite Image"
+}

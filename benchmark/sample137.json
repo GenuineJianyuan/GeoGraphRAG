@@ -1,0 +1,21 @@
+﻿{
+    "query": "Image Cropping using FeatureCollection",
+    "datasource": [
+        "Landsat 8 surface reflectance",
+        "FeatureCollection (e.g., countries)"
+    ],
+    "raw_code": "task descr: Use FeatureCollection for image cropping\n// Load an image (e.g., Landsat 8 surface reflectance)\nvar image = ee.Image('LANDSAT/LC08/C02/T1_L2');\n\n// Load a FeatureCollection (e.g., countries)\nvar fc = ee.FeatureCollection(\"FAO/GAUL/2015/level0\");\n\n// Filter the FeatureCollection to a specific region (e.g., China)\nvar china = fc.filter(ee.Filter.eq('ADM0_NAME', 'China'));\n\n// Clip the image to the area of interest (China)\nvar clipped = image.clip(china);\n\n// Output the result to the console\nprint('Clipped Image:', clipped);",
+    "api": [
+        "ee.Image",
+        "ee.FeatureCollection",
+        "ee.Filter.eq",
+        "ee.Image.clip"
+    ],
+    "processing step": [
+        "Load a Landsat 8 surface reflectance image",
+        "Load a FeatureCollection representing countries",
+        "Filter the FeatureCollection to select a specific region (e.g., China)",
+        "Clip the image to the area of interest (China)"
+    ],
+    "output": "Clipped Image"
+}

@@ -1,0 +1,21 @@
+﻿{
+    "query": "Load and display NASA GRACE groundwater data",
+    "datasource": [
+        "GRACE groundwater data"
+    ],
+    "raw_code": "var grace = ee.ImageCollection(\"NASA/GRACE/MASS_CONCENTRATION\").filterDate('2002-04-01', '2023-01-01').first();\nMap.addLayer(grace.select('lwe_thickness'), {min: -20, max: 20, palette: ['blue', 'white', 'red']}, 'Groundwater Change');",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.first",
+        "ee.Image.select",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load the NASA GRACE groundwater data for the specified date range",
+        "Select the first image from the collection",
+        "Select the 'lwe_thickness' band from the image",
+        "Add the selected band to the map with a specified color palette and range"
+    ],
+    "output": "Map displaying groundwater change"
+}

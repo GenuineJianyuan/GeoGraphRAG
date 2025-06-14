@@ -1,0 +1,18 @@
+﻿{
+    "query": "Calculate the centroid of a FeatureCollection",
+    "datasource": [
+        "FeatureCollection"
+    ],
+    "raw_code": "task descr: Calculate the centroid of a FeatureCollection\\n// Load a FeatureCollection (example: countries)\\nvar fc = ee.FeatureCollection(\"FAO/GAUL/2015/level0\");\\n\\n// Compute the centroid of each feature in the collection\\nvar centroids = fc.map(function(feature) {\\n  return feature.centroid();\\n});\\n\\n// Output the result to the console\\nprint('Centroids:', centroids);",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.FeatureCollection.map",
+        "ee.Feature.centroid"
+    ],
+    "processing step": [
+        "Load a FeatureCollection",
+        "Compute the centroid of each feature in the collection",
+        "Output the result to the console"
+    ],
+    "output": "Centroids of the FeatureCollection"
+}

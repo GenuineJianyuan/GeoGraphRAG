@@ -1,0 +1,21 @@
+﻿{
+    "query": "Mask out the pixels with NDVI threshold greater than 0.5",
+    "datasource": [
+        "Landsat 8"
+    ],
+    "raw_code": "task descr: Mask out the pixels with NDVI threshold greater than 0.5\n// Compute NDVI (e.g., from Landsat 8)\nvar image = ee.Image('LANDSAT/LC08/C02/T1_L2');\nvar ndvi = image.normalizedDifference(['SR_B4', 'SR_B3']).rename('NDVI');\n\n// Mask pixels where NDVI > 0.5\nvar masked = ndvi.updateMask(ndvi.gt(0.5)).rename('Masked_NDVI');\n\n// Output the result\nprint('Masked NDVI Image:', masked);",
+    "api": [
+        "ee.Image",
+        "ee.Image.normalizedDifference",
+        "ee.Image.rename",
+        "ee.Image.updateMask",
+        "ee.Image.gt"
+    ],
+    "processing step": [
+        "Compute NDVI from Landsat 8",
+        "Rename the NDVI band",
+        "Mask pixels where NDVI is greater than 0.5",
+        "Rename the masked NDVI band"
+    ],
+    "output": "Masked NDVI Image"
+}

@@ -1,0 +1,17 @@
+﻿{
+    "query": "Customize colors for vector layers",
+    "datasource": [
+        "vector data"
+    ],
+    "raw_code": "var vector = ee.FeatureCollection.randomPoints(ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]), 10);\n\nMap.addLayer(vector, {\n  color: 'blue'\n}, 'Vector Custom Color');",
+    "api": [
+        "ee.FeatureCollection.randomPoints",
+        "ee.Geometry.Rectangle",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Generate random points within a specified rectangle to create a feature collection",
+        "Add the feature collection as a layer to the map with a custom color"
+    ],
+    "output": "Vector layer with customized color on the map"
+}

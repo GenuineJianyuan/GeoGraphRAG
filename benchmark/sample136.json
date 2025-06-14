@@ -1,0 +1,22 @@
+﻿{
+    "query": "Project the FeatureCollection to another coordinate system",
+    "datasource": [
+        "FeatureCollection (FAO/GAUL/2015/level0)"
+    ],
+    "raw_code": "task descr: Project the FeatureCollection to another coordinate system\\n// Load a FeatureCollection (example: countries)\\nvar fc = ee.FeatureCollection(\"FAO/GAUL/2015/level0\");\\n\\n// Select a feature (e.g., China) to work with for projection change\\nvar china = fc.filter(ee.Filter.eq('ADM0_NAME', 'China'));\\n\\n// Project the feature to a new coordinate system (e.g., EPSG:3857 - Web Mercator)\\nvar projected = china.map(function(feature) {\\n  return feature.select(['geometry'], null, false).set('crs', 'EPSG:3857');\\n});\\n\\n// Output the result to the console\\nprint('Projected Feature:', projected);",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.Filter.eq",
+        "ee.FeatureCollection.filter",
+        "ee.FeatureCollection.map",
+        "ee.Feature.select",
+        "ee.Feature.set"
+    ],
+    "processing step": [
+        "Load a FeatureCollection",
+        "Filter the FeatureCollection to select a specific feature (e.g., China)",
+        "Map over the filtered FeatureCollection to project each feature to a new coordinate system",
+        "Output the projected FeatureCollection to the console"
+    ],
+    "output": "Projected FeatureCollection"
+}

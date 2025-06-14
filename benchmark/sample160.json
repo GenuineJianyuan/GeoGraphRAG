@@ -1,0 +1,26 @@
+﻿{
+    "query": "Calculate total number of pixels in the area",
+    "datasource": [
+        "region of interest",
+        "MODIS/061/MOD13Q1"
+    ],
+    "raw_code": "task descr: Use reduceRegion to calculate the total number of pixels in the area\n// Define region of interest\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load image collection\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .filterDate('2020-01-01', '2020-12-31')\n  .filterBounds(region);\n\n// Map over collection to compute pixel count per image\nvar pixelCount = ndviCol.map(function(img) {\n  var count = img.reduceRegion({\n    reducer: ee.Reducer.count(),\n    geometry: region,\n    scale: 250\n  }).get('NDVI');\n  return img.set('Pixel_Count', count);\n});\n\n// Print pixel count time series\nvar chart = ui.Chart.feature.byFeature(pixelCount, 'system:time_start', 'Pixel_Count');\nprint(chart);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filterBounds",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.count",
+        "ee.Image.get",
+        "ee.Image.set",
+        "ui.Chart.feature.byFeature"
+    ],
+    "processing step": [
+        "Define region of interest",
+        "Load and filter MODIS NDVI image collection",
+        "Map over the collection to compute pixel count per image",
+        "Print pixel count time series"
+    ],
+    "output": "Pixel count time series chart"
+}

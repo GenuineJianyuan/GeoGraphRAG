@@ -1,0 +1,17 @@
+﻿{
+    "query": "Load and visualize a Landsat 9 image",
+    "datasource": [
+        "Landsat9"
+    ],
+    "raw_code": "var image = ee.ImageCollection('LANDSAT/LC09/C02/T1_L2').first(); Map.addLayer(image, {}, 'Landsat9');",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.first",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load the first image from the Landsat 9 collection",
+        "Add the image to the map for visualization"
+    ],
+    "output": "Visualized Landsat 9 image"
+}

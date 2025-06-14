@@ -1,0 +1,24 @@
+﻿{
+    "query": "Calculate the annual average of NDVI in the vector area",
+    "datasource": [
+        "vector region",
+        "MODIS NDVI collection"
+    ],
+    "raw_code": "task descr: Calculate the annual average of NDVI in the vector area\n// Define vector region\nvar vectorRegion = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load MODIS NDVI collection (2020)\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .filterDate('2020-01-01', '2020-12-31')\n  .filterBounds(vectorRegion);\n\n// Compute annual mean NDVI\nvar annualMeanNDVI = ndviCol.mean();\n\n// Reduce to vector region\nvar meanNDVI = annualMeanNDVI.reduceRegion({\n  reducer: ee.Reducer.mean(),\n  geometry: vectorRegion,\n  scale: 250,\n  maxPixels: 1e9\n});\nprint('Annual Mean NDVI:', meanNDVI);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.mean",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.mean"
+    ],
+    "processing step": [
+        "Define the vector region",
+        "Load and filter the MODIS NDVI collection",
+        "Compute the annual mean NDVI",
+        "Reduce the mean NDVI to the vector region"
+    ],
+    "output": "Annual Mean NDVI"
+}

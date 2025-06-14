@@ -1,0 +1,28 @@
+﻿{
+    "query": "Calculate the average LST for slope zones",
+    "datasource": [
+        "DEM",
+        "MODIS imagery"
+    ],
+    "raw_code": "var region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\nvar slope = ee.Terrain.slope(ee.Image('USGS/SRTMGL1_003')).clip(region);\n\nvar lst = ee.ImageCollection('MODIS/061/MOD11A2')\n  .select('LST_Day_1km')\n  .first().multiply(0.02).clip(region);\n\nvar slopeClass = slope.expression(\n  '(b < 5) ? 1 : (b < 15) ? 2 : (b < 30) ? 3 : 4',\n  {'b': slope}).rename('slope_class');\n\nvar zonalStats = lst.addBands(slopeClass).reduceRegion({\n  reducer: ee.Reducer.mean().group(1, 'slope_class'),\n  geometry: region,\n  scale: 1000,\n  maxPixels: 1e9\n});\nprint('LST by Slope:', zonalStats);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Terrain.slope",
+        "ee.Image.clip",
+        "ee.ImageCollection.select",
+        "ee.Image.multiply",
+        "ee.Image.expression",
+        "ee.Image.rename",
+        "ee.Image.addBands",
+        "ee.Reducer.mean.group",
+        "ee.Image.reduceRegion"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Calculate slope and clip to region",
+        "Select and process MODIS LST data",
+        "Classify slope into categories",
+        "Perform zonal statistics on LST by slope class"
+    ],
+    "output": "Average LST by slope zone"
+}

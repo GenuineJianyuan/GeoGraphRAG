@@ -1,0 +1,22 @@
+﻿{
+    "query": "Calculate the minimum NDVI within the vector area",
+    "datasource": [
+        "vector region",
+        "MODIS NDVI"
+    ],
+    "raw_code": "task descr: Calculate the minimum NDVI within the vector area\n// Define vector region\nvar vectorRegion = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load MODIS NDVI\nvar ndviImage = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .first();\n\n// Compute min NDVI in vector region\nvar minNDVI = ndviImage.reduceRegion({\n  reducer: ee.Reducer.min(),\n  geometry: vectorRegion,\n  scale: 250,\n  maxPixels: 1e9\n});\nprint('Min NDVI:', minNDVI);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.min"
+    ],
+    "processing step": [
+        "Define the vector region",
+        "Load MODIS NDVI data",
+        "Select the NDVI band and get the first image",
+        "Compute the minimum NDVI value within the vector region"
+    ],
+    "output": "Minimum NDVI value"
+}

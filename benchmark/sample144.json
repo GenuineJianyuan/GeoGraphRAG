@@ -1,0 +1,21 @@
+﻿{
+    "query": "Calculate EVI from Sentinel-2 imagery",
+    "datasource": [
+        "Sentinel-3 OLCI"
+    ],
+    "raw_code": "task descr: Calculate EVI from Sentinel-2 imagery\n// Load a Sentinel-2 SR image collection (most recent)\nvar image = ee.ImageCollection('COPERNICUS/S3/OLCI')\n              .select(['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'B11', 'B12'])\n              .first();\n\n// Compute EVI using the formula: G * (B8 - B4) / (B8 + C1*B4 - C2*B2 + L)\nvar evi = image.expression(\n  'G * (NIR - RED) / (NIR + C1 * RED - C2 * BLUE + L)', {\n    'NIR' : image.select('B8'),\n    'RED' : image.select('B4'),\n    'BLUE': image.select('B2'),\n    'G'   : 2.5,\n    'C1'  : 6.0,\n    'C2'  : 7.5,\n    'L'   : 1.0\n  }).rename('EVI');\n\n// Output the result to the console\nprint('EVI Image:', evi);",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "ee.Image.expression",
+        "ee.Image.rename"
+    ],
+    "processing step": [
+        "Load a Sentinel-3 OLCI image collection and select specific bands",
+        "Get the first image in the collection",
+        "Compute EVI using the provided formula",
+        "Rename the resulting image to 'EVI'"
+    ],
+    "output": "EVI Image"
+}

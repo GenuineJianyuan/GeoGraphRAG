@@ -1,0 +1,21 @@
+﻿{
+    "query": "Clip DEM to vector boundary",
+    "datasource": [
+        "DEM",
+        "vector boundary"
+    ],
+    "raw_code": "task descr: Clip DEM to vector boundary\\n// Define vector region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load DEM\\nvar dem = ee.Image('USGS/SRTMGL1_003');\\n\\n// Clip DEM to vector region\\nvar clippedDEM = dem.clip(region);\\nMap.addLayer(clippedDEM, {min: 0, max: 3000, palette: ['white', 'green', 'brown']}, 'Clipped DEM');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Image",
+        "ee.Image.clip",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define the vector region",
+        "Load the DEM image",
+        "Clip the DEM to the vector region",
+        "Add the clipped DEM layer to the map"
+    ],
+    "output": "Clipped DEM"
+}

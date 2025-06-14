@@ -1,0 +1,18 @@
+﻿{
+    "query": "Randomly generate 10 points and display",
+    "datasource": [
+        "global region"
+    ],
+    "raw_code": "task descr: Randomly generate 10 points and display\n// Generate 10 random points globally\nvar points = ee.FeatureCollection.randomPoints({\n  region: ee.Geometry.Rectangle([-180, -90, 180, 90]),\n  points: 10,\n  seed: 42\n});\n\n// Add to map\nMap.addLayer(points, {}, 'Random Points');",
+    "api": [
+        "ee.FeatureCollection.randomPoints",
+        "ee.Geometry.Rectangle",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Generate a global region as a rectangle",
+        "Generate 10 random points within the global region",
+        "Add the generated points to the map"
+    ],
+    "output": "Random Points on the map"
+}

@@ -1,0 +1,20 @@
+﻿{
+    "query": "Composite slope and aspect layer",
+    "datasource": [
+        "DEM"
+    ],
+    "raw_code": "task descr: Composite slope and aspect layer\n// Define region\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load DEM\nvar dem = ee.Image('USGS/SRTMGL1_003').clip(region);\n\n// Compute slope and aspect\nvar terrain = ee.Terrain.products(dem);\n\n// Add combined layer: slope and aspect bands\nMap.addLayer(terrain.select(['slope']), {min: 0, max: 60, palette: ['white', 'red']}, 'Slope');\nMap.addLayer(terrain.select(['aspect']), {min: 0, max: 360, palette: ['blue', 'green', 'yellow', 'red']}, 'Aspect');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Image.clip",
+        "ee.Terrain.products",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load and clip the DEM to the region",
+        "Compute slope and aspect from the DEM",
+        "Add slope and aspect layers to the map"
+    ],
+    "output": "Slope and Aspect Layers"
+}

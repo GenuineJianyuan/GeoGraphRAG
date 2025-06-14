@@ -1,0 +1,22 @@
+﻿{
+    "query": "MODIS EVI Calculation and Visualization",
+    "datasource": [
+        "region of interest",
+        "MODIS EVI"
+    ],
+    "raw_code": "task descr: MODIS EVI Calculation and Visualization\\n// Define region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load MODIS EVI\\nvar eviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\\n  .select('EVI')\\n  .filterBounds(region);\\n\\n// Visualize first EVI image\\nvar eviImage = eviCol.first();\\nMap.addLayer(eviImage, {min: 0, max: 9000, palette: ['white', 'green']}, 'MODIS EVI');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.first",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load MODIS EVI data within the defined region",
+        "Select the first EVI image from the collection",
+        "Visualize the EVI image on the map"
+    ],
+    "output": "Visualized MODIS EVI image"
+}

@@ -1,0 +1,25 @@
+﻿{
+    "query": "Calculate the area of regions with elevation greater than 500 meters",
+    "datasource": [
+        "region of interest",
+        "dem"
+    ],
+    "raw_code": "// Define region\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load DEM\nvar dem = ee.Image('USGS/SRTMGL1_003').clip(region);\n\n// Mask elevation > 500m\nvar highElevationMask = dem.gt(500);\n\n// Compute area in square meters\nvar area = highElevationMask.multiply(ee.Image.pixelArea())\n  .reduceRegion({\n    reducer: ee.Reducer.sum(),\n    geometry: region,\n    scale: 30,\n    maxPixels: 1e9\n  });\n\nprint('Area > 500m (m²):', area);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Image",
+        "ee.Image.clip",
+        "ee.Image.gt",
+        "ee.Image.multiply",
+        "ee.Image.pixelArea",
+        "ee.Reducer.sum",
+        "ee.Image.reduceRegion"
+    ],
+    "processing step": [
+        "Define a region of interest",
+        "Load and clip the DEM to the region",
+        "Create a mask for areas with elevation greater than 500 meters",
+        "Compute the area of the masked region in square meters"
+    ],
+    "output": "Area > 500m (m²)"
+}

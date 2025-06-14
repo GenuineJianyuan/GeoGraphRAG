@@ -1,0 +1,23 @@
+﻿{
+    "query": "Calculate the mean NDVI within the vector area",
+    "datasource": [
+        "vector region",
+        "MODIS NDVI"
+    ],
+    "raw_code": "task descr: Calculate the mean NDVI within the vector area\n// Define vector region\nvar vectorRegion = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load MODIS NDVI\nvar ndviImage = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .first();\n\n// Compute mean NDVI in vector region\nvar meanNDVI = ndviImage.reduceRegion({\n  reducer: ee.Reducer.mean(),\n  geometry: vectorRegion,\n  scale: 250,\n  maxPixels: 1e9\n});\nprint('Mean NDVI:', meanNDVI);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "ee.Reducer.mean",
+        "ee.Image.reduceRegion"
+    ],
+    "processing step": [
+        "Define vector region",
+        "Load MODIS NDVI",
+        "Select NDVI band from the image collection",
+        "Compute mean NDVI in the defined vector region"
+    ],
+    "output": "Mean NDVI value"
+}

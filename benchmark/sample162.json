@@ -1,0 +1,22 @@
+﻿{
+    "query": "Filter Landsat image collection by cloud cover",
+    "datasource": [
+        "Landsat8"
+    ],
+    "raw_code": "var landsatCol = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR').filterDate('2020-05-01', '2020-09-30').filterBounds(ee.Geometry.Point([116.4, 39.9])).filter(ee.Filter.lt('CLOUD_COVER', 10)); print(landsatCol);",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.filter",
+        "ee.Geometry.Point",
+        "ee.Filter.lt"
+    ],
+    "processing step": [
+        "Load Landsat image collection",
+        "Filter images by date range",
+        "Filter images by region of interest",
+        "Filter images by cloud cover less than 10%"
+    ],
+    "output": "Filtered Landsat image collection"
+}

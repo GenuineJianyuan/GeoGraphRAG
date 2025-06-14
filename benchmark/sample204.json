@@ -1,0 +1,23 @@
+﻿{
+    "query": "Calculate the minimum MODIS NDVI",
+    "datasource": [
+        "MODIS影像",
+        "感兴趣区域"
+    ],
+    "raw_code": "task descr: Calculate the minimum MODIS NDVI\\n// Define region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load MODIS NDVI\\nvar ndviCol = ee.ImageCollection('MODIS/061/MOD13Q1')\\n  .select('NDVI')\\n  .filterBounds(region);\\n\\n// Compute min NDVI image\\nvar ndviMin = ndviCol.min().clip(region);\\nMap.addLayer(ndviMin, {min: 0, max: 9000, palette: ['white', 'green']}, 'NDVI Min');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.min",
+        "ee.Image.clip"
+    ],
+    "processing step": [
+        "定义感兴趣区域",
+        "加载MODIS NDVI数据并选择NDVI波段",
+        "筛选出感兴趣区域内的影像",
+        "计算最小NDVI值并裁剪到感兴趣区域"
+    ],
+    "output": "最小NDVI影像"
+}

@@ -1,0 +1,19 @@
+﻿{
+    "query": "Display a single MODIS NDVI image",
+    "datasource": [
+        "MODIS imagery"
+    ],
+    "raw_code": "var image = ee.ImageCollection('MODIS/006/MOD13A1').first(); Map.addLayer(image.select('NDVI'), {}, 'MODIS NDVI');",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.first",
+        "Map.addLayer",
+        "ee.Image.select"
+    ],
+    "processing step": [
+        "Load the first image from the MODIS NDVI collection",
+        "Select the NDVI band from the image",
+        "Add the NDVI image to the map for visualization"
+    ],
+    "output": "Visualized MODIS NDVI image"
+}

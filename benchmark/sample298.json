@@ -1,0 +1,24 @@
+﻿{
+    "query": "Export the image cropping result as GeoTIFF",
+    "datasource": [
+        "region of interest",
+        "Landsat8"
+    ],
+    "raw_code": "task descr: Export the image cropping result as GeoTIFF\\n// Define region of interest\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load and filter Landsat image collection\\nvar landsatCol = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR')\\n  .filterDate('2020-05-01', '2020-09-30')\\n  .filterBounds(region)\\n  .sort('CLOUD_COVER');\\n\\n// Get first image and clip to region\\nvar clippedImage = landsatCol.first().clip(region);\\n\\n// Export clipped image as GeoTIFF\\nExport.image.toDrive({\\n  image: clippedImage,\\n  description: 'Clipped_Landsat_Image',\\n  scale: 30,\\n  region: region,\\n  fileFormat: 'GeoTIFF'\\n});",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.filterDate",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.sort",
+        "ee.ImageCollection.first",
+        "ee.Image.clip",
+        "Export.image.toDrive"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load and filter the Landsat image collection",
+        "Clip the first image to the region",
+        "Export the clipped image as a GeoTIFF"
+    ],
+    "output": "Clipped Landsat Image (GeoTIFF)"
+}

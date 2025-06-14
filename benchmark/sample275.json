@@ -1,0 +1,28 @@
+﻿{
+    "query": "Calculate the average EVI for slope direction zones",
+    "datasource": [
+        "SRTM DEM",
+        "MODIS EVI"
+    ],
+    "raw_code": "var region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\nvar aspect = ee.Terrain.aspect(ee.Image('USGS/SRTMGL1_003')).clip(region);\n\nvar evi = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('EVI')\n  .first().clip(region);\n\nvar aspectClass = aspect.expression(\n  '(b <= 45 || b > 315) ? 1 : (b <= 135) ? 2 : (b <= 225) ? 3 : 4',\n  {'b': aspect}).rename('aspect_class');\n\nvar zonalStats = evi.addBands(aspectClass).reduceRegion({\n  reducer: ee.Reducer.mean().group(1, 'aspect_class'),\n  geometry: region,\n  scale: 250,\n  maxPixels: 1e9\n});\nprint('EVI by Aspect:', zonalStats);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Terrain.aspect",
+        "ee.Image.clip",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "ee.Image.expression",
+        "ee.Image.rename",
+        "ee.Image.addBands",
+        "ee.Reducer.mean.group",
+        "ee.Image.reduceRegion"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Calculate and clip the aspect from SRTM DEM",
+        "Select and clip the first EVI image from MODIS collection",
+        "Classify the aspect into four classes",
+        "Calculate zonal statistics for EVI based on aspect classes"
+    ],
+    "output": "EVI by Aspect"
+}

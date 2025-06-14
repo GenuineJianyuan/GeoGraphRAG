@@ -1,0 +1,24 @@
+﻿{
+    "query": "Calculate the maximum MODIS LST",
+    "datasource": [
+        "MODIS imagery (MOD11A2)",
+        "region of interest"
+    ],
+    "raw_code": "task descr: Calculate the maximum MODIS LST\\n// Define region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load MODIS LST\\nvar lstCol = ee.ImageCollection('MODIS/061/MOD11A2')\\n  .select('LST_Day_1km')\\n  .filterBounds(region);\\n\\n// Compute max LST\\nvar lstMax = lstCol.max().multiply(0.02).clip(region);\\nMap.addLayer(lstMax, {min: 250, max: 320, palette: ['blue', 'green', 'red']}, 'LST Max');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.filterBounds",
+        "ee.ImageCollection.max",
+        "ee.Image.multiply",
+        "ee.Image.clip",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load and select the MODIS LST data within the region",
+        "Compute the maximum LST value and apply a scale factor",
+        "Clip the result to the region and add it to the map"
+    ],
+    "output": "Maximum LST image"
+}

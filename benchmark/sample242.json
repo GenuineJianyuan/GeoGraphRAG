@@ -1,0 +1,17 @@
+﻿{
+    "query": "Draw slope legend",
+    "datasource": [],
+    "raw_code": "var legend = ui.Panel({style: {position: 'bottom-left'}}); legend.add(ui.Label('Slope Legend')); legend.add(ui.Label('White → Red (Low → High Slope)')); Map.add(legend);",
+    "api": [
+        "ui.Panel",
+        "ui.Label",
+        "Map.add"
+    ],
+    "processing step": [
+        "Create a UI panel for the legend",
+        "Add a label to the legend indicating it is a slope legend",
+        "Add a label to the legend describing the color scheme",
+        "Add the legend to the map"
+    ],
+    "output": "Slope legend on the map"
+}

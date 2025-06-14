@@ -1,0 +1,19 @@
+﻿{
+    "query": "Extract the median layer of the image",
+    "datasource": [
+        "Landsat8"
+    ],
+    "raw_code": "var collection = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2').select('SR_B.'); var medianImage = collection.median(); print('Median Image:', medianImage);",
+    "api": [
+        "ee.ImageCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.median"
+    ],
+    "processing step": [
+        "Load an image collection (e.g., Landsat 8 surface reflectance)",
+        "Select reflective bands from the collection",
+        "Reduce the collection to get the median value for each pixel",
+        "Output the result"
+    ],
+    "output": "Median Image"
+}

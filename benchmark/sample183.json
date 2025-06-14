@@ -1,0 +1,18 @@
+﻿{
+    "query": "Calculate elevation histogram",
+    "datasource": [
+        "dem"
+    ],
+    "raw_code": "task descr: Calculate elevation histogram\n// Define region\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load DEM\nvar dem = ee.Image('USGS/SRTMGL1_003').clip(region);\n\n// Chart elevation histogram\nvar histogram = ui.Chart.image.histogram({\n  image: dem,\n  region: region,\n  scale: 30\n});\nprint(histogram);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Image.clip",
+        "ui.Chart.image.histogram"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load the DEM and clip it to the defined region",
+        "Create a histogram of the elevation values within the region"
+    ],
+    "output": "Elevation histogram chart"
+}

@@ -1,0 +1,19 @@
+﻿{
+    "query": "Create a square buffer",
+    "datasource": [
+        "coordinates"
+    ],
+    "raw_code": "task descr: Create a square buffer\n// 定义左下角和右上角坐标\nvar square = ee.Geometry.Rectangle([116.38 - 0.01, 39.90 - 0.01, \n                                    116.38 + 0.01, 39.90 + 0.01]);\n// 可视化\nMap.centerObject(square, 12);\nMap.addLayer(square, {color: 'green'}, 'Square');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "Map.centerObject",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define the coordinates for a square geometry",
+        "Create a square geometry using the defined coordinates",
+        "Center the map on the created square geometry",
+        "Add the square geometry to the map with a specified color"
+    ],
+    "output": "Visualized square geometry on the map"
+}

@@ -1,0 +1,16 @@
+﻿{
+    "query": "Display NASA SRTM DEM data",
+    "datasource": [
+        "DEM"
+    ],
+    "raw_code": "var dem = ee.Image('USGS/SRTMGL1_003');\nMap.addLayer(dem, {min: 0, max: 3000}, 'SRTM DEM');",
+    "api": [
+        "ee.Image",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load the SRTM DEM image from the USGS/SRTMGL1_003 dataset",
+        "Add the DEM layer to the map with a specified min and max value for visualization"
+    ],
+    "output": "SRTM DEM visualization on the map"
+}

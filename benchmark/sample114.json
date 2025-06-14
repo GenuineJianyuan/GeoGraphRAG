@@ -1,0 +1,18 @@
+﻿{
+    "query": "Display Global Forest Cover Image",
+    "datasource": [
+        "Global Forest Cover (Tree Canopy Cover) image"
+    ],
+    "raw_code": "task descr: Display Global Forest Cover Image\n// Load Global Forest Cover (Tree Canopy Cover) image\nvar forest = ee.Image('UMD/hansen/global_forest_change_2022_v1_10')\n  .select('treecover2000');\n\n// Add to map\nMap.addLayer(forest, {min: 0, max: 100}, 'Tree Canopy Cover');",
+    "api": [
+        "ee.Image",
+        "ee.Image.select",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load the Global Forest Cover (Tree Canopy Cover) image",
+        "Select the 'treecover2000' band from the image",
+        "Add the selected band to the map with a specified visualization parameter"
+    ],
+    "output": "Tree Canopy Cover layer on the map"
+}

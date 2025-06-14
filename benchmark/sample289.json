@@ -1,0 +1,20 @@
+﻿{
+    "query": "Mask the area with elevation below 100 meters",
+    "datasource": [
+        "DEM"
+    ],
+    "raw_code": "var dem = ee.Image('USGS/SRTMGL1_003');\n\nvar lowElevMask = dem.lt(100).selfMask();\nMap.addLayer(lowElevMask, {palette:['cyan']}, 'Elevation < 100m Mask');",
+    "api": [
+        "ee.Image",
+        "ee.Image.lt",
+        "ee.Image.selfMask",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Load DEM data from USGS/SRTMGL1_003",
+        "Create a mask for areas with elevation below 100 meters",
+        "Apply the mask to the DEM image",
+        "Add the masked layer to the map"
+    ],
+    "output": "Elevation < 100m Mask"
+}

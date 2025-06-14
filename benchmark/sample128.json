@@ -1,0 +1,17 @@
+﻿{
+    "query": "Read and print the first feature in vector data",
+    "datasource": [
+        "vector data"
+    ],
+    "raw_code": "var fc = ee.FeatureCollection(\"users/yourusername/your_feature_collection\"); var firstFeature = fc.first(); print('First feature:', firstFeature);",
+    "api": [
+        "ee.FeatureCollection",
+        "ee.FeatureCollection.first"
+    ],
+    "processing step": [
+        "load a FeatureCollection from an asset path",
+        "get the first feature from the FeatureCollection",
+        "print the first feature"
+    ],
+    "output": "first feature of the FeatureCollection"
+}

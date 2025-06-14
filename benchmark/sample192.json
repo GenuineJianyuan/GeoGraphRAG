@@ -1,0 +1,20 @@
+﻿{
+    "query": "Show DEM layer with hillshade",
+    "datasource": [
+        "DEM"
+    ],
+    "raw_code": "task descr: Show DEM layer with hillshade\\n// Define region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load DEM\\nvar dem = ee.Image('USGS/SRTMGL1_003').clip(region);\\n\\n// Compute hillshade\\nvar hillshade = ee.Terrain.hillshade(dem);\\n\\n// Add DEM and hillshade layers\\nMap.addLayer(dem, {min: 0, max: 3000, palette: ['white', 'green', 'brown']}, 'DEM');\\nMap.addLayer(hillshade, {min: 0, max: 255, palette: ['black', 'white']}, 'Hillshade');",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Image.clip",
+        "ee.Terrain.hillshade",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load and clip the DEM to the region",
+        "Compute the hillshade from the DEM",
+        "Add the DEM and hillshade layers to the map"
+    ],
+    "output": "DEM and Hillshade layers on the map"
+}

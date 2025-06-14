@@ -1,0 +1,23 @@
+﻿{
+    "query": "Mask the water body area as a 0/1 binary layer",
+    "datasource": [
+        "Landsat8"
+    ],
+    "raw_code": "var ndwi = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR').filter(ee.Filter.lt('CLOUD_COVER',10)).first().normalizedDifference(['B3','B5']).rename('NDWI');\nvar waterMask = ndwi.gt(0).rename('water_mask');\nMap.addLayer(waterMask, {min:0, max:1, palette:['white','blue']}, 'Water Mask 0/1');",
+    "api": [
+        "ee.ImageCollection",
+        "ee.Filter.lt",
+        "ee.ImageCollection.first",
+        "ee.Image.normalizedDifference",
+        "ee.Image.rename",
+        "ee.Image.gt",
+        "Map.addLayer"
+    ],
+    "processing step": [
+        "Filter Landsat 8 images with cloud cover less than 10%",
+        "Calculate NDWI from B3 and B5 bands",
+        "Create a binary water mask using NDWI",
+        "Add the water mask to the map"
+    ],
+    "output": "Water Mask 0/1"
+}

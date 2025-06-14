@@ -1,0 +1,24 @@
+﻿{
+    "query": "Sample raster image by vector zone",
+    "datasource": [
+        "region of interest",
+        "MODIS imagery"
+    ],
+    "raw_code": "task descr: Sample raster image by vector zone\n// Define region of interest\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\n\n// Load NDVI image and clip\nvar ndviImage = ee.ImageCollection('MODIS/061/MOD13Q1')\n  .select('NDVI')\n  .first()\n  .clip(region);\n\n// Sample image over vector region\nvar samples = ndviImage.sample({\n  region: region,\n  scale: 250,\n  geometries: true\n});\n\n// Export samples to CSV\nExport.table.toDrive({\n  collection: samples,\n  description: 'Vector_Region_Samples',\n  fileFormat: 'CSV'\n});",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "ee.Image.clip",
+        "ee.Image.sample",
+        "Export.table.toDrive"
+    ],
+    "processing step": [
+        "Define the region of interest",
+        "Load and select NDVI from MODIS image collection",
+        "Clip the NDVI image to the region of interest",
+        "Sample the clipped image over the vector region"
+    ],
+    "output": "CSV file with sampled NDVI values"
+}

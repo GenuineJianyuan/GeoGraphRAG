@@ -1,0 +1,21 @@
+﻿{
+    "query": "Calculate the maximum NDVI value within the vector area",
+    "datasource": [
+        "vector region",
+        "MODIS NDVI"
+    ],
+    "raw_code": "task descr: Calculate the maximum NDVI value within the vector area\\n// Define vector region\\nvar vectorRegion = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load MODIS NDVI\\nvar ndviImage = ee.ImageCollection('MODIS/061/MOD13Q1')\\n  .select('NDVI')\\n  .first();\\n\\n// Compute max NDVI in vector region\\nvar maxNDVI = ndviImage.reduceRegion({\\n  reducer: ee.Reducer.max(),\\n  geometry: vectorRegion,\\n  scale: 250,\\n  maxPixels: 1e9\\n});\\nprint('Max NDVI:', maxNDVI);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.ImageCollection.select",
+        "ee.ImageCollection.first",
+        "ee.Image.reduceRegion",
+        "ee.Reducer.max"
+    ],
+    "processing step": [
+        "Define a vector region using coordinates",
+        "Load MODIS NDVI image collection and select the first image",
+        "Compute the maximum NDVI value within the vector region"
+    ],
+    "output": "Maximum NDVI value"
+}

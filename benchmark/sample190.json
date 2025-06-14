@@ -1,0 +1,20 @@
+﻿{
+    "query": "Calculate the minimum elevation of the DEM",
+    "datasource": [
+        "DEM"
+    ],
+    "raw_code": "task descr: Calculate the minimum elevation of the DEM\\n// Define region\\nvar region = ee.Geometry.Rectangle([116.3, 39.8, 116.5, 40.0]);\\n\\n// Load DEM\\nvar dem = ee.Image('USGS/SRTMGL1_003').clip(region);\\n\\n// Compute min elevation\\nvar minElevation = dem.reduceRegion({\\n  reducer: ee.Reducer.min(),\\n  geometry: region,\\n  scale: 30,\\n  maxPixels: 1e9\\n});\\n\\nprint('Min elevation:', minElevation);",
+    "api": [
+        "ee.Geometry.Rectangle",
+        "ee.Image",
+        "ee.Image.clip",
+        "ee.Reducer.min",
+        "ee.Image.reduceRegion"
+    ],
+    "processing step": [
+        "Define a rectangular region of interest",
+        "Load the DEM image and clip it to the defined region",
+        "Compute the minimum elevation within the region using the reduceRegion method with a min reducer"
+    ],
+    "output": "Minimum elevation value"
+}
