@@ -1,0 +1,54 @@
+You are a geospatial expert working with Google Earth Engine (GEE). Your task is to optimize and enhance the given JavaScript code to conform with the latest GEE data standards and geospatial coding best practices. Please strictly follow the guidelines below:
+
+1. **Update Landsat data source**:
+   - Replace outdated Landsat products (e.g., from Collection 1) with the latest **LANDSAT/LC08/C02/T1_L2** dataset, which provides surface reflectance (SR) values.
+   - Use appropriate band names for Landsat 8 Surface Reflectance:
+     - SR_B2: Blue  
+     - SR_B3: Green  
+     - SR_B4: Red  
+     - SR_B5: Near Infrared (NIR)  
+     - SR_B6: SWIR1  
+     - SR_B7: SWIR2
+
+2. **Use ImageCollection with temporal filtering**:
+   - Instead of a single image, filter the Landsat image collection over a defined time range (e.g., one month) and apply .mean() to generate a cloud-free composite.
+
+3. **NDVI calculation**:
+   - Compute NDVI using .normalizedDifference(['SR_B5', 'SR_B4']) and assign a clear name using .rename('NDVI').
+
+4. **Region of Interest (ROI)**:
+   - Explicitly define a rectangular roi, and apply .clip(roi) to all raster operations to ensure spatial consistency across datasets.
+
+5. **Improve layer visualization**:
+   - Use Map.addLayer() for intermediate outputs such as:
+     - RGB composite (['SR_B4', 'SR_B3', 'SR_B2'])
+     - DEM and derived slope
+     - Slope classification raster
+     - LULC classification
+     - Final susceptibility index
+   - Specify proper min, max, and palette values to enhance rendering quality.
+
+6. **MODIS LULC data**:
+   - Use the dataset 'MODIS/051/MCD12Q1', and select 'Land_Cover_Type_1'.
+   - Apply .remap() to classify desired categories (e.g., Forest, Shrubland, Urban) and rename accordingly.
+
+7. **Variable naming and structure**:
+   - Use consistent .rename() to label all processed layers (e.g., 'slope', 'slope_class', 'lulc', 'susceptibility').
+   - Maintain logical clarity and meaningful variable names throughout the script.
+
+8. **Center map view**:
+   - Add Map.centerObject(roi, zoomLevel) (e.g., zoomLevel = 10) to standardize the view window.
+
+9. **Preserve original analysis logic**:
+   - Keep the overall structure of the workflow intact (e.g., slope classification, LULC mapping, susceptibility index) but enhance readability, modularity, and robustness of the implementation.
+
+Here is the original code to optimize:
+
+{Your Code}
+
+Here is the error that currently occur:
+
+{Your Error List}
+
+
+Return a fully optimized GEE JavaScript code block based on the above instructions.

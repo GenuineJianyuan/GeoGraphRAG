@@ -1,1 +1,3 @@
-The demo will be uploaded soon!
+- **demo/**: Contains demonstration materials to illustrate the full usage of GeoGraphRAG.  
+  - `runtime_demo.mp4`: A complete demonstration video showing the end-to-end process of using GeoGraphRAG, including user interaction, task retrieval, code generation, debugging, and execution on the Google Earth Engine platform.  
+  - `prompt_refinement_template.md`: A prompt-based code refinement template designed to guide LLM to adjust the generated code for runtime compatibility.  
