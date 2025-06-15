@@ -25,8 +25,28 @@ GeoGraphRAG enhances geospatial knowledge representation by leveraging the seman
 
 ## 📊 Baseline Data Distribution
 
-The baseline dataset used for benchmarking GeoGraphRAG consists of 300 modeling tasks with diverse complexity levels. Among them, 100 tasks are classified as complex, each involving 5 to 10 sequential functional steps, while the remaining 200 tasks are simple, containing 1 to 4 steps. This distribution ensures a balanced evaluation across a spectrum of geospatial modeling scenarios, enabling comprehensive assessment of the method's robustness and scalability.
+The baseline dataset used for benchmarking **GeoGraphRAG** consists of **300 modeling tasks** with diverse complexity levels. Among them, **100 tasks are classified as complex**, each involving 5 to 10 sequential functional steps, while the remaining **200 tasks are simple**, containing 1 to 4 steps. This distribution ensures a balanced evaluation across a spectrum of geospatial modeling scenarios, enabling comprehensive assessment of the method's robustness and scalability.
 
+In addition to complexity, the dataset spans **all 11 task categories supported by the Google Earth Engine (GEE) platform**, as summarized in the table below. These categories reflect a wide range of real-world geospatial application domains and provide semantic diversity for evaluating retrieval-augmented generation performance.
+
+| **GEE Task Category**       | **Number of Tasks** |
+|----------------------------|---------------------|
+| Data Processing             | 140                 |
+| Others                      | 37                  |
+| Crop Mapping                | 34                  |
+| Climate Change              | 22                  |
+| Land Cover / Land Use       | 15                  |
+| Disaster                    | 13                  |
+| Urban                       | 13                  |
+| Water                       | 12                  |
+| Forest                      | 6                   |
+| Geospatial Analysis         | 5                   |
+| Soil                        | 3                   |
+
+These categories are derived from the classification schema proposed in the article:  
+**"Google Earth Engine for geo-big data applications: A meta-analysis and systematic review"**, *ISPRS Journal of Photogrammetry and Remote Sensing*, 164 (2020): 152–170.  
+
+![GEE Category](images/GEE%20applications%20categories.jpg) 
 ---
 
 ## 📖 Reference for S-GMKG
